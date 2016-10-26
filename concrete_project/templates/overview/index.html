@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load staticfiles %}
 <html>
 
     <head>
@@ -8,11 +9,14 @@
     <body>
         <h1>Rango says...</h1>
         <div>
-            hey there partner! <br />
-            <strong>{{ boldmessage }}</strong><br />
+            hey there partner! <br/>
+            <strong>{{ boldmessage }}</strong><br/>
         </div>
         <div>
-            <a href="/rango/about/">About</a><br />
+            <a href="/customer/">Customers</a><br/>
+            <img src="{% static "images/rango.jpg" %}"
+                 alt="Picture of Rango" />
+            <img src="{{ MEDIA_URL }}boston.jpg">.
         </div>
     </body>
 
