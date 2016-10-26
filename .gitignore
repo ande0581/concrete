@@ -88,11 +88,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
-.idea/*
-.idea/concrete.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
 
 db.sqlite3
-
+/.idea/
