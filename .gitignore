@@ -89,5 +89,6 @@ ENV/
 .ropeproject
 
 
-db.sqlite3
+
 /.idea/
+/concrete_project/db.sqlite3
