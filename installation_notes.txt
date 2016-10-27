@@ -13,4 +13,12 @@ django-admin.py startproject concrete_project
 python manage.py runserver
 python manage.py startapp customer
 
+python manage.py makemigrations <appname>
+python manage.py migrate
+
+superuser: admin / !concrete!
+http://127.0.0.1:8000/admin/
+
+
+
 
