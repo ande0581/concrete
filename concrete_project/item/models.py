@@ -28,7 +28,6 @@ class BidItem(db.Model):
 
 class BidItem(models.Model):
     bid_id = models.ForeignKey('bid.Bid', on_delete=models.CASCADE)
-    service_id = models.ForeignKey('service.Service', on_delete=models.CASCADE)
     description = models.CharField(max_length=2000)
     quantity = models.FloatField()
     cost = models.FloatField()
