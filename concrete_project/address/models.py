@@ -34,5 +34,8 @@ class Address(models.Model):
     customer_id = models.ForeignKey('customer.Customer', on_delete=models.CASCADE)
     # address_bids
 
+    class Meta:
+        verbose_name_plural = 'Addresses'
+
     def __str__(self):
         return self.street
