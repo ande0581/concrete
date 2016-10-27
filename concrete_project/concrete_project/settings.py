@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'journal',
     'overview',
     'service',
-    'user',
 ]
 
 MIDDLEWARE = [
