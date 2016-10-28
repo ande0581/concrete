@@ -19,6 +19,11 @@ python manage.py migrate
 superuser: admin / !concrete!
 http://127.0.0.1:8000/admin/
 
+When the sources are not showing up correctly on import statements:
+http://stackoverflow.com/questions/20479696/pycharm-unresolved-reference-error-on-the-ide-when-opening-a-working-project
+
+
+
 
 
 
