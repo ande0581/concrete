@@ -50,7 +50,12 @@ INSTALLED_APPS = [
     'journal',
     'overview',
     'service',
+
+    # 3rd Party Apps
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
