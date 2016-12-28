@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from customer.models import Customer
 from customer.forms import CustomerForm
@@ -20,6 +21,7 @@ def add_customer(request):
         if form.is_valid():
             # Save the new customer to the DB
             form.save(commit=True)
+            messages.success(request, "Customer was created successfully!")
             return redirect(index)
         else:
             print(form.errors)
