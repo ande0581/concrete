@@ -10,7 +10,7 @@ def index(request):
     for customer in customer_list:
         customer.telephone = "{}-{}-{}".format(customer.telephone[:3], customer.telephone[3:6], customer.telephone[6:])
 
-    paginator = Paginator(customer_list, 5)
+    paginator = Paginator(customer_list, 10)
     page = request.GET.get('page')
     try:
         queryset = paginator.page(page)
@@ -37,7 +37,7 @@ def add_customer(request):
             # Save the new customer to the DB
             form.save(commit=True)
             messages.success(request, "Customer was created successfully!")
-            return redirect(index)
+            return redirect('customer:index')
         else:
             print(form.errors)
     return render(request, 'customer/add_customer.html', {'form': form})

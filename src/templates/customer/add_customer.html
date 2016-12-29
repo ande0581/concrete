@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-        <h1>Add a Customer</h1>
+        <h4>Add a Customer</h4>
         <div>
             <form id="category_form" method="post" action="/customer/add_customer/"> {% csrf_token %}
                 {{ form|crispy }}
