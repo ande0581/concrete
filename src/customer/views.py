@@ -6,6 +6,9 @@ from customer.forms import CustomerForm
 
 def index(request):
     customer_list = Customer.objects.order_by('name')
+    for customer in customer_list:
+        customer.telephone = "{}-{}-{}".format(customer.telephone[:3], customer.telephone[3:6], customer.telephone[6:])
+
     context_dict = {'customers': customer_list}
     return render(request, 'customer/index.html', context_dict)
 
