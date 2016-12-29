@@ -1,11 +1,14 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.shortcuts import render, redirect
+
 from customer.models import Customer
 from customer.forms import CustomerForm
 
 
+@login_required()
 def index(request):
     queryset_list = Customer.objects.order_by('name')
 
@@ -32,9 +35,10 @@ def index(request):
         queryset = paginator.page(paginator.num_pages)
 
     context_dict = {'object_list': queryset}
-    return render(request, 'customer/index.html', context_dict)
+    return render(request, 'customer/customer_index.html', context_dict)
 
 
+@login_required()
 def add_customer(request):
     form = CustomerForm()
 

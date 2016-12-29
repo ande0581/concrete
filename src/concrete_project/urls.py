@@ -22,6 +22,7 @@ from overview import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^accounts/', include('accounts.urls')),
     url(r'^address/', include('address.urls')),
     url(r'^bid/', include('bid.urls')),
     url(r'^calculator/', include('calculator.urls')),
