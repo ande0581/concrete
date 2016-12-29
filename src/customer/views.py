@@ -1,16 +1,26 @@
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from customer.models import Customer
 from customer.forms import CustomerForm
 
 
 def index(request):
-    customer_list = Customer.objects.order_by('name')
-    for customer in customer_list:
-        customer.telephone = "{}-{}-{}".format(customer.telephone[:3], customer.telephone[3:6], customer.telephone[6:])
+    queryset_list = Customer.objects.order_by('name')
 
-    paginator = Paginator(customer_list, 10)
+    query = request.GET.get("q")
+    if query:
+        queryset_list = queryset_list.filter(
+            Q(name__icontains=query) |
+            Q(telephone__icontains=query) |
+            Q(email__icontains=query)
+        ).distinct()  # this prevents duplicates
+
+    for customer in queryset_list:
+        customer.telephone = "({}) {}-{}".format(customer.telephone[:3], customer.telephone[3:6], customer.telephone[6:])
+
+    paginator = Paginator(queryset_list, 10)
     page = request.GET.get('page')
     try:
         queryset = paginator.page(page)
