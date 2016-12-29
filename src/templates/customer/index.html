@@ -15,7 +15,7 @@
           <th><strong>Created Date</strong></th>
         </tr>
       </thead>
-      {% for customer in customers %}
+      {% for customer in object_list %}
           <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
               <td><a href="">{{ customer.name }}</a></td>
               <td>{{ customer.email }}</td>
@@ -25,6 +25,17 @@
       {% endfor %}
     </table>
   </div>
-<div>
+
+  <nav aria-label="...">
+  <ul class="pager">
+    {% if object_list.has_previous %}
+      <li><a href="?page={{ object_list.previous_page_number }}">previous</a></li>
+    {% endif %}
+
+    {% if object_list.has_next %}
+      <li><a href="?page={{ object_list.next_page_number }}">next</a></li>
+    {% endif %}
+  </ul>
+  </nav>
 
 {% endblock content %}
