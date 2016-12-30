@@ -4,7 +4,7 @@
 {% block content %}
         <h4>Add a Customer</h4>
         <div>
-            <form id="category_form" method="post" action="/customer/add_customer/"> {% csrf_token %}
+            <form id="category_form" method="post" action="/customer/create/"> {% csrf_token %}
                 {{ form|crispy }}
                 <input type="submit" name="submit" value="Create Customer" />
             </form>

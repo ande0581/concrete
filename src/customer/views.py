@@ -38,7 +38,7 @@ def customer_model_list_view(request):
     return render(request, 'customer/customer_index.html', context)
 
 
-def customer_model_detail_view(request, pk):
+def customer_model_detail_view(request, pk=None):
     obj = get_object_or_404(Customer, pk=pk)
     context = {
         "object": obj,
@@ -47,20 +47,13 @@ def customer_model_detail_view(request, pk):
 
 
 @login_required()
-def customer_model_add_view(request):
-    form = CustomerForm()
-
-    # A HTTP POST?
-    if request.method == 'POST':
-        form = CustomerForm(request.POST)
-
-        # Have we been provided a valid form?
-        if form.is_valid():
-            # Save the new customer to the DB
-            form.save(commit=True)
-            messages.success(request, "Customer was created successfully!")
-            return redirect('customer_app:customer_model_list_view')
-        else:
-            print(form.errors)
-    return render(request, 'customer/add_customer.html', {'form': form})
+def customer_model_create_view(request):
+    form = CustomerForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        # make modifications here
+        form.save()
+        messages.success(request, "Customer was created successfully!")
+        return redirect('customer_app:detail', pk=obj.pk)
+    return render(request, 'customer/customer_create.html', {'form': form})
 
