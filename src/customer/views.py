@@ -35,15 +35,7 @@ def customer_model_list_view(request):
         queryset = paginator.page(paginator.num_pages)
 
     context = {'object_list': queryset}
-    return render(request, 'customer/customer_index.html', context)
-
-
-def customer_model_detail_view(request, pk=None):
-    obj = get_object_or_404(Customer, pk=pk)
-    context = {
-        "object": obj,
-    }
-    return render(request, 'customer/customer_detail.html', context)
+    return render(request, 'customer/customer_list.html', context)
 
 
 @login_required()
@@ -56,4 +48,26 @@ def customer_model_create_view(request):
         messages.success(request, "Customer was created successfully!")
         return redirect('customer_app:detail', pk=obj.pk)
     return render(request, 'customer/customer_create.html', {'form': form})
+
+
+@login_required()
+def customer_model_update_view(request, pk=None):
+    obj = get_object_or_404(Customer, pk=pk)
+    form = CustomerForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        # make modifications here
+        form.save()
+        messages.success(request, "Customer was updated successfully!")
+        return redirect('customer_app:detail', pk=obj.pk)
+    return render(request, 'customer/customer_create.html', {'form': form})
+
+
+@login_required()
+def customer_model_detail_view(request, pk=None):
+    obj = get_object_or_404(Customer, pk=pk)
+    context = {
+        "object": obj,
+    }
+    return render(request, 'customer/customer_detail.html', context)
 
