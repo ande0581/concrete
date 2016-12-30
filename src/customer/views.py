@@ -9,7 +9,7 @@ from customer.forms import CustomerForm
 
 
 @login_required()
-def index(request):
+def customer_model_list_view(request):
     queryset_list = Customer.objects.order_by('name')
 
     query = request.GET.get("q")
@@ -47,7 +47,7 @@ def customer_model_detail_view(request, pk):
 
 
 @login_required()
-def add_customer(request):
+def customer_model_add_view(request):
     form = CustomerForm()
 
     # A HTTP POST?
@@ -59,7 +59,7 @@ def add_customer(request):
             # Save the new customer to the DB
             form.save(commit=True)
             messages.success(request, "Customer was created successfully!")
-            return redirect('customer_app:index')
+            return redirect('customer_app:customer_model_list_view')
         else:
             print(form.errors)
     return render(request, 'customer/add_customer.html', {'form': form})

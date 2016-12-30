@@ -15,7 +15,7 @@
 </form>
 
 <h4 class="entries">
-  <h4><strong>Customers </strong><a href="{% url 'customer_app:add_customer' %}" class="btn btn-sm btn-success" role="button">Add</a></h4>
+  <h4><strong>Customers </strong><a href="{% url 'customer_app:add' %}" class="btn btn-sm btn-success" role="button">Add</a></h4>
   <div class="datagrid">
     <table>
       <thead>
@@ -28,7 +28,7 @@
       </thead>
       {% for customer in object_list %}
           <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
-              <td><a href="">{{ customer.name }}</a></td>
+              <td><a href="{% url 'customer_app:detail' pk=customer.id %}">{{ customer.name }}</a></td>
               <td>{{ customer.email }}</td>
               <td>{{ customer.telephone }}</td>
               <td>{{ customer.created_date|date}}</td>
