@@ -71,3 +71,17 @@ def customer_model_detail_view(request, pk=None):
     }
     return render(request, 'customer/customer_detail.html', context)
 
+
+@login_required()
+def customer_model_delete_view(request, pk=None):
+    obj = get_object_or_404(Customer, pk=pk)
+    if request.method == "POST":
+        obj.delete()
+        messages.success(request, "Customer was deleted successfully!")
+        return redirect('customer_app:list')
+    context = {
+        "object": obj,
+    }
+    return render(request, 'customer/customer_delete.html', context)
+
+
