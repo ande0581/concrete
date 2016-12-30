@@ -1,0 +1,13 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<h4>This is the customer detail page</h4>
+
+{% if object %}
+Name: {{ object.name }}<br>
+Email: {{ object.email }}<br>
+Telephone: {{ object.telephone }}<br>
+{% endif %}
+
+{% endblock content %}

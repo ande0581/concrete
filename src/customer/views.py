@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from customer.models import Customer
 from customer.forms import CustomerForm
@@ -34,8 +34,16 @@ def index(request):
         # If page is out of range, deliver last page of results.
         queryset = paginator.page(paginator.num_pages)
 
-    context_dict = {'object_list': queryset}
-    return render(request, 'customer/customer_index.html', context_dict)
+    context = {'object_list': queryset}
+    return render(request, 'customer/customer_index.html', context)
+
+
+def customer_model_detail_view(request, pk):
+    obj = get_object_or_404(Customer, pk=pk)
+    context = {
+        "object": obj,
+    }
+    return render(request, 'customer/customer_detail.html', context)
 
 
 @login_required()
@@ -51,7 +59,7 @@ def add_customer(request):
             # Save the new customer to the DB
             form.save(commit=True)
             messages.success(request, "Customer was created successfully!")
-            return redirect('customer:index')
+            return redirect('customer_app:index')
         else:
             print(form.errors)
     return render(request, 'customer/add_customer.html', {'form': form})
