@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 """
 class Address(db.Model):
@@ -39,3 +40,6 @@ class Address(models.Model):
 
     def __str__(self):
         return self.street
+
+    def get_absolute_url(self):
+        return reverse('address_app:address_detail', kwargs={'pk': self.pk})

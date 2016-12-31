@@ -4,9 +4,34 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+
 from address.models import Address
 from customer.models import Customer
 from address.forms import AddressForm
+
+
+class AddressDetail(DetailView):
+    model = Address
+
+    # this is optional
+    def get_context_data(self, **kwargs):
+        context = super(AddressDetail, self).get_context_data(**kwargs)
+        print(context)
+        return context
+
+
+class AddressList(ListView):
+    model = Address
+
+    # this is optional
+    def get_queryset(self, *args, **kwargs):
+        qs = super(AddressList, self).get_queryset(*args, **kwargs).order_by('-street')
+        #qs = super(AddressList, self).get_queryset(*args, **kwargs).filter(title__startswith='670')
+        print(qs)
+        print(qs.first())
+        return qs
 
 
 def index(request):
