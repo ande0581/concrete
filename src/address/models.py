@@ -30,8 +30,8 @@ class Address(models.Model):
 
     street = models.CharField(max_length=128)
     city = models.CharField(max_length=50)
-    state = models.CharField(max_length=25)
-    zip = models.CharField(max_length=10)
+    state = models.CharField(max_length=2)
+    zip = models.CharField(max_length=5)
     customer_id = models.ForeignKey('customer.Customer', on_delete=models.CASCADE)
     # address_bids
 

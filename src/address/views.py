@@ -4,6 +4,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 
+from django.core.urlresolvers import reverse
+
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -32,12 +34,31 @@ from address.forms import AddressForm
 #         return super(ExampleCreate, self).form_valid(form)
 
 
+# class ExampleUpdate(UpdateView):
+#     model = Example
+#
+#     # you use fields or form_class but not both
+#     #fields = ['street', 'city', 'state', 'zip']
+#
+#     form_class = ExampleForm
+#
+#     # template name is option
+#     template_name = 'form.html'
+
+
+# class ExampleDelete(DeleteView):
+#     model = Example
+#
+#     def get_success_url(self):
+#         return reverse('address_app:address_list')
+
+
 # class ExampleDetail(DetailView):
 #     model = Example
 #
 #     # this is optional to see the context
 #     def get_context_data(self, **kwargs):
-#         context = super(AddressDetail, self).get_context_data(**kwargs)
+#         context = super(ExampleDetail, self).get_context_data(**kwargs)
 #         print(context)
 #         return context
 
@@ -47,8 +68,8 @@ from address.forms import AddressForm
 #
 #     # this is optional way to change the queryset
 #     def get_queryset(self, *args, **kwargs):
-#         qs = super(AddressList, self).get_queryset(*args, **kwargs).order_by('-street')
-#         #qs = super(AddressList, self).get_queryset(*args, **kwargs).filter(title__startswith='670')
+#         qs = super(ExampleList, self).get_queryset(*args, **kwargs).order_by('-street')
+#         #qs = super(ExampleList, self).get_queryset(*args, **kwargs).filter(title__startswith='670')
 #         print(qs)
 #         print(qs.first())
 #         return qs
@@ -61,6 +82,19 @@ class AddressCreate(CreateView):
     def form_valid(self, form):
         form.instance.customer_id = Customer.objects.get(pk=self.kwargs['customer_id'])
         return super(AddressCreate, self).form_valid(form)
+
+
+class AddressUpdate(UpdateView):
+    model = Address
+    form_class = AddressForm
+    template_name = 'form.html'
+
+
+class AddressDelete(DeleteView):
+    model = Address
+
+    def get_success_url(self):
+        return reverse('address_app:address_list')
 
 
 class AddressDetail(DetailView):
