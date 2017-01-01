@@ -28,7 +28,7 @@ class CustomerDelete(DeleteView):
 
     def get_success_url(self):
         messages.success(self.request, "Successfully Deleted")
-        return reverse('customer:customer_list')
+        return reverse('customer_app:customer_list')
 
 
 class CustomerDetail(DetailView):

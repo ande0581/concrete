@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+<strong>Customer Details:</strong><br>
 
 {% if object %}
-Name: {{ object.name }}<br>
-Email: {{ object.email }}<br>
-Telephone: {{ object.telephone }}<br>
+{{ object.name }}<br>
+{{ object.telephone }}<br>
+{{ object.email }}<br>
+<em>Created: {{ object.created_date }} (customer_id = {{ object.pk }})</em><br><br>
+
+<a href="{% url 'customer_app:customer_update' pk=object.pk %}" class="btn btn-sm btn-info"
+   role="button">Edit</a>
+<a href="{% url 'customer_app:customer_delete' pk=object.pk %}" class="btn btn-sm btn-danger"
+   role="button">Delete</a>
+
 {% endif %}
 
 {% endblock content %}
