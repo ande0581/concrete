@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 """
 class Customer(db.Model):
@@ -33,3 +34,6 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('customer_app:customer_detail', kwargs={'pk': self.pk})
