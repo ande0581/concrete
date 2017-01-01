@@ -11,20 +11,6 @@ from customer.models import Customer
 from customer.forms import CustomerForm
 
 
-# queryset_list = Customer.objects.order_by('name')
-#
-# query = request.GET.get("q")
-# if query:
-#     queryset_list = queryset_list.filter(
-#         Q(name__icontains=query) |
-#         Q(telephone__icontains=query) |
-#         Q(email__icontains=query)
-#     ).distinct()  # this prevents duplicates
-#
-# for customer in queryset_list:
-#     customer.telephone = "({}) {}-{}".format(customer.telephone[:3], customer.telephone[3:6], customer.telephone[6:])
-
-
 class CustomerCreate(SuccessMessageMixin, CreateView):
     template_name = 'customer/customer_form.html'
     form_class = CustomerForm
@@ -66,7 +52,8 @@ class CustomerList(ListView):
             ).distinct()  # this prevents duplicates
 
         for customer in queryset_list:
-            customer.telephone = "({}) {}-{}".format(customer.telephone[:3], customer.telephone[3:6],
+            if len(customer.telephone) == 10:
+                customer.telephone = "({}) {}-{}".format(customer.telephone[:3], customer.telephone[3:6],
                                                      customer.telephone[6:])
 
         return queryset_list
