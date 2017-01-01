@@ -2,16 +2,7 @@
 
 {% block content %}
 
-<form method="GET" action="" class="row">
-    <div class="col-sm-4">
-        <div class="input-group">
-            <input class='form-control' type="text" name="q" placeholder="Search Customers" value="{{ request.GET.q }}"/>
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="submit">Search <i class="fa fa-search"></i></button>
-            </span>
-        </div>
-    </div>
-</form>
+{% include 'q_search_form.html' %}
 
 
 <h4 class="entries">
