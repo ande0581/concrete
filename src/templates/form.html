@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+
+<div class="row">
+    <!--<div class="col-sm-6 col-sm-offset-3">-->
+        <h4>This is the generic form page</h4>
+
+        <form method="POST" action="">{% csrf_token %}
+        {{ form|crispy }}
+
+        <input class="btn btn-default" type="submit" value="Submit" />
+        </form>
+
+    <!--</div>-->
+</div>
+
+{% if object %}
+
+{% endif %}
+
+{% endblock content %}
