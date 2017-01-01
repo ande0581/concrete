@@ -12,7 +12,7 @@ from address.forms import AddressForm
 
 
 class AddressCreate(SuccessMessageMixin, CreateView):
-    template_name = "form.html"
+    template_name = 'address/address_form.html'
     form_class = AddressForm
     success_message = "Successfully Created: %(street)s"
 
@@ -24,7 +24,6 @@ class AddressCreate(SuccessMessageMixin, CreateView):
 class AddressUpdate(SuccessMessageMixin, UpdateView):
     model = Address
     form_class = AddressForm
-    template_name = 'form.html'
     success_message = "Successfully Updated: %(street)s"
 
 

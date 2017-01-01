@@ -1,10 +1,7 @@
 {% extends "_base.html" %}
 
 {% block content %}
-<h4>This is the address detail page</h4>
 
-{% if object %}
-
-{% endif %}
+{% include 'single_form.html' with form=form title='' btn_title="Save Address" %}
 
 {% endblock content %}
