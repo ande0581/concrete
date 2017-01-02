@@ -15,17 +15,27 @@ from bid.forms import BidInitialForm, BidForm
 class BidCreate(SuccessMessageMixin, CreateView):
     template_name = 'bid/bid_form.html'
     form_class = BidInitialForm
-    success_message = "Successfully Created: %(street)s"
+    success_message = "Successfully Created Bid"
+
+    def get_context_data(self, **kwargs):
+        context = super(BidCreate, self).get_context_data(**kwargs)
+        print('VIEW:', context['view'])
+        print('FORM:', context['form'])
+        return context
 
     def form_valid(self, form):
-        form.instance.customer_id = Customer.objects.get(pk=self.kwargs['customer_id'])
+        form.instance.address_id = Address.objects.get(pk=self.kwargs['address_id'])
+        form.instance.customer_id = form.instance.address_id.customer_id
+        print('FORM_INSTANCE ADDRESS---->', form.instance.address_id)
+        print('FORM_INSTANCE CUSTOMER---->', form.instance.address_id.customer_id)
+        print("POST FORM SAVE:", form.cleaned_data)
         return super(BidCreate, self).form_valid(form)
 
 
 class BidUpdate(SuccessMessageMixin, UpdateView):
     model = Bid
     form_class = BidForm
-    success_message = "Successfully Updated: %(street)s"
+    success_message = "Successfully Updated Bid"
 
 
 class BidDelete(DeleteView):

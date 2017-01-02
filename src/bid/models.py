@@ -75,4 +75,4 @@ class Bid(models.Model):
         return self.description
 
     def get_absolute_url(self):
-        return reverse('customer_app:customer_detail', kwargs={'pk': int(self.customer_id)})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.pk})

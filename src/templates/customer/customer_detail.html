@@ -52,4 +52,33 @@
 </div>
 <br>
 
+
+<div class="entries">
+  <h4><strong>Bids</strong></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="10%"><strong>Date</strong></th>
+          <th width="55%"><strong>Description</strong></th>
+          <th width="20%"><strong>Status</strong></th>
+          <th width="15%"><strong>Actions</strong></th>
+        </tr>
+      </thead>
+      {% for bid in bids %}
+      <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+          <td>{{ bid.timestamp }}</td>
+          <td>{{ bid.description }}</a></td>
+          <td>{{ bid.status }}</td>
+          <td>
+              <a href="{% url 'bid_app:bid_update' pk=object.pk %}" class="btn btn-sm btn-info">Edit</a>
+
+              <a href="{% url 'bid_app:bid_delete' pk=object.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
 {% endblock content %}

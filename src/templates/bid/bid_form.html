@@ -1,7 +1,13 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
-{% include 'single_form.html' with form=form title='' btn_title="Schedule Bid" %}
+<form method="POST" action=""> {% csrf_token %}
+    {{ form.description }}
+    <br>
+    <input type="text" name="scheduled_bid_date" id="scheduled_bid_date" value="">
+    <button class="btn btn-sm btn-success" type="submit">Save</button>
+</form>
 
-{% endblock content %}
+{% endblock %}

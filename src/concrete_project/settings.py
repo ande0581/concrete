@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
     # 3rd Party Apps
     'crispy_forms',
+    'bootstrapform',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
