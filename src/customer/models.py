@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import pre_save
 from django.core.urlresolvers import reverse
 
 """
@@ -28,9 +29,12 @@ class Customer(db.Model):
 
 class Customer(models.Model):
     name = models.CharField(max_length=128)
-    email = models.EmailField(null=False)
-    telephone = models.CharField(max_length=10)
+    email = models.EmailField(blank=True)
+    telephone = models.CharField(blank=True, max_length=10)
     created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Customers'
 
     def __str__(self):
         return self.name
@@ -42,3 +46,10 @@ class Customer(models.Model):
 
     def get_absolute_url(self):
         return reverse('customer_app:customer_detail', kwargs={'pk': self.pk})
+
+
+def customer_model_pre_save_receiver(sender, instance, *args, **kwargs):
+    instance.name = instance.name.upper()
+    instance.email = instance.email.lower()
+
+pre_save.connect(customer_model_pre_save_receiver, sender=Customer)

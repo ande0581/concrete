@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 """
 class Bid(db.Model):
@@ -44,11 +45,17 @@ class Bid(db.Model):
         return '<{}>'.format(self.description)
 """
 
+BID_STATUS = [
+    ('Job Started', 'Job Started'),
+    ('Needs Bid', 'Needs Bid'),
+    ('Job Accepted', 'Job Accepted')
+    ]
+
 
 class Bid(models.Model):
     description = models.CharField(max_length=2000)
-    notes = models.CharField(max_length=2000)
-    timestamp = models.DateTimeField()
+    notes = models.CharField(max_length=2000, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     customer_id = models.ForeignKey('customer.Customer', on_delete=models.CASCADE)
     address_id = models.ForeignKey('address.Address')
     scheduled_bid_date = models.DateTimeField(null=True)
@@ -59,7 +66,13 @@ class Bid(models.Model):
     down_payment_date = models.DateField(null=True)
     final_payment_amount = models.FloatField(default=0)
     final_payment_date = models.DateField(null=True)
-    status = models.CharField(max_length=2000)
+    status = models.CharField(max_length=2000, choices=BID_STATUS, default='Needs Bid')
+
+    class Meta:
+        verbose_name_plural = 'Bids'
 
     def __str__(self):
         return self.description
+
+    def get_absolute_url(self):
+        return reverse('customer_app:customer_detail', kwargs={'pk': int(self.customer_id)})

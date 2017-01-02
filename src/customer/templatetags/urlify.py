@@ -6,8 +6,6 @@ register = template.Library()
 
 @register.filter
 def urlify(value):
-    print('value before:', value)
     value = quote_plus(value)
-    print('value after:', value)
     return value
 

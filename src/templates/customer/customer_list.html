@@ -33,11 +33,11 @@
 <nav aria-label="...">
   <ul class="pager">
     {% if page_obj.has_previous %}
-      <li><a href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      <li><a href="?page={{ page_obj.previous_page_number }}"><strong>Previous</strong></a></li>
     {% endif %}
 
     {% if page_obj.has_next %}
-      <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      <li><a href="?page={{ page_obj.next_page_number }}"><strong>Next</strong></a></li>
     {% endif %}
   </ul>
 </nav>

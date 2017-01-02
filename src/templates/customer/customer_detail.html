@@ -39,10 +39,9 @@
             <td>{{ address.state}}</td>
             <td>{{ address.zip}}</td>
             <td>
-                <a href="" class="btn btn-sm btn-primary">Schedule Bid</a>
+                <a href="{% url 'bid_app:bid_create' address_id=object.pk %}" class="btn btn-sm btn-primary">Schedule Bid</a>
 
-                <a id="myAnchor" href="{% url 'address_app:address_update' pk=address.pk %}"
-                              class="btn btn-sm btn-info">Edit</a>
+                <a href="{% url 'address_app:address_update' pk=address.pk %}" class="btn btn-sm btn-info">Edit</a>
 
                 <a href="{% url 'address_app:address_delete' pk=address.pk %}" class="btn btn-sm btn-danger">Delete</a>
             </td>
