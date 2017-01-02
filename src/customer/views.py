@@ -57,10 +57,5 @@ class CustomerList(ListView):
                 Q(email__icontains=query)
             ).distinct()  # this prevents duplicates
 
-        for customer in queryset_list:
-            if len(customer.telephone) == 10:
-                customer.telephone = "({}) {}-{}".format(customer.telephone[:3], customer.telephone[3:6],
-                                                         customer.telephone[6:])
-
         return queryset_list
 

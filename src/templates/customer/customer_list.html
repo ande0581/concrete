@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load format_telephone %}
 
 {% block content %}
 
@@ -21,7 +22,7 @@
           <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
               <td><a href="{{ customer.get_absolute_url }}">{{ customer.name }}</a></td>
               <td>{{ customer.email }}</td>
-              <td>{{ customer.telephone }}</td>
+              <td>{{ customer.telephone|format_telephone }}</td>
               <td>{{ customer.created_date|date}}</td>
           </tr>
       {% endfor %}
