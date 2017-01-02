@@ -37,6 +37,7 @@ class Customer(models.Model):
 
     def __int__(self):
         # this is required to create an address for the redirect on successful ??
+        # TODO figure out why this is required
         return self.pk
 
     def get_absolute_url(self):

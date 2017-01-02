@@ -31,6 +31,7 @@ class AddressDelete(DeleteView):
     model = Address
 
     def get_object(self, queryset=None):
+        # https://ultimatedjango.com/learn-django/lessons/delete-contact-full-lesson/
         # Collect the object before deletion to redirect back to customer detail view on success
         obj = super(AddressDelete, self).get_object()
         self.customer_pk = Customer.objects.get(id=obj.customer_id)
