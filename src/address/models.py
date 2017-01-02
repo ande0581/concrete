@@ -42,4 +42,4 @@ class Address(models.Model):
         return self.street
 
     def get_absolute_url(self):
-        return reverse('address_app:address_detail', kwargs={'pk': self.pk})
+        return reverse('customer_app:customer_detail', kwargs={'pk': int(self.customer_id)})

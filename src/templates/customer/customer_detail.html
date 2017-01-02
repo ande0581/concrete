@@ -3,7 +3,6 @@
 {% block content %}
 <strong>Customer Details:</strong><br>
 
-{% if object %}
 {{ object.name }}<br>
 {{ object.telephone }}<br>
 {{ object.email }}<br>
@@ -14,6 +13,41 @@
 <a href="{% url 'customer_app:customer_delete' pk=object.pk %}" class="btn btn-sm btn-danger"
    role="button">Delete</a>
 
-{% endif %}
+
+<div class="entries">
+  <h4><strong>Addresses </strong><a href="{% url 'address_app:address_create' customer_id=object.pk %}"
+                                    class="btn btn-sm btn-success" role="button">Add</a></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="40%"><strong>Street</strong></th>
+          <th width="20%"><strong>City</strong></th>
+          <th width="5%"><strong>State</strong></th>
+          <th width="7%"><strong>ZIP</strong></th>
+          <th width="28%"><strong>Actions</strong></th>
+        </tr>
+      </thead>
+      {% for address in addresses %}
+        <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+            <td>
+                <a href="https://www.google.com/maps/place/" target="_blank">{{ address.street }}</a></td>
+            <td>{{ address.city }}</td>
+            <td>{{ address.state}}</td>
+            <td>{{ address.zip}}</td>
+            <td>
+                <a href="" class="btn btn-sm btn-primary">Schedule Bid</a>
+
+                <a id="myAnchor" href="{% url 'address_app:address_update' pk=address.pk %}"
+                              class="btn btn-sm btn-info">Edit</a>
+
+                <a href="{% url 'address_app:address_delete' pk=address.pk %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+<br>
 
 {% endblock content %}
