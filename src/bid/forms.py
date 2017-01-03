@@ -1,8 +1,9 @@
 from django import forms
 from bid.models import Bid
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.bootstrap import FormActions
+from crispy_forms.helper import FormHelper, Layout
+from crispy_forms.layout import Submit, Div
 
 
 class BidInitialForm(forms.ModelForm):
@@ -20,8 +21,8 @@ class BidInitialForm(forms.ModelForm):
 
 
 class BidForm(forms.ModelForm):
-    description = forms.CharField(max_length=2000, help_text="Enter the description")
-    scheduled_bid_date = forms.DateTimeField(help_text="Enter the scheduled bid date")
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 20}))
+    scheduled_bid_date = forms.DateTimeField()
 
     class Meta:
         model = Bid
@@ -33,6 +34,35 @@ class BidForm(forms.ModelForm):
     helper.form_method = 'POST'
     helper.add_input(Submit('login', 'Save Bid', css_class='btn=primary'))
 
+    helper = FormHelper()
+    helper.layout = Layout(
+            Div(
+                Div('description', css_class='col-xs-12'),
+                css_class='row-fluid'),
+            Div(
+                Div('notes', css_class='col-xs-12'),
+                css_class='row-fluid'),
+            Div(
+                Div('status', css_class='col-xs-12'),
+                css_class='row-fluid'),
+            Div(
+                Div('scheduled_bid_date', css_class='col-xs-6'),
+                Div('tentative_start', css_class='col-xs-6'),
+                css_class='row-fluid'),
+            Div(
+                Div('actual_start', css_class='col-xs-6'),
+                Div('completion_date', css_class='col-xs-6'),
+                css_class='row-fluid'),
+            Div(
+                Div('down_payment_amount', css_class='col-xs-6'),
+                Div('down_payment_date', css_class='col-xs-6'),
+                css_class='row-fluid'),
+            Div(
+                Div('final_payment_amount', css_class='col-xs-6'),
+                Div('final_payment_date', css_class='col-xs-6'),
+                css_class='row-fluid'),
+            FormActions(Submit('Save Bid', 'Save Bid', css_class='btn-primary'))
+            )
 
 
 """
