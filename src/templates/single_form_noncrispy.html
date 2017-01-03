@@ -13,3 +13,16 @@
         </form>
     </div>
 </div>
+
+
+<div class="row"> 
+    <h4>Schedule Bid</h4> 
+    <div class="col-sm-6 col-sm-offset-3"> 
+        <form method="POST" action=""> {% csrf_token %}  
+            {{ form.description }} 
+            <br>         Scheduled Bid Date: 
+            <input type="text" name="scheduled_bid_date" id="scheduled_bid_date" value=""> 
+            <br>         <button class="btn btn-sm btn-success" type="submit">Save</button> 
+        </form> 
+    </div> 
+    </div>
