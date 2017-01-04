@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load format_telephone %}
+
+{% block content %}
+
+<div class="entries">
+  <h4><strong>Jobs that Need a Bid</strong></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="15%"><strong>Customer</strong></th>
+          <th width="35%"><strong>Description</strong></th>
+          <th width="12%"><strong>Scheduled Date</strong></th>
+          <th width="25%"><strong>Address</strong></th>
+          <th width="13%"><strong>Telephone</strong></th>
+        </tr>
+      </thead>
+
+    {% for bid in object_list %}
+        {% if bid.status == 'Needs Bid' %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td><a href="{% url 'customer_app:customer_detail' pk=bid.customer_id.id %}">{{ bid.customer_id }}</a></td>
+              <td><a href="{% url 'bid_app:bid_update' pk=bid.pk %}">{{ bid.description }}</a></td>
+              <td>{{ bid.tentative_start }}</td>
+              <td><a href="https://www.google.com/maps/place/{{ bid.address_id.street|urlify|add:'+'|add:bid.address_id.zip }}"
+                     target="_blank">{{ bid.address_id }}</a></td>
+              <td>{{ bid.customer_id.telephone|format_telephone }}</td>
+        {% endif %}
+    {% endfor %}
+
+    </table>
+  </div>
+</div>
+<br>
+
+<div class="entries">
+  <h4><strong>Jobs In Progress</strong></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="15%"><strong>Customer</strong></th>
+          <th width="35%"><strong>Description</strong></th>
+          <th width="12%"><strong>Started Date</strong></th>
+          <th width="25%"><strong>Address</strong></th>
+          <th width="13%"><strong>Telephone</strong></th>
+        </tr>
+      </thead>
+
+    {% for bid in object_list %}
+        {% if bid.status == 'Job Started' %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td><a href="{% url 'customer_app:customer_detail' pk=bid.customer_id.id %}">{{ bid.customer_id }}</a></td>
+              <td><a href="{% url 'bid_app:bid_update' pk=bid.pk %}">{{ bid.description }}</a></td>
+              <td>{{ bid.actual_start }}</td>
+              <td><a href="https://www.google.com/maps/place/{{ bid.address_id.street|urlify|add:'+'|add:bid.address_id.zip }}"
+                     target="_blank">{{ bid.address_id }}</a></td>
+              <td>{{ bid.customer_id.telephone|format_telephone }}</td>
+        {% endif %}
+    {% endfor %}
+
+    </table>
+  </div>
+</div>
+
+
+<div class="entries">
+  <h4><strong>Jobs In Queue</strong></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="15%"><strong>Customer</strong></th>
+          <th width="35%"><strong>Description</strong></th>
+          <th width="12%"><strong>Tentative Date</strong></th>
+          <th width="25%"><strong>Address</strong></th>
+          <th width="13%"><strong>Telephone</strong></th>
+        </tr>
+      </thead>
+
+    {% for bid in object_list %}
+        {% if bid.status == 'Job Accepted' %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td><a href="{% url 'customer_app:customer_detail' pk=bid.customer_id.id %}">{{ bid.customer_id }}</a></td>
+              <td><a href="{% url 'bid_app:bid_update' pk=bid.pk %}">{{ bid.description }}</a></td>
+              <td>{{ bid.tentative_start }}</td>
+              <td><a href="https://www.google.com/maps/place/{{ bid.address_id.street|urlify|add:'+'|add:bid.address_id.zip }}"
+                     target="_blank">{{ bid.address_id }}</a></td>
+              <td>{{ bid.customer_id.telephone|format_telephone }}</td>
+        {% endif %}
+    {% endfor %}
+
+    </table>
+  </div>
+</div>
+
+
+<div class="entries">
+  <h4><strong>Jobs Awaiting Customer Acceptance</strong></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="15%"><strong>Customer</strong></th>
+          <th width="35%"><strong>Description</strong></th>
+          <th width="12%"><strong>Tentative Date</strong></th>
+          <th width="25%"><strong>Address</strong></th>
+          <th width="13%"><strong>Telephone</strong></th>
+        </tr>
+      </thead>
+
+    {% for bid in object_list %}
+        {% if bid.status == 'Awaiting Customer Acceptance' %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td><a href="{% url 'customer_app:customer_detail' pk=bid.customer_id.id %}">{{ bid.customer_id }}</a></td>
+              <td><a href="{% url 'bid_app:bid_update' pk=bid.pk %}">{{ bid.description }}</a></td>
+              <td>{{ bid.scheduled_bid_date }}</td>
+              <td><a href="https://www.google.com/maps/place/{{ bid.address_id.street|urlify|add:'+'|add:bid.address_id.zip }}"
+                     target="_blank">{{ bid.address_id }}</a></td>
+              <td>{{ bid.customer_id.telephone|format_telephone }}</td>
+        {% endif %}
+    {% endfor %}
+
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

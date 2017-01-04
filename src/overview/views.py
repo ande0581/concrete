@@ -1,8 +1,14 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.views.generic.list import ListView
+
+from bid.models import Bid
 
 
-def index(request):
-    context_dict = {'boldmessage': 'Crunch, creamy, cookie, candy, cupcake'}
-    return render(request, 'overview/overview_index.html', context=context_dict)
+class OverviewList(ListView):
+    model = Bid
+    template_name = 'overview/overview_list.html'
+    # TODO look at returning query in specified date order
 
+    # def get_queryset(self):
+    #     queryset_list = Customer.objects.order_by('name')
+    #
+    #     return queryset_list

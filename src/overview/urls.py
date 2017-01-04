@@ -1,7 +1,8 @@
 from django.conf.urls import url
-from overview import views
+from overview.views import OverviewList
 
-app_name = 'overview'
+
+app_name = 'overview_app'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', OverviewList.as_view(), name='overview_list'),
 ]

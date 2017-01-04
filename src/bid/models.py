@@ -46,9 +46,9 @@ class Bid(db.Model):
 """
 
 BID_STATUS = [
-    ('Job Started', 'Job Started'),
-    ('Needs Bid', 'Needs Bid'),
-    ('Job Accepted', 'Job Accepted')
+    ('Needs Bid', 'Needs Bid'), ('Awaiting Customer Acceptance', 'Awaiting Customer Acceptance'),
+    ('Job Accepted', 'Job Accepted'), ('Job Started', 'Job Started'), ('Job Completed', 'Job Completed'),
+    ('Job Declined', 'Job Declined')
     ]
 
 
