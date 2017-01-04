@@ -18,10 +18,9 @@ from django.conf.urls.static import static
 from django.conf.urls import url
 from django.contrib import admin
 from django.conf.urls import include
-from overview import views
 
 urlpatterns = [
-    #url(r'^$', views., name='OverviewList'),
+    url(r'^', include('overview.urls')),
     url(r'^accounts/', include('accounts.urls')),
     url(r'^address/', include('address.urls')),
     url(r'^bid/', include('bid.urls')),
