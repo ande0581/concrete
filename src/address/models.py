@@ -42,7 +42,7 @@ class Address(models.Model):
         return '{0}, {1}, {2}, {3}'.format(self.street, self.city, self.state, self.zip)
 
     def get_absolute_url(self):
-        return reverse('customer_app:customer_detail', kwargs={'pk': int(self.customer_id)})
+        return reverse('customer_app:customer_detail', kwargs={'pk': self.customer_id.id})
 
 
 def address_model_pre_save_receiver(sender, instance, *args, **kwargs):
