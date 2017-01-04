@@ -23,7 +23,7 @@
           <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
               <td><a href="{% url 'customer_app:customer_detail' pk=bid.customer_id.id %}">{{ bid.customer_id }}</a></td>
               <td><a href="{% url 'bid_app:bid_update' pk=bid.pk %}">{{ bid.description }}</a></td>
-              <td>{{ bid.tentative_start|date:"D d M Y" }}</td>
+              <td>{{ bid.scheduled_bid_date }}</td>
               <td><a href="https://www.google.com/maps/place/{{ bid.address_id.street|urlify|add:'+'|add:bid.address_id.zip }}"
                      target="_blank">{{ bid.address_id }}</a></td>
               <td>{{ bid.customer_id.telephone|format_telephone }}</td>

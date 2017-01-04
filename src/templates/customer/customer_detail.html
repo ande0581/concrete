@@ -5,7 +5,8 @@
 {% block content %}
 <strong>Customer Details:</strong><br>
 
-{{ object.name }}<br>
+{% if customer.company_name %}{{ customer.company_name }}<br>{% endif %}
+{{ object.first_name }} {{ object.last_name }}<br>
 {{ object.telephone|format_telephone }}<br>
 {{ object.email }}<br>
 <em>Created: {{ object.created_date }} (customer_id = {{ object.pk }})</em><br><br>
@@ -39,7 +40,7 @@
             <td>{{ address.state}}</td>
             <td>{{ address.zip}}</td>
             <td>
-                <a href="{% url 'bid_app:bid_create' address_id=object.pk %}" class="btn btn-sm btn-primary">Schedule Bid</a>
+                <a href="{% url 'bid_app:bid_create' address_id=address.pk %}" class="btn btn-sm btn-primary">Schedule Bid</a>
 
                 <a href="{% url 'address_app:address_update' pk=address.pk %}" class="btn btn-sm btn-info">Edit</a>
 

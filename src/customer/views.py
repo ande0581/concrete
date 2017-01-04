@@ -16,13 +16,13 @@ from customer.forms import CustomerForm
 class CustomerCreate(SuccessMessageMixin, CreateView):
     template_name = 'customer/customer_form.html'
     form_class = CustomerForm
-    success_message = "Successfully Created: %(name)s"
+    success_message = "Successfully Created: %(first_name)s %(last_name)s"
 
 
 class CustomerUpdate(SuccessMessageMixin, UpdateView):
     model = Customer
     form_class = CustomerForm
-    success_message = "Successfully Updated: %(name)s"
+    success_message = "Successfully Updated: %(first_name)s %(last_name)s"
 
 
 class CustomerDelete(DeleteView):
@@ -49,12 +49,14 @@ class CustomerList(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset_list = Customer.objects.order_by('name')
+        queryset_list = Customer.objects.order_by('last_name')
         query = self.request.GET.get('q')
 
         if query:
             queryset_list = queryset_list.filter(
-                Q(name__icontains=query) |
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(company_name__icontains=query) |
                 Q(telephone__icontains=query) |
                 Q(email__icontains=query)
             ).distinct()  # this prevents duplicates
