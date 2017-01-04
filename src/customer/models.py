@@ -28,6 +28,7 @@ class Customer(db.Model):
 
 
 class Customer(models.Model):
+    # TODO Change name to first, last and add company
     name = models.CharField(max_length=128)
     email = models.EmailField(blank=True)
     telephone = models.CharField(blank=True, max_length=10)

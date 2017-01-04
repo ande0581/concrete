@@ -5,6 +5,31 @@ from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, Div
 
+CEMENT = [
+    ('2.15|Common Gray', 'Common Gray'),
+    ('3.5|Colored', 'Colored'),
+    ('2.75|Exposed', 'Exposed')
+    ]
+
+REBAR = [
+    (.67, 'Rebar 3/8 non-coated'),
+    (.75, 'Rebar 1/2 non-coated'),
+    (.77, 'Rebar 3/8 coated'),
+    (.84, 'Rebar 1/2 coated'),
+]
+
+
+class DrivewayForm(forms.Form):
+    length = forms.IntegerField(label='Length in Feet', required=False)
+    width = forms.IntegerField(label='Width in Feet', required=False)
+    thickness = forms.IntegerField(label='Thickness in Inches', required=False)
+    cement_type = forms.CharField(widget=forms.Select(choices=CEMENT))
+    rebar_type = forms.CharField(widget=forms.Select(choices=REBAR))
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Bid Driveway', css_class='btn=primary'))
+
 
 class BidInitialForm(forms.ModelForm):
     description = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows': 3, 'cols': 20}))
