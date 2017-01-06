@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="entries">
+  <h4><strong>Categories </strong><a href="{% url 'category_app:category_create' %}"
+                                    class="btn btn-sm btn-success" role="button">Add</a></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="200px"><strong>Category</strong></th>
+          <th width="50px"><strong>Edit</strong></th>
+          <th width="50px"><strong>Delete</strong></th>
+        </tr>
+      </thead>
+      {% for category in object_list %}
+        <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+            <td>{{ category.category }}</td>
+            <td><a href="{% url 'category_app:category_update' pk=category.pk %}">Edit</a></td>
+            <td><a href="{% url 'category_app:category_delete' pk=category.pk %}">Delete</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,7 +1,10 @@
 from django.conf.urls import url
-from service import views
+from service.views import ServiceList, ServiceCreate, ServiceUpdate, ServiceDelete
 
-app_name = 'service'
+app_name = 'service_app'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', ServiceList.as_view(), name='service_list'),
+    url(r'^(?P<pk>\d+)/update/$', ServiceUpdate.as_view(), name='service_update'),
+    url(r'^create/$', ServiceCreate.as_view(), name='service_create'),
+    url(r'^(?P<pk>\d+)/delete/$', ServiceDelete.as_view(), name='service_delete'),
 ]

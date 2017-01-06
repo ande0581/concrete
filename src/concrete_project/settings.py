@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'address',
     'bid',
     'calculator',
+    'category',
     'customer',
     'item',
     'journal',

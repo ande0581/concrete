@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^address/', include('address.urls')),
     url(r'^bid/', include('bid.urls')),
     url(r'^calculator/', include('calculator.urls')),
+    url(r'^category/', include('category.urls')),
     url(r'^customer/', include('customer.urls')),
     url(r'^item/', include('item.urls')),
     url(r'^journal/', include('journal.urls')),

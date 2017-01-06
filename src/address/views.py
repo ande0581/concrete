@@ -42,10 +42,6 @@ class AddressDelete(DeleteView):
         return reverse('customer_app:customer_detail', kwargs={'pk': self.customer_pk})
 
 
-class AddressDetail(DetailView):
-    model = Address
-
-
 class AddressList(ListView):
     model = Address
 
