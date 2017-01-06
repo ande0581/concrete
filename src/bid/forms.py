@@ -11,9 +11,9 @@ class DrivewayForm(forms.Form):
     length = forms.IntegerField(label='Length in Feet', required=False)
     width = forms.IntegerField(label='Width in Feet', required=False)
     thickness = forms.IntegerField(label='Thickness in Inches', required=False)
-    cement_type = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__exact='Cement'))
-    rebar_type = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__exact='Rebar'))
-    fill = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__exact='Fill'))
+    cement_type = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__name__exact='Cement'))
+    rebar_type = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__name__exact='Rebar'))
+    fill = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__name__exact='Fill'))
 
     helper = FormHelper()
     helper.form_method = 'POST'

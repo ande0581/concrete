@@ -50,7 +50,7 @@ class DrivewayCreate(SuccessMessageMixin, FormView):
     def form_valid(self, form):
         #print('%%%%%%%', form.__dict__)
         #print("POST FORM SAVE:", form.cleaned_data)
-        cement_cost, cement_type = form.cleaned_data['cement_type'].split('|')
+        #cement_cost, cement_type = form.cleaned_data['cement_type'].split('|')
         #print('CEMENT COST:', cement_cost)
         #print('CEMENT TYPE:', cement_type)
         return super(DrivewayCreate, self).form_valid(form)

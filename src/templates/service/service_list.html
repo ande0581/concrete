@@ -18,7 +18,7 @@
       </thead>
       {% for service in object_list %}
         <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
-            <td>{{ service.category }}</td>
+            <td>{{ service.category.name }}</td>
             <td>{{ service.description }}</td>
             <td>{{ service.cost }}</td>
             <td><a href="{% url 'service_app:service_update' pk=service.pk %}">Edit</a></td>

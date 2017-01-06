@@ -22,7 +22,7 @@ class Service(db.Model):
 class Service(models.Model):
     description = models.CharField(max_length=200)
     cost = models.FloatField()
-    category = models.CharField(max_length=20)
+    category = models.ForeignKey('category.Category', on_delete=models.CASCADE, null=True)
     # TODO look at making this a foreign key relationship
 
     def __str__(self):

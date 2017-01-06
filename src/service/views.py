@@ -25,12 +25,12 @@ class ServiceUpdate(SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ServiceUpdate, self).get_context_data(**kwargs)
-        print('VIEW:', context['view'])
-        print('FORM:', context['form'])
+        #print('VIEW:', context['view'])
+        #print('FORM:', context['form'])
         return context
 
     def form_valid(self, form):
-        #print('%%%%%%%', form.__dict__)
+        #print('%%%%%%%', self.__dict__)
         print("POST FORM SAVE:", form.cleaned_data)
         #cement_cost, cement_type = form.cleaned_data['cement_type'].split('|')
         #print('CEMENT COST:', cement_cost)
