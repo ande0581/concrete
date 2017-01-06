@@ -18,18 +18,12 @@ class Service(db.Model):
         return '<{}>'.format(self.description)
 """
 
-CATEGORIES = [
-    ('concrete', 'concrete'),
-    ('rebar', 'rebar'),
-    ('stamp', 'stamp')
-]
-
 
 class Service(models.Model):
     description = models.CharField(max_length=200)
     cost = models.FloatField()
-    category = models.CharField(max_length=2000, choices=CATEGORIES, default='No Category')
-    protected = models.BooleanField(default=False)
+    category = models.CharField(max_length=20)
+    # TODO look at making this a foreign key relationship
 
     def __str__(self):
         return self.description

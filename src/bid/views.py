@@ -19,16 +19,16 @@ class BidCreate(SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(BidCreate, self).get_context_data(**kwargs)
-        print('VIEW:', context['view'])
-        print('FORM:', context['form'])
+        #print('VIEW:', context['view'])
+        #print('FORM:', context['form'])
         return context
 
     def form_valid(self, form):
         form.instance.address_id = Address.objects.get(pk=self.kwargs['address_id'])
         form.instance.customer_id = form.instance.address_id.customer_id
-        print('FORM_INSTANCE ADDRESS---->', form.instance.address_id)
-        print('FORM_INSTANCE CUSTOMER---->', form.instance.address_id.customer_id)
-        print("POST FORM SAVE:", form.cleaned_data)
+        #print('FORM_INSTANCE ADDRESS---->', form.instance.address_id)
+        #print('FORM_INSTANCE CUSTOMER---->', form.instance.address_id.customer_id)
+        #print("POST FORM SAVE:", form.cleaned_data)
         return super(BidCreate, self).form_valid(form)
 
 
@@ -49,10 +49,10 @@ class DrivewayCreate(SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
         #print('%%%%%%%', form.__dict__)
-        print("POST FORM SAVE:", form.cleaned_data)
+        #print("POST FORM SAVE:", form.cleaned_data)
         cement_cost, cement_type = form.cleaned_data['cement_type'].split('|')
-        print('CEMENT COST:', cement_cost)
-        print('CEMENT TYPE:', cement_type)
+        #print('CEMENT COST:', cement_cost)
+        #print('CEMENT TYPE:', cement_type)
         return super(DrivewayCreate, self).form_valid(form)
 
 

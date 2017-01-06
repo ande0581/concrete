@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 
-from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
@@ -24,6 +23,20 @@ class ServiceUpdate(SuccessMessageMixin, UpdateView):
     form_class = ServiceForm
     success_message = "Successfully Updated Service"
 
+    def get_context_data(self, **kwargs):
+        context = super(ServiceUpdate, self).get_context_data(**kwargs)
+        print('VIEW:', context['view'])
+        print('FORM:', context['form'])
+        return context
+
+    def form_valid(self, form):
+        #print('%%%%%%%', form.__dict__)
+        print("POST FORM SAVE:", form.cleaned_data)
+        #cement_cost, cement_type = form.cleaned_data['cement_type'].split('|')
+        #print('CEMENT COST:', cement_cost)
+        #print('CEMENT TYPE:', cement_type)
+        return super(ServiceUpdate, self).form_valid(form)
+
 
 class ServiceDelete(DeleteView):
     model = Service
@@ -35,5 +48,11 @@ class ServiceDelete(DeleteView):
 
 class ServiceList(ListView):
     model = Service
+    # TODO sort by category
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(ServiceList, self).get_queryset(*args, **kwargs).order_by('category')
+        return qs
+
 
 

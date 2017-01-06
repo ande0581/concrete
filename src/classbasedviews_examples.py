@@ -60,10 +60,10 @@ from address.forms import AddressForm
 # class ExampleList(ListView):
 #     model = Example
 #
-#     # this is optional way to change the queryset
-#     def get_queryset(self, *args, **kwargs):
-#         qs = super(ExampleList, self).get_queryset(*args, **kwargs).order_by('-street')
-#         #qs = super(ExampleList, self).get_queryset(*args, **kwargs).filter(title__startswith='670')
-#         print(qs)
-#         print(qs.first())
-#         return qs
+    # # this is optional way to change the queryset
+    # def get_queryset(self, *args, **kwargs):
+    #     qs = super(ExampleList, self).get_queryset(*args, **kwargs).order_by('-street')
+    #     #qs = super(ExampleList, self).get_queryset(*args, **kwargs).filter(title__startswith='670')
+    #     print(qs)
+    #     print(qs.first())
+    #     return qs
