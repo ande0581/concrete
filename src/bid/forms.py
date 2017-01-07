@@ -42,10 +42,6 @@ class BidForm(forms.ModelForm):
                   'final_payment_amount', 'final_payment_date')
 
     helper = FormHelper()
-    helper.form_method = 'POST'
-    helper.add_input(Submit('login', 'Save Bid', css_class='btn=primary'))
-
-    helper = FormHelper()
     helper.layout = Layout(
             Div(
                 Div('description', css_class='col-xs-12'),
