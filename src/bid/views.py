@@ -24,8 +24,8 @@ class BidCreate(SuccessMessageMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        form.instance.address_id = Address.objects.get(pk=self.kwargs['address_id'])
-        form.instance.customer_id = form.instance.address_id.customer_id
+        form.instance.address = Address.objects.get(pk=self.kwargs['address'])
+        form.instance.customer = form.instance.address.customer
         #print('FORM_INSTANCE ADDRESS---->', form.instance.address_id)
         #print('FORM_INSTANCE CUSTOMER---->', form.instance.address_id.customer_id)
         #print("POST FORM SAVE:", form.cleaned_data)
@@ -69,7 +69,7 @@ class BidDelete(DeleteView):
         # https://ultimatedjango.com/learn-django/lessons/delete-contact-full-lesson/
         # Collect the object before deletion to redirect back to customer detail view on success
         obj = super(BidDelete, self).get_object()
-        self.customer_pk = obj.customer_id.id
+        self.customer_pk = obj.customer.id
         return obj
 
     def get_success_url(self):

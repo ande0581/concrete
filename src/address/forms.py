@@ -3,10 +3,6 @@ from address.models import Address
 
 
 class AddressForm(forms.ModelForm):
-    street = forms.CharField(max_length=128, help_text="Enter the street address")
-    city = forms.CharField(max_length=128, help_text="Enter the city")
-    state = forms.CharField(max_length=2, help_text="Enter the 2 digit state abbreviation")
-    zip = forms.CharField(max_length=5, help_text="Enter the 5 digit zipcode")
 
     class Meta:
         model = Address

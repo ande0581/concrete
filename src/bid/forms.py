@@ -21,9 +21,7 @@ class DrivewayForm(forms.Form):
 
 
 class BidInitialForm(forms.ModelForm):
-    description = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={'rows': 3, 'cols': 20}))
-    scheduled_bid_date = forms.DateTimeField()
-    notes = forms.CharField(required=True)
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 20}))
 
     class Meta:
         model = Bid
@@ -36,7 +34,6 @@ class BidInitialForm(forms.ModelForm):
 
 class BidForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 20}))
-    scheduled_bid_date = forms.DateTimeField()
 
     class Meta:
         model = Bid

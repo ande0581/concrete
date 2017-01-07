@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 
-from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
@@ -17,7 +16,7 @@ class AddressCreate(SuccessMessageMixin, CreateView):
     success_message = "Successfully Created: %(street)s"
 
     def form_valid(self, form):
-        form.instance.customer_id = Customer.objects.get(pk=self.kwargs['customer_id'])
+        form.instance.customer = Customer.objects.get(pk=self.kwargs['customer'])
         return super(AddressCreate, self).form_valid(form)
 
 
@@ -34,7 +33,7 @@ class AddressDelete(DeleteView):
         # https://ultimatedjango.com/learn-django/lessons/delete-contact-full-lesson/
         # Collect the object before deletion to redirect back to customer detail view on success
         obj = super(AddressDelete, self).get_object()
-        self.customer_pk = obj.customer_id.id
+        self.customer_pk = obj.customer.id
         return obj
 
     def get_success_url(self):
