@@ -6,10 +6,17 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.views.generic.list import ListView
 
+from wkhtmltopdf.views import PDFTemplateView
+
 from address.models import Address
 from bid.models import Bid
 from customer.models import Customer
 from bid.forms import BidInitialForm, BidForm, DrivewayForm
+
+
+class PDFView(PDFTemplateView):
+    filename = 'my_pdf.pdf'
+    template_name = 'bid/bid_pdf.html'
 
 
 class BidCreate(SuccessMessageMixin, CreateView):

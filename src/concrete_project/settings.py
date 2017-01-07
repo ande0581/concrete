@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 
     # 3rd Party Apps
     'crispy_forms',
-    'bootstrapform',
+    'wkhtmltopdf',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
@@ -141,6 +141,10 @@ USE_TZ = True
 
 STATICFILES_DIRS = [STATIC_DIR, ]
 STATIC_URL = '/static/'
+
+# Required for WKHTMLTOPDF
+STATIC_ROOT = '/static/'
+WKHTMLTOPDF_CMD = '/usr/local/bin/wkhtmltopdf'
 
 
 MEDIA_ROOT = MEDIA_DIR
