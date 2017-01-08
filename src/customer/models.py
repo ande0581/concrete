@@ -25,9 +25,9 @@ class Customer(models.Model):
 
 
 def customer_model_pre_save_receiver(sender, instance, *args, **kwargs):
-    instance.name = instance.first_name.upper()
-    instance.name = instance.last_name.upper()
-    instance.name = instance.company_name.upper()
+    instance.first_name = instance.first_name.upper()
+    instance.last_name = instance.last_name.upper()
+    instance.company_name = instance.company_name.upper()
     instance.email = instance.email.lower()
 
 pre_save.connect(customer_model_pre_save_receiver, sender=Customer)

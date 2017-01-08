@@ -43,6 +43,13 @@ class BidUpdate(SuccessMessageMixin, UpdateView):
     form_class = BidForm
     success_message = "Successfully Updated Bid"
 
+    def get_context_data(self, **kwargs):
+        context = super(BidUpdate, self).get_context_data(**kwargs)
+        print('CONTEXT:', context)
+        print('BID:', context['bid'].address.street)
+        print('FORM:', context['form'])
+        return context
+
 
 class BidDelete(DeleteView):
     model = Bid
