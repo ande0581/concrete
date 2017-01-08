@@ -2,12 +2,6 @@
 
 {% block content %}
 
-{% if bid.customer.company_name %}{{ bid.customer.company_name }}<br>{% endif %}
-{{ bid.customer.first_name }} {{ bid.customer.last_name }}<br>
-{{ bid.address.street }}<br>
-{{ bid.address.city }}, {{ bid.address.state }} {{ bid.address.zip }}<br>
-
-
 {% include 'crispy_form.html' %}
 
 {% endblock content %}
