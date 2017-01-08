@@ -3,15 +3,14 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
 from wkhtmltopdf.views import PDFTemplateView
 
 from address.models import Address
 from bid.models import Bid
-from customer.models import Customer
-from bid.forms import BidInitialForm, BidForm, DrivewayForm
+from bid.forms import BidInitialForm, BidForm
 
 
 class PDFView(PDFTemplateView):
@@ -37,30 +36,6 @@ class BidCreate(SuccessMessageMixin, CreateView):
         #print('FORM_INSTANCE CUSTOMER---->', form.instance.address_id.customer_id)
         #print("POST FORM SAVE:", form.cleaned_data)
         return super(BidCreate, self).form_valid(form)
-
-
-class DrivewayCreate(SuccessMessageMixin, FormView):
-    template_name = 'bid/bid_form.html'
-    form_class = DrivewayForm
-    #success_message = "Successfully Created Bid"
-
-    def get_success_url(self):
-        #messages.success(self.request, "Successfully Deleted")
-        return reverse('bid_app:driveway_create')
-
-    def get_context_data(self, **kwargs):
-        context = super(DrivewayCreate, self).get_context_data(**kwargs)
-        # print('VIEW:', context['view'])
-        # print('FORM:', context['form'])
-        return context
-
-    def form_valid(self, form):
-        #print('%%%%%%%', form.__dict__)
-        #print("POST FORM SAVE:", form.cleaned_data)
-        #cement_cost, cement_type = form.cleaned_data['cement_type'].split('|')
-        #print('CEMENT COST:', cement_cost)
-        #print('CEMENT TYPE:', cement_type)
-        return super(DrivewayCreate, self).form_valid(form)
 
 
 class BidUpdate(SuccessMessageMixin, UpdateView):

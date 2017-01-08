@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'journal',
     'overview',
     'service',
+    'service_group',
 
     # 3rd Party Apps
     'crispy_forms',

@@ -31,5 +31,6 @@ urlpatterns = [
     url(r'^journal/', include('journal.urls')),
     url(r'^overview/', include('overview.urls')),
     url(r'^service/', include('service.urls')),
+    url(r'^service_group/', include('service_group.urls')),
     url(r'^admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

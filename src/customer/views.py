@@ -36,6 +36,7 @@ class CustomerDelete(DeleteView):
 class CustomerDetail(DetailView):
     model = Customer
 
+    # TODO can this be done better passing a single object
     def get_context_data(self, **kwargs):
         context = super(CustomerDetail, self).get_context_data(**kwargs)
         context['addresses'] = Address.objects.filter(customer_id=self.kwargs['pk'])
