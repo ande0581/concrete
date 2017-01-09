@@ -10,6 +10,7 @@ from wkhtmltopdf.views import PDFTemplateView
 
 from address.models import Address
 from bid.models import Bid
+from bid_item.models import BidItem
 from bid.forms import BidInitialForm, BidForm
 
 
@@ -46,9 +47,10 @@ class BidUpdate(SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(BidUpdate, self).get_context_data(**kwargs)
+        context['bid_items'] = BidItem.objects.filter(bid=self.kwargs['pk'])
         print('CONTEXT:', context)
         print('BID:', context['bid'].address.street)
-        print('FORM:', context['form'])
+        #print('FORM:', context['form'])
         return context
 
 

@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load format_telephone %}
 
 {% block content %}
 
@@ -6,8 +8,58 @@
 {{ bid.customer.first_name }} {{ bid.customer.last_name }}<br>
 {{ bid.address.street }}<br>
 {{ bid.address.city }}, {{ bid.address.state }} {{ bid.address.zip }}<br>
+{{ bid.customer.telephone|format_telephone }}<br><br><br>
 
 
-{% include 'crispy_form.html' %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {% crispy form %}
+</form>
+<br>
+<br>
+
+
+<div class="entries">
+  <h4><strong>Items </strong>
+    <a href="{% url 'bid_item_app:bid_item_create' bid=bid.id %}" class="btn btn-sm btn-success">Add</a>
+    <a href="" class="btn btn-sm btn-info">Add Custom Item</a></h4>
+  </h4>
+    <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="50px"><strong>Description</strong></th>
+          <th width="50px"><strong>Edit</strong></th>
+          <th width="50px"><strong>Delete</strong></th>
+          <th width="75px"><strong>Quantity</strong></th>
+          <th width="30px"><strong>Cost</strong></th>
+          <th width="30px"><strong>Total</strong></th>
+        </tr>
+      </thead>
+
+      {% for item in bid_items %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td>{{ item.description }}</td>
+              <td><a href="{% url 'bid_item_app:bid_item_update' pk=item.id %}">Edit</a></td>
+              <td><a href="{% url 'bid_item_app:bid_item_delete' pk=item.id %}">Delete</a></td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.cost }}</td>
+              <td>{{ item.total }}</td>
+          </tr>
+      {% endfor %}
+
+      <thead>
+        <tr>
+          <th width="75px"><strong>Total</strong></th>
+          <th width="30px"><strong></strong></th>
+          <th width="30px"><strong></strong></th>
+          <th width="30px"><strong></strong></th>
+          <th width="30px"><strong></strong></th>
+          <th width="30px"><strong>--$00.00--</strong></th>
+        </tr>
+      </thead>
+    </table>
+    </div>
+</div>
 
 {% endblock content %}
