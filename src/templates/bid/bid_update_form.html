@@ -20,9 +20,12 @@
 
 
 <div class="entries">
-  <h4><strong>Items </strong>
+  <h4><strong>Items:</strong>
     <a href="{% url 'bid_item_app:bid_item_create' bid=bid.id %}" class="btn btn-sm btn-success">Add</a>
     <a href="{% url 'bid_item_app:bid_item_custom_create' bid=bid.id %}" class="btn btn-sm btn-info">Add Custom Item</a></h4>
+  </h4>
+  <h4><strong>Services:</strong>
+    <a href="{% url 'service_group_app:driveway_create' bid=bid.id %}" class="btn btn-sm btn-success">Driveway</a>
   </h4>
     <div class="datagrid">
     <table>
@@ -42,8 +45,8 @@
               <td>{{ item.description }}</td>
               <td><a href="{% url 'bid_item_app:bid_item_update' pk=item.id %}">Edit</a></td>
               <td><a href="{% url 'bid_item_app:bid_item_delete' pk=item.id %}">Delete</a></td>
-              <td>{{ item.quantity }}</td>
-              <td>{{ item.cost|floatformat:2 }}</td>
+              <td>{% if item.quantity %}{{ item.quantity }}{% endif %}</td>
+              <td>{% if item.cost %}{{ item.cost|floatformat:2 }}{% endif %}</td>
               <td>{{ item.total|floatformat:2 }}</td>
           </tr>
       {% endfor %}
