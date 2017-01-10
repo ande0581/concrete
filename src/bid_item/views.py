@@ -6,10 +6,10 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
-from address.models import Address
 from bid.models import Bid
 from bid_item.models import BidItem
-from bid_item.forms import BidItemForm
+from service.models import Service
+from bid_item.forms import BidItemForm, BidItemCustomForm, BidItemUpdateForm
 
 
 class BidItemCreate(SuccessMessageMixin, CreateView):
@@ -25,22 +25,33 @@ class BidItemCreate(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.bid = Bid.objects.get(pk=self.kwargs['bid'])
+        form.instance.cost = Service.objects.values_list('cost').filter(description=form.cleaned_data['description'])[0][0]
+        form.instance.total = form.instance.quantity * form.instance.cost
         return super(BidItemCreate, self).form_valid(form)
+
+
+class BidItemCustomCreate(SuccessMessageMixin, CreateView):
+    template_name = 'bid_item/biditem_form.html'
+    form_class = BidItemCustomForm
+    success_message = "Successfully Added Item"
+
+    def form_valid(self, form):
+        form.instance.bid = Bid.objects.get(pk=self.kwargs['bid'])
+        return super(BidItemCustomCreate, self).form_valid(form)
 
 
 class BidItemUpdate(SuccessMessageMixin, UpdateView):
     template_name = 'bid_item/biditem_form.html'
     model = BidItem
-    form_class = BidItemForm
+    form_class = BidItemCustomForm
     success_message = "Successfully Updated Item"
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(BidItemUpdate, self).get_context_data(**kwargs)
-    #     context['bid_items'] = BidItem.objects.filter(bid=self.kwargs['pk'])
-    #     print('CONTEXT:', context)
-    #     print('BID:', context['bid'].address.street)
-    #     #print('FORM:', context['form'])
-    #     return context
+
+class BidItemCustomUpdate(SuccessMessageMixin, UpdateView):
+    template_name = 'bid_item/biditem_form.html'
+    model = BidItem
+    form_class = BidItemUpdateForm
+    success_message = "Successfully Updated Item"
 
 
 class BidItemDelete(DeleteView):

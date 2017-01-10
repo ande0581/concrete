@@ -6,8 +6,8 @@ class BidItem(models.Model):
 
     bid = models.ForeignKey('bid.Bid', on_delete=models.CASCADE)
     description = models.CharField(max_length=100)
-    quantity = models.FloatField()
-    cost = models.FloatField()
+    quantity = models.FloatField(null=True)
+    cost = models.FloatField(null=True)
     total = models.FloatField()
 
     class Meta:

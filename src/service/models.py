@@ -20,7 +20,7 @@ class Service(db.Model):
 
 
 class Service(models.Model):
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, unique=True)
     cost = models.FloatField()
     category = models.ForeignKey('category.Category', on_delete=models.CASCADE, null=True)
 

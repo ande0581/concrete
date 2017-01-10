@@ -22,7 +22,7 @@
 <div class="entries">
   <h4><strong>Items </strong>
     <a href="{% url 'bid_item_app:bid_item_create' bid=bid.id %}" class="btn btn-sm btn-success">Add</a>
-    <a href="" class="btn btn-sm btn-info">Add Custom Item</a></h4>
+    <a href="{% url 'bid_item_app:bid_item_custom_create' bid=bid.id %}" class="btn btn-sm btn-info">Add Custom Item</a></h4>
   </h4>
     <div class="datagrid">
     <table>
@@ -43,8 +43,8 @@
               <td><a href="{% url 'bid_item_app:bid_item_update' pk=item.id %}">Edit</a></td>
               <td><a href="{% url 'bid_item_app:bid_item_delete' pk=item.id %}">Delete</a></td>
               <td>{{ item.quantity }}</td>
-              <td>{{ item.cost }}</td>
-              <td>{{ item.total }}</td>
+              <td>{{ item.cost|floatformat:2 }}</td>
+              <td>{{ item.total|floatformat:2 }}</td>
           </tr>
       {% endfor %}
 
@@ -55,7 +55,7 @@
           <th width="30px"><strong></strong></th>
           <th width="30px"><strong></strong></th>
           <th width="30px"><strong></strong></th>
-          <th width="30px"><strong>--$00.00--</strong></th>
+          <th width="30px"><strong>${{ total_cost|floatformat:2 }}</strong></th>
         </tr>
       </thead>
     </table>

@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
@@ -47,9 +48,11 @@ class BidUpdate(SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(BidUpdate, self).get_context_data(**kwargs)
-        context['bid_items'] = BidItem.objects.filter(bid=self.kwargs['pk'])
-        print('CONTEXT:', context)
-        print('BID:', context['bid'].address.street)
+        bid_item_obj = BidItem.objects.filter(bid=self.kwargs['pk'])
+        context['bid_items'] = bid_item_obj
+        context['total_cost'] = bid_item_obj.aggregate(Sum('total'))['total__sum']
+        #print('CONTEXT:', context)
+        #print('total_cost:', context['total_cost'])
         #print('FORM:', context['form'])
         return context
 
