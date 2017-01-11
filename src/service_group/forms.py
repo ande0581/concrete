@@ -7,12 +7,13 @@ from crispy_forms.layout import Submit, Div
 
 
 class DrivewayForm(forms.Form):
-    length = forms.IntegerField(label='Length in Feet', required=False)
-    width = forms.IntegerField(label='Width in Feet', required=False)
-    thickness = forms.IntegerField(label='Thickness in Inches', required=False)
+    length = forms.IntegerField(label='Length in Feet')
+    width = forms.IntegerField(label='Width in Feet')
+    thickness = forms.IntegerField(label='Thickness in Inches')
     cement_type = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__name__exact='Cement'))
     rebar_type = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__name__exact='Rebar'))
-    fill = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__name__exact='Fill'))
+    fill = forms.ModelChoiceField(queryset=Service.objects.all().filter(category__name__exact='Fill'), required=False,
+                                  empty_label="(Nothing)")
 
     helper = FormHelper()
     helper.form_method = 'POST'

@@ -9,13 +9,17 @@ from service.models import Service
 from service_group.forms import DrivewayForm
 
 
+def calculate_sq_ft(length, width, inches):
+    return length * width * (inches / 12)
+
+
 class DrivewayCreate(SuccessMessageMixin, FormView):
     template_name = 'service_group/driveway_form.html'
     form_class = DrivewayForm
 
     def get_success_url(self):
         messages.success(self.request, "Driveway Estimated")
-        return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
+        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
 
     def get_context_data(self, **kwargs):
         context = super(DrivewayCreate, self).get_context_data(**kwargs)
@@ -25,7 +29,20 @@ class DrivewayCreate(SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
         #print('%%%%%%%', form.__dict__)
-        #print("POST FORM SAVE:", form.cleaned_data)
+        print("POST FORM SAVE:", form.cleaned_data)
+        length = form.cleaned_data['length']
+        width = form.cleaned_data['width']
+        thickness = form.cleaned_data['thickness']
+        cement = form.cleaned_data['cement_type']
+        rebar = form.cleaned_data['rebar_type']
+        fill = form.cleaned_data['fill']
+
+        sq_ft = calculate_sq_ft(length, width, thickness)
+        print('sq_ft:', sq_ft)
+        print('cement:', cement)
+        print('rebar:', rebar)
+        if fill:
+            print('fill:', fill)
         #cement_cost, cement_type = form.cleaned_data['cement_type'].split('|')
         #print('CEMENT COST:', cement_cost)
         #print('CEMENT TYPE:', cement_type)

@@ -8,7 +8,7 @@ from crispy_forms.layout import Submit, Div
 
 class BidInitialForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 20}))
-    notes = forms.CharField(widget=forms.Textarea(attrs={'rows': 2, 'cols': 20}))
+    notes = forms.CharField(widget=forms.Textarea(attrs={'rows': 2, 'cols': 20}), required=False)
 
     class Meta:
         model = Bid
