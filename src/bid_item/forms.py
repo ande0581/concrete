@@ -20,6 +20,7 @@ class BidItemForm(forms.ModelForm):
 
 
 class BidItemUpdateForm(forms.ModelForm):
+    # TODO, post save calculate quantity x cost
 
     class Meta:
         model = BidItem

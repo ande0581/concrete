@@ -5,6 +5,8 @@ from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, Div
 
+# TODO Make service names that are used for queries protected
+
 
 def get_queryset(category_name):
     return Service.objects.all().filter(category__name__exact=category_name)
