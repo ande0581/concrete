@@ -5,13 +5,21 @@ from category.models import Category
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
+MEASUREMENT_UNITS = [
+    ('each', 'each'),
+    ('linear_foot', 'linear_foot'),
+    ('square_foot', 'square_foot'),
+    ('cubic_yard', 'cubic_yard')
+]
+
 
 class ServiceForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all())
+    measurement = forms.CharField(widget=forms.Select(choices=MEASUREMENT_UNITS))
 
     class Meta:
         model = Service
-        fields = ('description', 'cost', 'category')
+        fields = ('description', 'cost', 'category', 'measurement')
 
     helper = FormHelper()
     helper.form_method = 'POST'

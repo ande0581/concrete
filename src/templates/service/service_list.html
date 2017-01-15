@@ -12,6 +12,7 @@
           <th width="10px"><strong>Category</strong></th>
           <th width="200px"><strong>Description</strong></th>
           <th width="50px"><strong>Cost</strong></th>
+          <th width="50px"><strong>Measurement</strong></th>
           <th width="50px"><strong>Edit</strong></th>
             <th width="50px"><strong>Delete</strong></th>
         </tr>
@@ -21,6 +22,7 @@
             <td>{{ service.category.name }}</td>
             <td>{{ service.description }}</td>
             <td>{{ service.cost }}</td>
+            <td>{{ service.measurement }}</td>
             <td><a href="{% url 'service_app:service_update' pk=service.pk %}">Edit</a></td>
             <td><a href="{% url 'service_app:service_delete' pk=service.pk %}">Delete</a></td>
         </tr>
