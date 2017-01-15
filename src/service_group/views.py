@@ -14,6 +14,10 @@ def calculate_sq_ft(length, width, inches):
 
 
 class DrivewayCreate(SuccessMessageMixin, FormView):
+    """
+    (length x width x thickness) / 27 = yards
+
+    """
     template_name = 'service_group/driveway_form.html'
     form_class = DrivewayForm
 
@@ -33,13 +37,13 @@ class DrivewayCreate(SuccessMessageMixin, FormView):
         length = form.cleaned_data['length']
         width = form.cleaned_data['width']
         thickness = form.cleaned_data['thickness']
-        cement = form.cleaned_data['cement_type']
+        concrete = form.cleaned_data['concrete_type']
         rebar = form.cleaned_data['rebar_type']
         fill = form.cleaned_data['fill']
 
         sq_ft = calculate_sq_ft(length, width, thickness)
         print('sq_ft:', sq_ft)
-        print('cement:', cement)
+        print('cement:', concrete)
         print('rebar:', rebar)
         if fill:
             print('fill:', fill)

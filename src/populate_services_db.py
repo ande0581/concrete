@@ -11,11 +11,11 @@ def populate():
 
     category_records = [
         {'name': 'Concrete'},
-        {'name': 'Control-Joint'},
         {'name': 'Drain-Tile'},
         {'name': 'Expansion-Felt'},
         {'name': 'Fasteners'},
         {'name': 'Fill'},
+        {'name': 'Finishing'},
         {'name': 'Forming'},
         {'name': 'Flashing'},
         {'name': 'Permits'},
@@ -52,8 +52,8 @@ def populate():
         {'description': 'Expansion Felt', 'cost': 1.0, 'category': 'Expansion-Felt', 'measurement': 'linear_foot'},
         {'description': 'Forming, Grading and Setup', 'cost': .73, 'category': 'Forming', 'measurement': 'square_foot'},
         {'description': 'Minimum Load Charge', 'cost': 120, 'category': 'Short-Load', 'measurement': 'each'},
-        {'description': 'Pour, Finish, Control Joints', 'cost': .78, 'category': 'Control-Joint', 'measurement': 'square_foot'},
-        {'description': 'Pour, Finish, Control Joints Colored/Stamped', 'cost': 1.75, 'category': 'Control-Joint', 'measurement': 'square_foot'},
+        {'description': 'Pour, Finish, Control Joints', 'cost': .78, 'category': 'Finishing', 'measurement': 'square_foot'},
+        {'description': 'Pour, Finish, Control Joints Colored/Stamped', 'cost': 1.75, 'category': 'Finishing', 'measurement': 'square_foot'},
         {'description': 'Railing Painted', 'cost': 70, 'category': 'Railing', 'measurement': 'linear_foot'},
         {'description': 'Railing Powder Coated', 'cost': 90, 'category': 'Railing', 'measurement': 'linear_foot'},
         {'description': 'Rebar 1/2 Non-Coated', 'cost': .84, 'category': 'Rebar', 'measurement': 'square_foot'},
