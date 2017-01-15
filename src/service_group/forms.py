@@ -10,13 +10,17 @@ def get_queryset(name):
     return Service.objects.all().filter(category__name__exact=name)
 
 
+def get_one_object(service_name):
+    my_obj = Service.objects.get(description=service_name)
+    return my_obj.pk
+
 
 class DrivewayForm(forms.Form):
     length = forms.IntegerField(label='Length in Feet')
     width = forms.IntegerField(label='Width in Feet')
     thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
-    concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'), initial='Concrete Exposed')
-    rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), initial='Non-Coated 1/2')
+    concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'), initial=get_one_object('Concrete Colored $'))
+    rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), initial=get_one_object('Rebar 1/2 Non-Coated'))
     fill = forms.ModelChoiceField(queryset=get_queryset('Fill'), required=False, empty_label="(Nothing)")
     sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False, empty_label="(Nothing)")
 
