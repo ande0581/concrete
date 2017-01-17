@@ -18,6 +18,8 @@ def get_one_object(service_name):
 
 
 class DrivewayForm(forms.Form):
+# TODO http://stackoverflow.com/questions/32383978/no-such-column-error-in-django-models, an issue??
+
     length = forms.IntegerField(label='Length in Feet')
     width = forms.IntegerField(label='Width in Feet')
     thickness = forms.IntegerField(label='Thickness in Inches', initial=4)

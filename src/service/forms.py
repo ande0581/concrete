@@ -14,12 +14,26 @@ MEASUREMENT_UNITS = [
 
 
 class ServiceForm(forms.ModelForm):
+    # https://www.pydanny.com/overloading-form-fields.html
     category = forms.ModelChoiceField(queryset=Category.objects.all())
     measurement = forms.CharField(widget=forms.Select(choices=MEASUREMENT_UNITS))
 
     class Meta:
         model = Service
-        fields = ('description', 'cost', 'category', 'measurement')
+        fields = ('description', 'cost', 'category', 'measurement', 'protected')
+
+    def __init__(self, *args, **kwargs):
+        """
+        If the service.protected value in the db is set to True, change all fields but cost to read-only
+        This is done to make sure hardcoded queries don't break if someone modifies the service
+        """
+        super(ServiceForm, self).__init__(*args, **kwargs)
+
+        if self.initial.get('protected'):
+            self.fields['description'].disabled = True
+            self.fields['category'].disabled = True
+            self.fields['measurement'].disabled = True
+            self.fields['protected'].disabled = True
 
     helper = FormHelper()
     helper.form_method = 'POST'

@@ -7,6 +7,7 @@ class Service(models.Model):
     cost = models.FloatField()
     category = models.ForeignKey('category.Category', on_delete=models.CASCADE, null=True)
     measurement = models.CharField(max_length=30)
+    protected = models.BooleanField(default=False)
 
     def __str__(self):
         return self.description

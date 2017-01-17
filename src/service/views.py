@@ -25,6 +25,7 @@ class ServiceUpdate(SuccessMessageMixin, UpdateView):
 
 
 class ServiceDelete(DeleteView):
+    # TODO prevent deletion of protected service type
     model = Service
 
     def get_success_url(self):
@@ -33,6 +34,7 @@ class ServiceDelete(DeleteView):
 
 
 class ServiceList(ListView):
+    # TODO add search to services list view
     model = Service
 
     def get_queryset(self, *args, **kwargs):
