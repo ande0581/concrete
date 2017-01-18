@@ -16,13 +16,6 @@ class BidItemCreate(SuccessMessageMixin, CreateView):
     template_name = 'bid_item/biditem_form.html'
     form_class = BidItemForm
     success_message = "Successfully Added Item"
-    # TODO change bid item list to be alphabetical
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(BidItemCreate, self).get_context_data(**kwargs)
-    #     #print('VIEW:', context['view'])
-    #     #print('FORM:', context['form'])
-    #     return context
 
     def form_valid(self, form):
         form.instance.bid = Bid.objects.get(pk=self.kwargs['bid'])

@@ -8,7 +8,7 @@ from crispy_forms.layout import Submit, Div
 
 
 class BidItemForm(forms.ModelForm):
-    description = forms.ModelChoiceField(queryset=Service.objects.all())
+    description = forms.ModelChoiceField(queryset=Service.objects.all().order_by('description'))
 
     class Meta:
         model = BidItem
