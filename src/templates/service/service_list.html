@@ -26,7 +26,7 @@
             <td>{{ service.description }}</td>
             <td>{{ service.cost }}</td>
             <td>{{ service.measurement }}</td>
-            <td>{{ service.protected }}</td>
+            {% if service.protected %}<td style="color:red">{% else %}<td>{% endif %}{{ service.protected }}</td>
             <td><a href="{% url 'service_app:service_update' pk=service.pk %}">Edit</a></td>
             <td>{% if not service.protected %}<a href="{% url 'service_app:service_delete' pk=service.pk %}">Delete</a>{% endif %}</td>
         </tr>
