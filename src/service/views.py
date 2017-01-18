@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -41,12 +42,19 @@ class ServiceDelete(DeleteView):
 
 
 class ServiceList(ListView):
-    # TODO add search to services list view
     model = Service
 
-    def get_queryset(self, *args, **kwargs):
-        qs = super(ServiceList, self).get_queryset(*args, **kwargs).order_by('category')
-        return qs
+    def get_queryset(self):
+        queryset_list = Service.objects.order_by('category', 'description')
+        query = self.request.GET.get('q')
+
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(category__name__icontains=query) |
+                Q(description__icontains=query)
+               ).distinct()  # this prevents duplicates
+
+        return queryset_list
 
 
 

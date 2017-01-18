@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% include 'q_search_form.html' %}
+
 <div class="entries">
   <h4><strong>Services </strong><a href="{% url 'service_app:service_create' %}"
                                     class="btn btn-sm btn-success" role="button">Add</a></h4>

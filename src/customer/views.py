@@ -46,8 +46,7 @@ class CustomerDetail(DetailView):
 
 class CustomerList(ListView):
     model = Customer
-    # TODO change pagination value to something larger
-    paginate_by = 5
+    paginate_by = 20
 
     def get_queryset(self):
         queryset_list = Customer.objects.order_by('last_name')
