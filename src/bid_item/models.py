@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import pre_save
 from django.core.urlresolvers import reverse
 
 
@@ -18,3 +19,9 @@ class BidItem(models.Model):
 
     def get_absolute_url(self):
         return reverse('bid_app:bid_update', kwargs={'pk': self.bid.id})
+
+
+def biditem_model_pre_save_receiver(sender, instance, *args, **kwargs):
+    instance.total = instance.quantity * instance.cost
+
+pre_save.connect(biditem_model_pre_save_receiver, sender=BidItem)

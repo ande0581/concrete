@@ -20,11 +20,10 @@ class BidItemForm(forms.ModelForm):
 
 
 class BidItemUpdateForm(forms.ModelForm):
-    # TODO, post save calculate quantity x cost
 
     class Meta:
         model = BidItem
-        fields = ('description', 'quantity')
+        fields = ('description', 'quantity', 'cost')
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -32,6 +31,7 @@ class BidItemUpdateForm(forms.ModelForm):
 
 
 class BidItemCustomForm(forms.ModelForm):
+
         class Meta:
             model = BidItem
             fields = ('description', 'total')
