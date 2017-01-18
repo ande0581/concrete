@@ -2,11 +2,25 @@ from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import mm
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from django.conf import settings
 
 from bid_item.models import BidItem
+
+# http://ericsaupe.com/reportlab-and-django-part-3-paragraphs-and-tables/
+
+# Register Fonts
+pdfmetrics.registerFont(TTFont('Arial', settings.STATIC_ROOT + '/fonts/arial.ttf'))
+pdfmetrics.registerFont(TTFont('Arial-Bold', settings.STATIC_ROOT + '/fonts/arialbd.ttf'))
+
+# A large collection of style sheets pre-made for us
+styles = getSampleStyleSheet()
+# Our Custom Style
+styles.add(ParagraphStyle(name='RightAlign', fontName='Arial', align=TA_RIGHT))
 
 
 class NumberedCanvas(canvas.Canvas):
