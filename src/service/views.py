@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -25,8 +26,14 @@ class ServiceUpdate(SuccessMessageMixin, UpdateView):
 
 
 class ServiceDelete(DeleteView):
-    # TODO prevent deletion of protected service type
     model = Service
+
+    def get_object(self, queryset=None):
+        # Do not allow the deletion of a protected service which is hardcoded in queries
+        obj = super(ServiceDelete, self).get_object()
+        if obj.protected:
+            raise PermissionDenied()
+        return obj
 
     def get_success_url(self):
         messages.success(self.request, "Successfully Deleted")
