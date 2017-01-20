@@ -147,7 +147,7 @@ STATIC_URL = '/static/'
 # Required for WKHTMLTOPDF
 # STATIC_ROOT = '/Users/janderson/PycharmProjects/concrete/src/static/'
 # STATIC_ROOT = '/static/'
-# WKHTMLTOPDF_CMD = '/usr/local/bin/wkhtmltopdf'
+WKHTMLTOPDF_CMD = '/usr/local/bin/wkhtmltopdf'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
 
 
