@@ -33,10 +33,11 @@ class NumberedCanvas(canvas.Canvas):
                              "Page {} of {}".format(self._pageNumber, page_count))
 
 
-def generate_pdf(pdf_name):
+def generate_pdf(filename, obj):
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename={}'.format(pdf_name)
+    #response['Content-Disposition'] = 'attachment; filename={}'.format(pdf_name)
+    response['Content-Disposition'] = 'filename={}'.format(filename)
 
     buff = BytesIO()
 
@@ -75,10 +76,16 @@ def generate_pdf(pdf_name):
     styles.add(ParagraphStyle(name='Line_Label', font='Helvetica-Bold', fontSize=7, leading=6, alignment=TA_LEFT))
     styles.add(ParagraphStyle(name='Line_Label_Center', font='Helvetica-Bold', fontSize=7, alignment=TA_CENTER))
 
-    address_paragraph = \
-        "Jeff Anderson<br />" \
-        "670 Ironton ST NE <br />" \
-        "Fridley, MN 55432<br />"
+    telephone = obj.customer.telephone
+    telephone = "({}) {}-{}".format(telephone[:3], telephone[3:6], telephone[6:])
+
+    customer_paragraph = "{first} {last}<br />" \
+                         "{street}<br />" \
+                         "{city}, {state} {zip}<br />" \
+                         "{telephone}<br />" \
+                         "{email}".format(first=obj.customer.first_name, last=obj.customer.last_name,
+                                          street=obj.address.street, city=obj.address.city, state=obj.address.state,
+                                          zip=obj.address.zip, telephone=telephone, email=obj.customer.email)
 
     company_paragraph = \
         "Tom Madsen<br />" \
@@ -88,7 +95,7 @@ def generate_pdf(pdf_name):
     data1 = [[Paragraph('SHIPPER/EXPORTER (complete name and address)', styles["Line_Label"]),
               Paragraph('CONSIGNEE (complete name and address)', styles["Line_Label"])],
 
-             [Paragraph(address_paragraph, styles["Line_Data_Large"]),
+             [Paragraph(customer_paragraph, styles["Line_Data_Large"]),
               Paragraph(company_paragraph, styles["Line_Data_Large"])]
              ]
 
