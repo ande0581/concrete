@@ -1,5 +1,7 @@
 from django.http import HttpResponse
+from django.templatetags.static import static
 from django.utils.six import BytesIO
+import os
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_LEFT
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
@@ -42,7 +44,7 @@ def generate_pdf(filename, obj):
     buff = BytesIO()
 
     doc = SimpleDocTemplate(buff, rightMargin=.5 * cm, leftMargin=.5 * cm,
-                            topMargin=3.5 * cm, bottomMargin=1.5 * cm)
+                            topMargin=1.0 * cm, bottomMargin=1.5 * cm)
 
     def _header_footer(canvas, doc):
         # Save the state of our canvas so we can draw on it
@@ -76,6 +78,17 @@ def generate_pdf(filename, obj):
     styles.add(ParagraphStyle(name='Line_Label', font='Helvetica-Bold', fontSize=7, leading=6, alignment=TA_LEFT))
     styles.add(ParagraphStyle(name='Line_Label_Center', font='Helvetica-Bold', fontSize=7, alignment=TA_CENTER))
 
+    # TODO figure out static diretory url
+    # current_directory = os.path.dirname(os.path.realpath(__file__))
+    # logo = os.path.join(current_directory, 'images/checked.png')
+
+    logo = '/Users/janderson/PycharmProjects/concrete/src/static/img/logo.jpg'
+    divider = 5
+    image = Image(logo, width=800/divider, height=269/divider)
+    image.hAlign = 'LEFT'
+    story.append(image)
+
+    # Add customer info to PDF
     telephone = obj.customer.telephone
     telephone = "({}) {}-{}".format(telephone[:3], telephone[3:6], telephone[6:])
 
@@ -109,7 +122,8 @@ def generate_pdf(filename, obj):
 
     story.append(t1)
 
-    doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
+    #doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
+    doc.build(story, canvasmaker=NumberedCanvas)
     response.write(buff.getvalue())
     buff.close()
 
