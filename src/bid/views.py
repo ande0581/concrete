@@ -2,32 +2,13 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
-from django.template import RequestContext
-import os
-
-from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-
-#from wkhtmltopdf.views import PDFTemplateView
 
 from address.models import Address
 from bid.models import Bid
 from bid_item.models import BidItem
 from bid.forms import BidInitialForm, BidForm
-
-
-# class PDFView(PDFTemplateView):
-#     filename = 'my_pdf.pdf'
-#     template_name = 'bid/bid_pdf.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(PDFView, self).get_context_data(**kwargs)
-#         print("PDF Context:", context)
-#         obj = Bid.objects.get(pk=context['pk'])
-#         context = {'obj': obj}
-#         print('Post PDF Context:', context)
-#         return context
 
 
 class BidCreate(SuccessMessageMixin, CreateView):
@@ -80,10 +61,6 @@ class BidDelete(DeleteView):
     def get_success_url(self):
         messages.success(self.request, "Successfully Deleted")
         return reverse('customer_app:customer_detail', kwargs={'pk': self.customer_pk})
-
-
-class BidDetail(DetailView):
-    model = Bid
 
 
 class BidList(ListView):

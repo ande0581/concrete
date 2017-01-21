@@ -70,4 +70,17 @@
     </div>
 </div>
 
+<br>
+    <a href="{% url 'pdf_app:pdf_create' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
+       role="button">View PDF</a>
+
+    <a href="" target="_blank" class="btn btn-sm btn-info"
+       role="button">View PDF Invoice-TODO</a>
+
+    <a href="" class="btn btn-sm btn-warning"
+       role="button">Save PDF-TODO</a>
+
+    <a href="{% url 'customer_app:customer_detail' pk=bid.customer.id %}" class="btn btn-sm btn-primary"
+       role="button">Return to Customer</a>
+
 {% endblock content %}

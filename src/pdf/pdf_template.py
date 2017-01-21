@@ -33,7 +33,7 @@ class NumberedCanvas(canvas.Canvas):
                              "Page {} of {}".format(self._pageNumber, page_count))
 
 
-def generate_commercial_invoice(pdf_name):
+def generate_pdf(pdf_name):
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename={}'.format(pdf_name)
