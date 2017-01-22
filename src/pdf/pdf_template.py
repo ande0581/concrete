@@ -44,7 +44,7 @@ def generate_pdf(filename, obj):
     buff = BytesIO()
 
     doc = SimpleDocTemplate(buff, rightMargin=.5 * cm, leftMargin=.5 * cm,
-                            topMargin=1.0 * cm, bottomMargin=1.5 * cm)
+                            topMargin=.2 * cm, bottomMargin=1.5 * cm)
 
     def _header_footer(canvas, doc):
         # Save the state of our canvas so we can draw on it
@@ -74,9 +74,11 @@ def generate_pdf(filename, obj):
     styles.add(ParagraphStyle(name='Line_Data', alignment=TA_LEFT, fontSize=8, leading=7))
     styles.add(ParagraphStyle(name='Line_Data_Small', alignment=TA_LEFT, fontSize=7, leading=8))
     styles.add(ParagraphStyle(name='Line_Data_Large', alignment=TA_LEFT, fontSize=12, leading=12))
+    styles.add(ParagraphStyle(name='Invoice_Date', alignment=TA_LEFT, fontSize=12, leading=12))
     styles.add(ParagraphStyle(name='Line_Data_Largest', alignment=TA_LEFT, fontSize=14, leading=15))
     styles.add(ParagraphStyle(name='Line_Label', font='Helvetica-Bold', fontSize=7, leading=6, alignment=TA_LEFT))
     styles.add(ParagraphStyle(name='Line_Label_Center', font='Helvetica-Bold', fontSize=7, alignment=TA_CENTER))
+
 
     # TODO figure out static diretory url
     # current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -85,8 +87,38 @@ def generate_pdf(filename, obj):
     logo = '/Users/janderson/PycharmProjects/concrete/src/static/img/logo.jpg'
     divider = 5
     image = Image(logo, width=800/divider, height=269/divider)
-    image.hAlign = 'LEFT'
+    image.hAlign = 'CENTER'
     story.append(image)
+    #story.append(Spacer(1, 12))
+
+    # Add Company Info
+
+    company_paragraph = """
+        Madsen Concrete<br />
+        179 Marvy ST<br />
+        Lino Lakes, MN 55014<br />
+        (612) 508-2484 <br />
+        concrete@madsenconrete.com
+        """
+
+    invoice_paragraph = """
+        Date: <br />
+        Invoice #: obj.id <br />
+    """
+
+    data1 = [[Paragraph(company_paragraph, styles["Line_Data_Large"]),
+              Paragraph(invoice_paragraph, styles["Invoice_Date"])]
+             ]
+
+    t1 = Table(data1, colWidths=(15 * cm, None,))
+    t1.setStyle(TableStyle([
+        #('INNERGRID', (0, 0), (1, 0), 0.25, colors.black),
+        #('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    ]))
+
+    story.append(t1)
+    story.append(Spacer(1, 12))
 
     # Add customer info to PDF
     telephone = obj.customer.telephone
@@ -100,16 +132,13 @@ def generate_pdf(filename, obj):
                                           street=obj.address.street, city=obj.address.city, state=obj.address.state,
                                           zip=obj.address.zip, telephone=telephone, email=obj.customer.email)
 
-    company_paragraph = \
-        "Tom Madsen<br />" \
-        "179 Marvy ST<br />" \
-        "Lino Lakes, MN 55014<br />"
+
 
     data1 = [[Paragraph('SHIPPER/EXPORTER (complete name and address)', styles["Line_Label"]),
               Paragraph('CONSIGNEE (complete name and address)', styles["Line_Label"])],
 
              [Paragraph(customer_paragraph, styles["Line_Data_Large"]),
-              Paragraph(company_paragraph, styles["Line_Data_Large"])]
+              Paragraph("placeholder 1", styles["Line_Data_Large"])]
              ]
 
     t1 = Table(data1)
@@ -121,6 +150,7 @@ def generate_pdf(filename, obj):
     ]))
 
     story.append(t1)
+
 
     #doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
     doc.build(story, canvasmaker=NumberedCanvas)
