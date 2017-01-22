@@ -1,4 +1,6 @@
 import datetime
+
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.templatetags.static import static
 from django.utils.six import BytesIO
@@ -60,7 +62,7 @@ def generate_pdf(filename, obj):
         header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
 
         # Footer
-        footer = Paragraph('This is a multi-line footer.  It goes on every page.   ' * 5, styles['Normal'])
+        footer = Paragraph('Thank You For Your Business', styles['Normal'])
         w, h = footer.wrap(doc.width, doc.bottomMargin)
         footer.drawOn(canvas, doc.leftMargin, h)
 
@@ -103,25 +105,25 @@ def generate_pdf(filename, obj):
         """
 
     invoice_paragraph = """
-        Date: {date}<br />
-        Invoice #: {invoice} <br />
-    """.format(date=datetime.date.today(), invoice=obj.id)
+        Date: {}<br />
+        Invoice #: {:04d} <br />
+    """.format(datetime.date.today(), obj.id)
 
-    data1 = [[Paragraph(company_paragraph, styles['Line_Data']),
+    data1 = [[Paragraph(company_paragraph, styles['Line_Data_Large']),
               image,
-             Paragraph(invoice_paragraph, styles['Line_Data'])],
-             [None, None, None]]
+             Paragraph(invoice_paragraph, styles['Line_Data_Large'])]]
 
-    #t1 = Table(data1, colWidths=(15 * cm, 4.6 * cm,))
-    t1 = Table(data1)
+    t1 = Table(data1, colWidths=(7 * cm, 8 * cm, 4.6 * cm))
+    #t1 = Table(data1)
     t1.setStyle(TableStyle([
         #('INNERGRID', (0, 0), (1, 0), 0.25, colors.black),
-        #('BOX', (0, 0), (-1, -1), .25, colors.black),
+        #('BOX', (0, 0), (-1, -1), 1.25, colors.lightgrey),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        #('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
     ]))
 
     story.append(t1)
-    story.append(Spacer(4, 32))
+    story.append(Spacer(2, 22))
 
     # Add customer info to PDF
 
@@ -152,7 +154,7 @@ def generate_pdf(filename, obj):
               Paragraph(description_paragraph, styles["Line_Data_Large"])]
              ]
 
-    t1 = Table(data1)
+    t1 = Table(data1, colWidths=(7 * cm, 12.6 * cm))
     t1.setStyle(TableStyle([
         #('INNERGRID', (0, 0), (1, 0), 0.25, colors.black),
         #('INNERGRID', (0, 1), (1, 1), 0.25, colors.black),
@@ -175,10 +177,9 @@ def generate_pdf(filename, obj):
     t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
     t1.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 1.25, colors.green),
+        ('BOX', (0, 0), (-1, -1), .25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('TEXTCOLOR', (0, 0), (-1, -1), colors.white),
-        ('BACKGROUND', (0, 0), (-1, -1), colors.green)
+        ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
     ]))
 
     story.append(t1)
@@ -186,7 +187,7 @@ def generate_pdf(filename, obj):
     items = BidItem.objects.all().filter(bid=obj.id)
 
     data1 = [[Paragraph(str(item.description), styles["Line_Data_Large"]),
-              Paragraph(str(item.total), styles["Line_Data_Large_Right"])] for item in items]
+              Paragraph(str("{0:.2f}".format(round(item.total, 2))), styles["Line_Data_Large_Right"])] for item in items]
 
     t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
     t1.setStyle(TableStyle([
@@ -196,6 +197,28 @@ def generate_pdf(filename, obj):
     ]))
 
     story.append(t1)
+
+    #bid_item_obj = BidItem.objects.filter(bid=obj.bid.id)
+
+    total = items.aggregate(Sum('total'))['total__sum']
+
+    print('TOTAL:', total)
+
+    data1 = [[Paragraph('Total', styles["Line_Data_Large"]),
+              Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
+             ]
+
+    t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
+    t1.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BOX', (0, 0), (-1, -1), .25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
+    ]))
+
+    story.append(t1)
+
+
 
     #doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
     doc.build(story, canvasmaker=NumberedCanvas)
