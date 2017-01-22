@@ -1,8 +1,7 @@
 import datetime
-
+from django.conf import settings
 from django.db.models import Sum
 from django.http import HttpResponse
-from django.templatetags.static import static
 from django.utils.six import BytesIO
 import os
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_LEFT
@@ -11,7 +10,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import cm
 from reportlab.lib.units import mm, inch
 from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 
 from bid_item.models import BidItem
 
@@ -48,6 +47,7 @@ def generate_pdf(filename, obj):
 
     buff = BytesIO()
 
+    # The page width totals 19.6cm
     doc = SimpleDocTemplate(buff, rightMargin=.5 * cm, leftMargin=.5 * cm,
                             topMargin=.5 * cm, bottomMargin=1.5 * cm)
 
@@ -83,26 +83,20 @@ def generate_pdf(filename, obj):
     styles.add(ParagraphStyle(name='Line_Data_Large_Right', alignment=TA_RIGHT, fontSize=12, leading=12))
     styles.add(ParagraphStyle(name='Invoice_Date', alignment=TA_LEFT, fontSize=12, leading=12))
     styles.add(ParagraphStyle(name='Line_Data_Largest', alignment=TA_LEFT, fontSize=14, leading=15))
-    styles.add(ParagraphStyle(name='Line_Label', font='Helvetica-Bold', fontSize=7, leading=6, alignment=TA_LEFT))
+    styles.add(ParagraphStyle(name='Line_Label', font='Helvetica-Bold', fontSize=10, leading=12, alignment=TA_LEFT))
     styles.add(ParagraphStyle(name='Line_Label_Center', font='Helvetica-Bold', fontSize=7, alignment=TA_CENTER))
 
-
-    # TODO figure out static diretory url
-    # current_directory = os.path.dirname(os.path.realpath(__file__))
-    # logo = os.path.join(current_directory, 'images/checked.png')
-
-    logo = '/Users/janderson/PycharmProjects/concrete/src/static/img/logo.jpg'
-    divider = 5
-    image = Image(logo, width=800/divider, height=269/divider)
-
-    # Add Company Info
-
+    # Add Company Address, Logo and Invoice Info
     company_paragraph = """
         179 Marvy ST<br />
         Lino Lakes, MN 55014<br />
         (612) 508-2484 <br />
         concrete@madsenconcrete.com
         """
+
+    logo = os.path.join(settings.STATIC_ROOT, 'img/logo.jpg')
+    denominator = 5
+    image = Image(logo, width=800/denominator, height=269/denominator)
 
     invoice_paragraph = """
         Date: {}<br />
@@ -114,19 +108,14 @@ def generate_pdf(filename, obj):
              Paragraph(invoice_paragraph, styles['Line_Data_Large'])]]
 
     t1 = Table(data1, colWidths=(7 * cm, 8 * cm, 4.6 * cm))
-    #t1 = Table(data1)
     t1.setStyle(TableStyle([
-        #('INNERGRID', (0, 0), (1, 0), 0.25, colors.black),
-        #('BOX', (0, 0), (-1, -1), 1.25, colors.lightgrey),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        #('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
     ]))
 
     story.append(t1)
-    story.append(Spacer(2, 22))
+    story.append(Spacer(2, 32))
 
-    # Add customer info to PDF
-
+    # Add Customer Info and Job Description
     telephone = obj.customer.telephone
     telephone = "({}) {}-{}".format(telephone[:3], telephone[3:6], telephone[6:])
 
@@ -142,13 +131,13 @@ def generate_pdf(filename, obj):
         {city}, {state} {zip}<br />
         {telephone}<br />
         {email}""".format(first=obj.customer.first_name, last=obj.customer.last_name, company=company,
-                                          street=obj.address.street, city=obj.address.city, state=obj.address.state,
-                                          zip=obj.address.zip, telephone=telephone, email=obj.customer.email)
+                          street=obj.address.street, city=obj.address.city, state=obj.address.state,
+                          zip=obj.address.zip, telephone=telephone, email=obj.customer.email)
 
     description_paragraph = obj.description
 
-    data1 = [[Paragraph('To:', styles["Line_Label"]),
-              Paragraph('Job Description:', styles["Line_Label"])],
+    data1 = [[Paragraph('To', styles["Line_Data_Large"]),
+              Paragraph('Job Description', styles["Line_Data_Large"])],
 
              [Paragraph(customer_paragraph, styles["Line_Data_Large"]),
               Paragraph(description_paragraph, styles["Line_Data_Large"])]
@@ -156,23 +145,17 @@ def generate_pdf(filename, obj):
 
     t1 = Table(data1, colWidths=(7 * cm, 12.6 * cm))
     t1.setStyle(TableStyle([
-        #('INNERGRID', (0, 0), (1, 0), 0.25, colors.black),
-        #('INNERGRID', (0, 1), (1, 1), 0.25, colors.black),
-        #('BOX', (0, 0), (-1, -1), 0.25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
     ]))
 
     story.append(t1)
 
-
-    #### Add Items to Bid
-
+    # Add Bid Items to PDF
     story.append(Spacer(4, 32))
     data1 = [[Paragraph('Description', styles["Line_Data_Large"]),
               Paragraph('Total', styles["Line_Data_Large_Right"])]
              ]
-
-    #print('Column Width', 1.7+1.3+2+7+1+1.5+1.5+1.8+1.8)  # 19.6cm
 
     t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
     t1.setStyle(TableStyle([
@@ -198,12 +181,8 @@ def generate_pdf(filename, obj):
 
     story.append(t1)
 
-    #bid_item_obj = BidItem.objects.filter(bid=obj.bid.id)
-
+    # Calculate total and add to PDF
     total = items.aggregate(Sum('total'))['total__sum']
-
-    print('TOTAL:', total)
-
     data1 = [[Paragraph('Total', styles["Line_Data_Large"]),
               Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
              ]
@@ -217,8 +196,6 @@ def generate_pdf(filename, obj):
     ]))
 
     story.append(t1)
-
-
 
     #doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
     doc.build(story, canvasmaker=NumberedCanvas)
