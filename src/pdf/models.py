@@ -1,6 +1,8 @@
 from django.db import models
 import datetime
 
+from django.urls import reverse
+
 
 def generate_filename(instance, _blank):
 
@@ -17,4 +19,7 @@ class PDFImage(models.Model):
     bid = models.ForeignKey('bid.bid', on_delete=models.CASCADE)
     filename = models.FileField(upload_to=generate_filename)
     created_date = models.DateTimeField(auto_now_add=True)
+
+    def get_absolute_url(self):
+        return reverse('pdf_app:pdf_list', kwargs={'pk': self.bid.id})
 

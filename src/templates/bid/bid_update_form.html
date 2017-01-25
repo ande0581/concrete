@@ -21,6 +21,9 @@
 
 
 <div class="entries">
+  <h4><strong>Photos:</strong>
+    <a href="{% url 'photo_app:photo_list' bid_id=bid.id %}" class="btn btn-sm btn-success">View</a>
+  </h4>
   <h4><strong>Items:</strong>
     <a href="{% url 'bid_item_app:bid_item_create' bid=bid.id %}" class="btn btn-sm btn-success">Add</a>
     <a href="{% url 'bid_item_app:bid_item_custom_create' bid=bid.id %}" class="btn btn-sm btn-info">Add Custom Item</a></h4>

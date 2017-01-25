@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="entries">
+  <h4><strong>Photos </strong><a href="{% url 'photo_app:photo_upload' bid_id=bid_id %}"
+                                    class="btn btn-sm btn-success" role="button">Add</a></h4>
+{% for photo in object_list %}
+  <div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="{{ MEDIA_URL }}{{ photo.file }}">
+        <img src="{{ MEDIA_URL }}{{ photo.file }}" alt="Lights" style="width:100%">
+        <div class="caption">
+          <p><a href="{% url 'photo_app:photo_delete' pk=photo.pk %}" class="btn btn-sm btn-danger" r
+                ole="button">Delete</a></p>
+        </div>
+      </a>
+    </div>
+  </div>
+{% endfor %}
+
+
+{% endblock content %}
