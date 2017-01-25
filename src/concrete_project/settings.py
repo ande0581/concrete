@@ -52,11 +52,13 @@ INSTALLED_APPS = [
     'journal',
     'overview',
     'pdf',
+    'photo',
     'service',
     'service_group',
 
     # 3rd Party Apps
     'crispy_forms',
+    'multiupload',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
