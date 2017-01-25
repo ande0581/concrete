@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load format_telephone %}
+{% load static %}
 
 {% block content %}
 
@@ -71,16 +72,20 @@
 </div>
 
 <br>
-    <a href="{% url 'pdf_app:pdf_create' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
+    <a href="{% url 'pdf_app:pdf_view' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
        role="button">View PDF</a>
 
     <a href="" target="_blank" class="btn btn-sm btn-info"
        role="button">View PDF Invoice-TODO</a>
 
-    <a href="" class="btn btn-sm btn-warning"
-       role="button">Save PDF-TODO</a>
+    <a href="{% url 'pdf_app:pdf_save' bid_id=bid.id %}" class="btn btn-sm btn-warning"
+       role="button">Save PDF</a>
+
+    <a href="{% url 'pdf_app:pdf_list' pk=bid.id %}" class="btn btn-sm btn-warning"
+       role="button">PDF Archive</a>
 
     <a href="{% url 'customer_app:customer_detail' pk=bid.customer.id %}" class="btn btn-sm btn-primary"
        role="button">Return to Customer</a>
+
 
 {% endblock content %}

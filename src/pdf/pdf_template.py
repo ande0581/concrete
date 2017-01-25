@@ -1,7 +1,10 @@
 import datetime
 from django.conf import settings
+from django.contrib import messages
+from django.core.files.base import ContentFile
 from django.db.models import Sum
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.utils.six import BytesIO
 import os
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_LEFT
@@ -13,6 +16,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 
 from bid_item.models import BidItem
+from pdf.models import PDFImage
 
 
 class NumberedCanvas(canvas.Canvas):
@@ -39,11 +43,7 @@ class NumberedCanvas(canvas.Canvas):
                              "Page {} of {}".format(self._pageNumber, page_count))
 
 
-def generate_pdf(filename, obj):
-
-    response = HttpResponse(content_type='application/pdf')
-    #response['Content-Disposition'] = 'attachment; filename={}'.format(pdf_name)
-    response['Content-Disposition'] = 'filename={}'.format(filename)
+def generate_pdf(request, obj, save_to_disk=False):
 
     buff = BytesIO()
 
@@ -197,9 +197,23 @@ def generate_pdf(filename, obj):
 
     story.append(t1)
 
-    #doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
+    # doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
     doc.build(story, canvasmaker=NumberedCanvas)
-    response.write(buff.getvalue())
+
+    pdf = buff.getvalue()
     buff.close()
+
+    if save_to_disk:
+        myfile = ContentFile(pdf)
+        db_model = PDFImage()
+        db_model.bid = obj
+        db_model.filename.save('', myfile)
+        messages.success(request, "PDF was saved successfully!")
+        return redirect('bid_app:bid_update', pk=obj.id)
+
+    filename = obj.customer.__str__().replace(' ', '_').lower()
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename={}.pdf'.format(filename)
+    response.write(pdf)
 
     return response

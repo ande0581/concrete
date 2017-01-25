@@ -8,6 +8,7 @@ from django.views.generic.list import ListView
 from address.models import Address
 from bid.models import Bid
 from bid_item.models import BidItem
+from pdf.models import PDFImage
 from bid.forms import BidInitialForm, BidForm
 
 
@@ -42,6 +43,7 @@ class BidUpdate(SuccessMessageMixin, UpdateView):
         bid_item_obj = BidItem.objects.filter(bid=self.kwargs['pk'])
         context['bid_items'] = bid_item_obj
         context['total_cost'] = bid_item_obj.aggregate(Sum('total'))['total__sum']
+        context['pdfs'] = PDFImage.objects.all().filter(bid=self.kwargs['pk'])
         #print('CONTEXT:', context)
         #print('total_cost:', context['total_cost'])
         #print('FORM:', context['form'])

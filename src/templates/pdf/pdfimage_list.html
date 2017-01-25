@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="entries">
+    <h4>Saved PDFs</h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="200px"><strong>Date</strong></th>
+          <th width="50px"><strong>Delete</strong></th>
+        </tr>
+      </thead>
+      {% for pdf in object_list %}
+        <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+            <td><a href="{{ MEDIA_URL }}{{ pdf.filename }}" target="_blank">{{ pdf.created_date }}</a></td>
+            <td><a href="{% url 'pdf_app:pdf_delete' pk=pdf.pk %}">Delete</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock content %}
