@@ -9,17 +9,24 @@
       <thead>
         <tr>
           <th width="200px"><strong>Date</strong></th>
+          <th width="50px"><strong>Email Customer</strong></th>
+          <th width="50px"><strong>Email Employee</strong></th>
           <th width="50px"><strong>Delete</strong></th>
         </tr>
       </thead>
       {% for pdf in object_list %}
         <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
             <td><a href="{{ MEDIA_URL }}{{ pdf.filename }}" target="_blank">{{ pdf.created_date }}</a></td>
+            <td>Placeholder</td>
+            <td>Placeholder</td>
             <td><a href="{% url 'pdf_app:pdf_delete' pk=pdf.pk %}">Delete</a></td>
         </tr>
       {% endfor %}
     </table>
   </div>
 </div>
+
+<br>
+<a href="{% url 'bid_app:bid_update' pk=bid_id %}" class="btn btn-sm btn-info" role="button">Return to Bid</a>
 
 {% endblock content %}

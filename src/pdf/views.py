@@ -24,6 +24,13 @@ def save_pdf(request, **kwargs):
 
 class PDFImageList(ListView):
     model = PDFImage
+    queryset = PDFImage.objects.filter(bid=3)
+
+    def get_context_data(self, **kwargs):
+        context = super(PDFImageList, self).get_context_data(**kwargs)
+        context['object_list'] = PDFImage.objects.filter(bid=self.kwargs['pk'])
+        context['bid_id'] = self.kwargs['pk']
+        return context
 
 
 class PDFImageDelete(DeleteView):
