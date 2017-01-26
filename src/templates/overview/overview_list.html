@@ -21,8 +21,8 @@
     {% for bid in object_list %}
         {% if bid.status == 'Needs Bid' %}
           <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
-              <td><a href="{% url 'customer_app:customer_detail' pk=bid.customer.id %}">{{ bid.customer }}</a></td>
-              <td><a href="{% url 'bid_app:bid_update' pk=bid.pk %}">{{ bid.description }}</a></td>
+              <td><a href="{{ bid.customer.get_absolute_url }}">{{ bid.customer }}</a></td>
+              <td><a href="{{ bid.get_absolute_url }}">{{ bid.description|truncatechars:100 }}</a></td>
               <td>{{ bid.scheduled_bid_date }}</td>
               <td><a href="https://www.google.com/maps/place/{{ bid.address.street|urlify|add:'+'|add:bid.address.zip }}"
                      target="_blank">{{ bid.address }}</a></td>

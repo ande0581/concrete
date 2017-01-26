@@ -1,13 +1,40 @@
 {% extends "base.html" %}
-
 {% block content %}
+{% include 'q_search_form.html' %}
 
-<table class="table">
-    {% for object in object_list %}
+<br>
+<h4 class="entries">
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th><strong>Customer</strong></th>
+          <th><strong>Bid Description</strong></th>
+          <th><strong>Status</strong></th>
+        </tr>
+      </thead>
+      {% for bid in object_list %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td><a href="{{ bid.customer.get_absolute_url }}">{% if bid.customer.company_name %}{{ bid.customer.company_name }}
+                  {% else %}{{ bid.customer.first_name }} {{ bid.customer.last_name }}{% endif %}</a></td>
+              <td><a href="{{ bid.get_absolute_url }}">{{ bid.description|truncatechars:100 }}</a></td>
+              <td>{{ bid.status }}</td>
+          </tr>
+      {% endfor %}
+    </table>
+</div>
 
-    <tr><td><a href="{% url 'bid_app:bid_update' pk=object.id %}">{{ object }}</a></td></tr>
 
-    {% endfor %}
-</table>
+<nav aria-label="...">
+  <ul class="pager">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}"><strong>Previous</strong></a></li>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}"><strong>Next</strong></a></li>
+    {% endif %}
+  </ul>
+</nav>
 
 {% endblock content %}

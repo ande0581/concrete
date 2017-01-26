@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -69,4 +70,19 @@ class BidDelete(DeleteView):
 
 class BidList(ListView):
     model = Bid
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset_list = Bid.objects.order_by('timestamp')
+        query = self.request.GET.get('q')
+
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(customer__first_name__icontains=query) |
+                Q(customer__last_name__icontains=query) |
+                Q(customer__company_name__icontains=query) |
+                Q(status__icontains=query)
+            ).distinct()  # this prevents duplicates
+
+        return queryset_list
 
