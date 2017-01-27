@@ -27,6 +27,6 @@
 </div>
 
 <br>
-<a href="{% url 'bid_app:bid_update' pk=bid_id %}" class="btn btn-sm btn-info" role="button">Return to Bid</a>
+<a href="{{ object_list.0.bid.get_absolute_url }}" class="btn btn-sm btn-info" role="button">Return to Bid</a>
 
 {% endblock content %}

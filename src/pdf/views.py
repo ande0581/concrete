@@ -29,7 +29,6 @@ class PDFImageList(ListView):
     def get_context_data(self, **kwargs):
         context = super(PDFImageList, self).get_context_data(**kwargs)
         context['object_list'] = PDFImage.objects.filter(bid=self.kwargs['pk'])
-        context['bid_id'] = self.kwargs['pk']
         return context
 
 
