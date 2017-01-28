@@ -35,7 +35,6 @@ class BidCreate(SuccessMessageMixin, CreateView):
 
 class BidUpdate(SuccessMessageMixin, UpdateView):
 
-    # TODO Display Photos on bid
     template_name = 'bid/bid_update_form.html'
     model = Bid
     form_class = BidForm
