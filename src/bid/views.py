@@ -72,7 +72,7 @@ class BidList(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        queryset_list = Bid.objects.order_by('timestamp')
+        queryset_list = Bid.objects.order_by('-timestamp')
         query = self.request.GET.get('q')
 
         if query:
