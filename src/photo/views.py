@@ -41,7 +41,6 @@ class PhotoUpload(FormView):
 
 class PhotoDelete(DeleteView):
 
-    # TODO absolute url on deletion needed
     model = Attachment
     template_name = 'photo/photo_delete.html'
 
