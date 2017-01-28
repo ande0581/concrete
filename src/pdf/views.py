@@ -28,7 +28,7 @@ class PDFImageList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PDFImageList, self).get_context_data(**kwargs)
-        context['object_list'] = PDFImage.objects.filter(bid=self.kwargs['pk'])
+        context['object_list'] = PDFImage.objects.filter(bid=self.kwargs['pk']).order_by('-created_date')
         return context
 
 
