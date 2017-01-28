@@ -3,7 +3,6 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.list import ListView
 
 from address.models import Address
 from customer.models import Customer
@@ -40,8 +39,5 @@ class AddressDelete(DeleteView):
         messages.success(self.request, "Successfully Deleted")
         return reverse('customer_app:customer_detail', kwargs={'pk': self.customer_pk})
 
-
-class AddressList(ListView):
-    model = Address
 
 
