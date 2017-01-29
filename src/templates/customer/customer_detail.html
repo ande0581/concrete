@@ -72,7 +72,7 @@
           <td>{{ bid.description }}</a></td>
           <td>{{ bid.status }}</td>
           <td>
-              <a href="{% url 'bid_app:bid_update' pk=bid.pk %}" class="btn btn-sm btn-info">Edit</a>
+              <a href="{{ bid.get_absolute_url }}" class="btn btn-sm btn-info">Edit</a>
 
               <a href="{% url 'bid_app:bid_delete' pk=bid.pk %}" class="btn btn-sm btn-danger">Delete</a>
           </td>
