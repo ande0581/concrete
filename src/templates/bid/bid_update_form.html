@@ -44,6 +44,61 @@
 <br>
 <br>
 
+
+<div class="datagrid">
+<table>
+      <thead>
+      <tr>
+            <th width="50px"><strong>Services</strong></th>
+            <th width="50px"><strong>Items</strong></th>
+            <th width="50px"><strong>Photos</strong></th>
+      </tr>
+      </thead>
+
+      <tr style="background: white">
+            <td><a href="{% url 'service_group_app:driveway_create' bid=bid.id %}">Cement</a></td>
+            <td><a href="{% url 'bid_item_app:bid_item_create' bid=bid.id %}">Add</a></td>
+            <td><a href="{% url 'photo_app:photo_list' bid_id=bid.id %}">View</a></td>
+      </tr>
+
+      <tr style="background: #F0F0F0">
+            <td><a href="">Colored-Stamped</a></td>
+            <td><a href="{% url 'bid_item_app:bid_item_custom_create' bid=bid.id %}">Add Custom Item</a></td>
+            <td></td>
+      </tr>
+
+      <tr style="background: white">
+          <td><a href="">Steps</a></td>
+            <td></td>
+            <td></td>
+      </tr>
+
+      <tr style="background: #F0F0F0">
+            <td><a href="">Foundation</a></td>
+            <td></td>
+            <td></td>
+      </tr>
+
+       <tr style="background: white">
+            <td><a href="">Tuckpointing</a></td>
+            <td></td>
+            <td></td>
+       </tr>
+
+       <tr style="background: #F0F0F0">
+            <td><a href="">Egress Window</a></td>
+            <td></td>
+            <td></td>
+       </tr>
+</table>
+</div>
+<br>
+<br>
+
+
+
+
+
 <div class="entries">
   <h4><strong>Photos:</strong>
     <a href="{% url 'photo_app:photo_list' bid_id=bid.id %}" class="btn btn-sm btn-success">View</a>
