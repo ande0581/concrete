@@ -3,6 +3,7 @@ from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, Div
 
+from job_type.models import JobType
 from service.models import Service
 
 
@@ -18,7 +19,7 @@ def get_one_object(service_name):
 class StandardConcreteForm(forms.Form):
 # TODO http://stackoverflow.com/questions/32383978/no-such-column-error-in-django-models, an issue??
 
-    job_type = forms.CharField(label='description of job being performed')
+    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
     length = forms.IntegerField(label='Length in Feet')
     width = forms.IntegerField(label='Width in Feet')
     thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
