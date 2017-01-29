@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
-
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from bid.models import Bid
@@ -29,8 +28,6 @@ class JournalDelete(DeleteView):
     model = Journal
 
     def get_object(self, queryset=None):
-        # https://ultimatedjango.com/learn-django/lessons/delete-contact-full-lesson/
-        # Collect the object before deletion to redirect back to customer detail view on success
         obj = super(JournalDelete, self).get_object()
         self.bid_pk = obj.bid.id
         return obj

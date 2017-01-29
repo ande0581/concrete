@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
-
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from address.models import Address
@@ -29,8 +28,6 @@ class AddressDelete(DeleteView):
     model = Address
 
     def get_object(self, queryset=None):
-        # https://ultimatedjango.com/learn-django/lessons/delete-contact-full-lesson/
-        # Collect the object before deletion to redirect back to customer detail view on success
         obj = super(AddressDelete, self).get_object()
         self.customer_pk = obj.customer.id
         return obj

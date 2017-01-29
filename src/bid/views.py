@@ -21,16 +21,11 @@ class BidCreate(SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(BidCreate, self).get_context_data(**kwargs)
-        #print('VIEW:', context['view'])
-        #print('FORM:', context['form'])
         return context
 
     def form_valid(self, form):
         form.instance.address = Address.objects.get(pk=self.kwargs['address'])
         form.instance.customer = form.instance.address.customer
-        #print('FORM_INSTANCE ADDRESS---->', form.instance.address_id)
-        #print('FORM_INSTANCE CUSTOMER---->', form.instance.address_id.customer_id)
-        #print("POST FORM SAVE:", form.cleaned_data)
         return super(BidCreate, self).form_valid(form)
 
 
@@ -48,9 +43,6 @@ class BidUpdate(SuccessMessageMixin, UpdateView):
         context['total_cost'] = bid_item_obj.aggregate(Sum('total'))['total__sum']
         context['pdfs'] = PDFImage.objects.all().filter(bid=self.kwargs['pk'])
         context['journal_entries'] = Journal.objects.all().filter(bid=self.kwargs['pk']).order_by('-timestamp')
-        #print('CONTEXT:', context)
-        #print('total_cost:', context['total_cost'])
-        #print('FORM:', context['form'])
         return context
 
 
@@ -58,8 +50,6 @@ class BidDelete(DeleteView):
     model = Bid
 
     def get_object(self, queryset=None):
-        # https://ultimatedjango.com/learn-django/lessons/delete-contact-full-lesson/
-        # Collect the object before deletion to redirect back to customer detail view on success
         obj = super(BidDelete, self).get_object()
         self.customer_pk = obj.customer.id
         return obj
@@ -83,7 +73,7 @@ class BidList(ListView):
                 Q(customer__last_name__icontains=query) |
                 Q(customer__company_name__icontains=query) |
                 Q(status__icontains=query)
-            ).distinct()  # this prevents duplicates
+            ).distinct()
 
         return queryset_list
 

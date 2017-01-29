@@ -1,2 +1,1 @@
-# TODO refactor adding special context dictionary when using object_list when trying to
-# use a single objects value inside the dictionary for absolute url
+# TODO, check delete on cascade is appropriate for all models

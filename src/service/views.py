@@ -3,7 +3,6 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
@@ -52,7 +51,7 @@ class ServiceList(ListView):
             queryset_list = queryset_list.filter(
                 Q(category__name__icontains=query) |
                 Q(description__icontains=query)
-               ).distinct()  # this prevents duplicates
+               ).distinct()
 
         return queryset_list
 

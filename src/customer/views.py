@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -58,7 +57,7 @@ class CustomerList(ListView):
                 Q(company_name__icontains=query) |
                 Q(telephone__icontains=query) |
                 Q(email__icontains=query)
-            ).distinct()  # this prevents duplicates
+            ).distinct()
 
         return queryset_list
 

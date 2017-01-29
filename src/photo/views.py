@@ -2,10 +2,10 @@ from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.edit import FormView, DeleteView
-from photo.forms import UploadForm
-from photo.models import Attachment
 
 from bid.models import Bid
+from photo.models import Attachment
+from photo.forms import UploadForm
 
 
 class PhotoList(ListView):
