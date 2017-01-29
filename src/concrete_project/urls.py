@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^calculator/', include('calculator.urls')),
     url(r'^category/', include('category.urls')),
     url(r'^customer/', include('customer.urls')),
+    url(r'^job_type/', include('job_type.urls')),
     url(r'^journal/', include('journal.urls')),
     url(r'^overview/', include('overview.urls')),
     url(r'^pdf/', include('pdf.urls')),

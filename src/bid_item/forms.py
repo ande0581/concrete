@@ -12,7 +12,7 @@ class BidItemForm(forms.ModelForm):
 
     class Meta:
         model = BidItem
-        fields = ('description', 'quantity')
+        fields = ('job_type', 'description', 'quantity')
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -23,7 +23,7 @@ class BidItemUpdateForm(forms.ModelForm):
 
     class Meta:
         model = BidItem
-        fields = ('description', 'quantity', 'cost')
+        fields = ('job_type', 'description', 'quantity', 'cost')
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -34,7 +34,7 @@ class BidItemCustomForm(forms.ModelForm):
 
         class Meta:
             model = BidItem
-            fields = ('description', 'total')
+            fields = ('job_type', 'description', 'total')
 
         helper = FormHelper()
         helper.form_method = 'POST'

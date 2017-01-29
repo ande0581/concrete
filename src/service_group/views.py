@@ -51,6 +51,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
     def form_valid(self, form):
         #print('%%%%%%%', form.__dict__)
         print("POST FORM SAVE:", form.cleaned_data)
+        job_type = form.cleaned_data['job_type']
         length = form.cleaned_data['length']
         width = form.cleaned_data['width']
         thickness = form.cleaned_data['thickness']
@@ -81,6 +82,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
 
         concrete_obj = get_one_object(concrete)
         concrete_record = {'bid': bid_obj,
+                           'job_type': job_type,
                            'quantity': cubic_yards,
                            'cost': concrete_obj.cost,
                            'description': concrete_obj.description,
@@ -90,6 +92,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         if rebar:
             rebar_obj = get_one_object(rebar)
             rebar_record = {'bid': bid_obj,
+                            'job_type': job_type,
                             'quantity': sq_ft,
                             'cost': rebar_obj.cost,
                             'description': rebar_obj.description,
@@ -99,6 +102,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         if removal:
             removal_obj = get_one_object(removal)
             removal_record = {'bid': bid_obj,
+                              'job_type': job_type,
                               'quantity': sq_ft,
                               'cost': removal_obj.cost,
                               'description': removal_obj.description,
@@ -108,6 +112,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         if saw_cutting_qty:
             saw_cutting_obj = get_one_object('Saw Cutting')
             saw_cutting_record = {'bid': bid_obj,
+                                  'job_type': job_type,
                                   'quantity': saw_cutting_qty,
                                   'cost': saw_cutting_obj.cost,
                                   'description': saw_cutting_obj.description,
@@ -117,6 +122,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         if forming:
             forming_obj = get_one_object(forming)
             forming_record = {'bid': bid_obj,
+                              'job_type': job_type,
                               'quantity': sq_ft,
                               'cost': forming_obj.cost,
                               'description': forming_obj.description,
@@ -126,6 +132,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         if expansion_felt_qty:
             expansion_felt_obj = get_one_object('Expansion Felt')
             expansion_felt_record = {'bid': bid_obj,
+                                     'job_type': job_type,
                                      'quantity': expansion_felt_qty,
                                      'cost': expansion_felt_obj.cost,
                                      'description': expansion_felt_obj.description,
@@ -135,6 +142,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         if fill:
             fill_obj = get_one_object(fill)
             fill_record = {'bid': bid_obj,
+                           'job_type': job_type,
                            'quantity': 1,
                            'cost': fill_obj.cost,
                            'description': fill_obj.description,
@@ -143,6 +151,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
 
         finishing_obj = get_one_object(finishing)
         finishing_record = {'bid': bid_obj,
+                            'job_type': job_type,
                             'quantity': sq_ft,
                             'cost': finishing_obj.cost,
                             'description': finishing_obj.description,
@@ -152,6 +161,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         if sealer:
             sealer_obj = get_one_object(sealer)
             sealer_record = {'bid': bid_obj,
+                             'job_type': job_type,
                              'quantity': sq_ft,
                              'cost': sealer_obj.cost,
                              'description': sealer_obj.description,

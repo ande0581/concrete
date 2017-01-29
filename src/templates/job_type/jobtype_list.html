@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'q_search_form.html' %}
+
+
+<h4 class="entries">
+  <h4><strong>Job Type </strong><a href="{% url 'job_type_app:job_type_create' %}" class="btn btn-sm btn-success" role="button">Add</a></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th><strong>Description</strong></th>
+          <th><strong>Delete</strong></th>
+        </tr>
+      </thead>
+      {% for job_type in object_list %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td><a href="{% url 'job_type_app:job_type_update' pk=job_type.pk %}">{{ job_type.description }}</a></td>
+              <td><a href="{% url 'job_type_app:job_type_delete' pk=job_type.pk %}">Delete</a></td>
+          </tr>
+      {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 class BidItem(models.Model):
 
     bid = models.ForeignKey('bid.Bid', on_delete=models.CASCADE)
+    job_type = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     quantity = models.FloatField(null=True)
     cost = models.FloatField(null=True)

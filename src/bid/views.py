@@ -38,7 +38,7 @@ class BidUpdate(SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(BidUpdate, self).get_context_data(**kwargs)
-        bid_item_obj = BidItem.objects.filter(bid=self.kwargs['pk'])
+        bid_item_obj = BidItem.objects.filter(bid=self.kwargs['pk']).order_by('job_type')
         context['bid_items'] = bid_item_obj
         context['total_cost'] = bid_item_obj.aggregate(Sum('total'))['total__sum']
         context['pdfs'] = PDFImage.objects.all().filter(bid=self.kwargs['pk'])

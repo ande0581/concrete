@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'calculator',
     'category',
     'customer',
+    'job_type',
     'journal',
     'overview',
     'pdf',
