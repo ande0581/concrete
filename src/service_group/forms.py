@@ -28,6 +28,8 @@ class StandardConcreteForm(forms.Form):
     removal = forms.ModelChoiceField(queryset=get_queryset('Removal-Square-Foot'), required=False,
                                      initial=get_one_object('Removal - Concrete/Tar'))
     saw_cutting = forms.IntegerField(label='Saw Cutting in Feet or Blank for None', required=False)
+    forming = forms.ModelChoiceField(queryset=get_queryset('Forming'), required=False,
+                                     initial=get_one_object('Forming, Grading and Setup'))
     expansion_felt = forms.IntegerField(label='Expansion Felt in Feet or Blank for None', required=False)
     fill = forms.ModelChoiceField(queryset=get_queryset('Fill'), required=False, empty_label="(Nothing)")
     finishing = forms.ModelChoiceField(queryset=get_queryset('Finishing'),
@@ -55,7 +57,30 @@ class StandardConcreteForm(forms.Form):
 
 
 class DecorativeConcreteForm(forms.Form):
-    pass
+
+    length = forms.IntegerField(label='Length in Feet')
+    width = forms.IntegerField(label='Width in Feet')
+    thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
+    concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
+                                           initial=get_one_object('Concrete Colored $$'))
+    rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), required=False,
+                                        initial=get_one_object('Rebar 1/2 Non-Coated'))
+    removal = forms.ModelChoiceField(queryset=get_queryset('Removal-Square-Foot'), required=False,
+                                     initial=get_one_object('Removal - Concrete/Tar'))
+    saw_cutting = forms.IntegerField(label='Saw Cutting in Feet or Blank for None', required=False)
+    forming = forms.ModelChoiceField(queryset=get_queryset('Forming'), required=False,
+                                     initial=get_one_object('Forming, Grading and Setup'))
+    expansion_felt = forms.IntegerField(label='Expansion Felt in Feet or Blank for None', required=False)
+    fill = forms.ModelChoiceField(queryset=get_queryset('Fill'), required=False, empty_label="(Nothing)")
+    finishing = forms.ModelChoiceField(queryset=get_queryset('Finishing'),
+                                       initial=get_one_object('Pour, Finish, Control Joints Colored/Stamped'))
+    stamps = forms.BooleanField(required=True, initial=False)
+    sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
+                                    initial=get_one_object('Sealer - Lumiseal Plus'))
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Bid Driveway', css_class='btn=primary'))
 
     """
     1. removal -required(no), default=Removal - Concrete/Tar (sq/ft).

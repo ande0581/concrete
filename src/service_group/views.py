@@ -59,6 +59,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         removal = form.cleaned_data['removal']
         saw_cutting_qty = form.cleaned_data['saw_cutting']
         expansion_felt_qty = form.cleaned_data['expansion_felt']
+        forming = form.cleaned_data['forming']
         fill = form.cleaned_data['fill']
         finishing = form.cleaned_data['finishing']
         sealer = form.cleaned_data['sealer']
@@ -112,6 +113,15 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
                                   'description': saw_cutting_obj.description,
                                   'total': (saw_cutting_obj.cost * saw_cutting_qty)}
             insert_bid_item(**saw_cutting_record)
+
+        if forming:
+            forming_obj = get_one_object(forming)
+            forming_record = {'bid': bid_obj,
+                              'quantity': sq_ft,
+                              'cost': forming_obj.cost,
+                              'description': forming_obj.description,
+                              'total': (forming_obj.cost * sq_ft)}
+            insert_bid_item(**forming_record)
 
         if expansion_felt_qty:
             expansion_felt_obj = get_one_object('Expansion Felt')
