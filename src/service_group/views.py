@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
 
 from bid.models import Bid
 from bid_item.models import BidItem
 from service.models import Service
-from service_group.forms import DrivewayForm
+from service_group.forms import StandardConcreteForm, DecorativeConcreteForm, StepsForm, FoundationForm, \
+    FootingsForm, EgressWindowForm
 
 
 def calculate_square_feet(length, width):
@@ -30,16 +30,16 @@ def insert_bid_item(**item_details):
     item.save()
 
 
-class DrivewayCreate(SuccessMessageMixin, FormView):
+class StandardConcreteCreate(SuccessMessageMixin, FormView):
     """
     (length x width x thickness) / 27 = yards
 
     """
-    template_name = 'service_group/driveway_form.html'
-    form_class = DrivewayForm
+    template_name = 'service_group/service_group_form.html'
+    form_class = StandardConcreteForm
 
     def get_success_url(self):
-        messages.success(self.request, "Driveway Estimated")
+        messages.success(self.request, "Standard Concrete Estimated")
         return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
 
     # def get_context_data(self, **kwargs):
@@ -148,4 +148,74 @@ class DrivewayCreate(SuccessMessageMixin, FormView):
                              'total': (sealer_obj.cost * sq_ft)}
             insert_bid_item(**sealer_record)
 
-        return super(DrivewayCreate, self).form_valid(form)
+        return super(StandardConcreteCreate, self).form_valid(form)
+
+
+class DecorativeConcreteCreate(SuccessMessageMixin, FormView):
+
+    template_name = 'service_group/service_group_form.html'
+    form_class = DecorativeConcreteForm
+
+    def get_success_url(self):
+        messages.success(self.request, "Decorative Concrete Estimated")
+        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+
+    def form_valid(self, form):
+
+        return super(DecorativeConcreteCreate, self).form_valid(form)
+
+
+class StepsCreate(SuccessMessageMixin, FormView):
+
+    template_name = 'service_group/service_group_form.html'
+    form_class = StepsForm
+
+    def get_success_url(self):
+        messages.success(self.request, "Steps Estimated")
+        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+
+    def form_valid(self, form):
+
+        return super(StepsCreate, self).form_valid(form)
+
+
+class FoundationCreate(SuccessMessageMixin, FormView):
+
+    template_name = 'service_group/service_group_form.html'
+    form_class = FoundationForm
+
+    def get_success_url(self):
+        messages.success(self.request, "Foundation Estimated")
+        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+
+    def form_valid(self, form):
+
+        return super(FoundationCreate, self).form_valid(form)
+
+
+class FootingsCreate(SuccessMessageMixin, FormView):
+
+    template_name = 'service_group/service_group_form.html'
+    form_class = FootingsForm
+
+    def get_success_url(self):
+        messages.success(self.request, "Footings Estimated")
+        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+
+    def form_valid(self, form):
+
+        return super(FootingsCreate, self).form_valid(form)
+
+
+class EgressWindowCreate(SuccessMessageMixin, FormView):
+
+    template_name = 'service_group/service_group_form.html'
+    form_class = EgressWindowForm
+
+    def get_success_url(self):
+        messages.success(self.request, "Egress Window Estimated")
+        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+
+    def form_valid(self, form):
+
+        return super(EgressWindowCreate, self).form_valid(form)

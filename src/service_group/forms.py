@@ -1,9 +1,9 @@
 from django import forms
-from service.models import Service
-
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, Div
+
+from service.models import Service
 
 
 def get_queryset(category_name):
@@ -15,7 +15,7 @@ def get_one_object(service_name):
     return my_obj.pk
 
 
-class DrivewayForm(forms.Form):
+class StandardConcreteForm(forms.Form):
 # TODO http://stackoverflow.com/questions/32383978/no-such-column-error-in-django-models, an issue??
 
     length = forms.IntegerField(label='Length in Feet')
@@ -54,7 +54,7 @@ class DrivewayForm(forms.Form):
     """
 
 
-class ColoredConcrete(forms.Form):
+class DecorativeConcreteForm(forms.Form):
     pass
 
     """
@@ -72,7 +72,7 @@ class ColoredConcrete(forms.Form):
     """
 
 
-class Steps(forms.Form):
+class StepsForm(forms.Form):
     pass
 
     """
@@ -86,7 +86,7 @@ class Steps(forms.Form):
     """
 
 
-class Foundation(forms.Form):
+class FoundationForm(forms.Form):
     pass
 
     """
@@ -99,7 +99,7 @@ class Foundation(forms.Form):
     """
 
 
-class Footings(forms.Form):
+class FootingsForm(forms.Form):
     pass
 
     """
@@ -109,23 +109,7 @@ class Footings(forms.Form):
     """
 
 
-class Pillars(forms.Form):
-    pass
-
-    """
-    wait on this one
-    """
-
-
-class Tuckpointing(forms.Form):
-    pass
-
-    """
-    wait on this one
-    """
-
-
-class EgressWindow(forms.Form):
+class EgressWindowForm(forms.Form):
     pass
 
     """

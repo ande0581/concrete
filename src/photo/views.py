@@ -12,6 +12,10 @@ class PhotoList(ListView):
     model = Attachment
     template_name = 'photo/photo_list.html'
 
+    def get_queryset(self):
+        queryset_list = Attachment.objects.filter(bid=self.kwargs['bid_id'])
+        return queryset_list
+
     def get_context_data(self, **kwargs):
         context = super(PhotoList, self).get_context_data(**kwargs)
         context['bid_id'] = self.kwargs['bid_id']
