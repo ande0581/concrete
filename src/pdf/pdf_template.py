@@ -39,7 +39,7 @@ class NumberedCanvas(canvas.Canvas):
 
     def draw_page_number(self, page_count):
         # Change the position of this to wherever you want the page number to be
-        self.drawRightString(200 * mm, 15 * mm + (0.2 * inch),
+        self.drawRightString(200 * mm, 10 * mm + (0.2 * inch),
                              "Page {} of {}".format(self._pageNumber, page_count))
 
 
