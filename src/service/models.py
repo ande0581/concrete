@@ -9,6 +9,9 @@ class Service(models.Model):
     measurement = models.CharField(max_length=30)
     protected = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['description']
+
     def __str__(self):
         return self.description
 

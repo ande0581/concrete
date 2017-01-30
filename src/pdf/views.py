@@ -5,13 +5,34 @@ from django.views.generic import ListView
 
 from pdf.pdf_template import generate_pdf
 from bid.models import Bid
+from bid_item.models import BidItem
 from pdf.models import PDFImage
+
+
+def create_bid_item_dict(bid_obj):
+    """
+    :param bid_obj:
+    :return: dictionary where the key is the job_type and the value is biditem_obj that matches that job_type
+    """
+    bid_item_obj = BidItem.objects.filter(bid=bid_obj.id)
+
+    unique_job_types = set()
+    for item in bid_item_obj:
+        unique_job_types.add(item.job_type)
+
+    bid_item_dict = {}
+    for job in unique_job_types:
+        bid_items = bid_item_obj.filter(job_type=job)
+        bid_item_dict.setdefault(job, bid_items)
+
+    return bid_item_dict
 
 
 def view_pdf(request, **kwargs):
 
     obj = Bid.objects.get(pk=kwargs['bid_id'])
-    response = generate_pdf(request, obj=obj, save_to_disk=False)
+    bid_item_dict = create_bid_item_dict(obj)
+    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, save_to_disk=False)
     return response
 
 

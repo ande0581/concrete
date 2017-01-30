@@ -5,6 +5,9 @@ from django.core.urlresolvers import reverse
 class JobType(models.Model):
     description = models.CharField(max_length=50, unique=True)
 
+    class Meta:
+        ordering = ['description']
+
     def __str__(self):
         return self.description
 

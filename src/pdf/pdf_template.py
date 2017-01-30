@@ -43,8 +43,7 @@ class NumberedCanvas(canvas.Canvas):
                              "Page {} of {}".format(self._pageNumber, page_count))
 
 
-def generate_pdf(request, obj, save_to_disk=False):
-
+def generate_pdf(request, obj, bid_item_dict, save_to_disk=False):
     buff = BytesIO()
 
     # The page width totals 19.6cm
@@ -96,7 +95,7 @@ def generate_pdf(request, obj, save_to_disk=False):
 
     logo = os.path.join(settings.STATIC_ROOT, 'img/logo.jpg')
     denominator = 5
-    image = Image(logo, width=800/denominator, height=269/denominator)
+    image = Image(logo, width=800 / denominator, height=269 / denominator)
 
     invoice_paragraph = """
         Date: {}<br />
@@ -105,7 +104,7 @@ def generate_pdf(request, obj, save_to_disk=False):
 
     data1 = [[Paragraph(company_paragraph, styles['Line_Data_Large']),
               image,
-             Paragraph(invoice_paragraph, styles['Line_Data_Large'])]]
+              Paragraph(invoice_paragraph, styles['Line_Data_Large'])]]
 
     t1 = Table(data1, colWidths=(7 * cm, 8 * cm, 4.6 * cm))
     t1.setStyle(TableStyle([
@@ -153,37 +152,56 @@ def generate_pdf(request, obj, save_to_disk=False):
 
     # Add Bid Items to PDF
     story.append(Spacer(4, 32))
-    data1 = [[Paragraph('Description', styles["Line_Data_Large"]),
-              Paragraph('Total', styles["Line_Data_Large_Right"])]
-             ]
 
-    t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
-    t1.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-        ('BOX', (0, 0), (-1, -1), .25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
-    ]))
+    for job_name, items in bid_item_dict.items():
+        title = [[Paragraph(job_name, styles["Line_Data_Large"]),
+                  Paragraph('', styles["Line_Data_Large"])]
+                 ]
 
-    story.append(t1)
+        t1 = Table(title, colWidths=(16 * cm, 3.6 * cm))
+        t1.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), .25, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
+        ]))
 
+        story.append(t1)
+
+        data1 = [[Paragraph(str(item.description), styles["Line_Data_Large"]),
+                  Paragraph(str("{0:.2f}".format(round(item.total, 2))), styles["Line_Data_Large_Right"])] for item in
+                 items]
+
+        t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
+        t1.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ]))
+
+        story.append(t1)
+
+        # Calculate total per job and add to PDF
+        total = items.aggregate(Sum('total'))['total__sum']
+        data1 = [[Paragraph('Total', styles["Line_Data_Large"]),
+                  Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
+                 ]
+
+        t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
+        t1.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), .25, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
+        ]))
+
+        story.append(t1)
+        story.append(Spacer(4, 12))
+
+    # Add Grand Total to PDF
     items = BidItem.objects.all().filter(bid=obj.id)
-
-    data1 = [[Paragraph(str(item.description), styles["Line_Data_Large"]),
-              Paragraph(str("{0:.2f}".format(round(item.total, 2))), styles["Line_Data_Large_Right"])] for item in items]
-
-    t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
-    t1.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-    ]))
-
-    story.append(t1)
-
-    # Calculate total and add to PDF
     total = items.aggregate(Sum('total'))['total__sum']
-    data1 = [[Paragraph('Total', styles["Line_Data_Large"]),
+    data1 = [[Paragraph('Grand Total', styles["Line_Data_Large"]),
               Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
              ]
 
