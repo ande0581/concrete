@@ -33,7 +33,7 @@ class StandardConcreteForm(forms.Form):
     forming = forms.ModelChoiceField(queryset=get_queryset('Forming'), required=False,
                                      initial=get_one_object('Forming, Grading and Setup'))
     expansion_felt = forms.IntegerField(label='Expansion Felt in Feet or Blank for None', required=False)
-    fill = forms.ModelChoiceField(queryset=get_queryset('Fill'), required=False, empty_label="(Nothing)")
+    fill = forms.ModelChoiceField(queryset=get_queryset('Fill'), required=False)
     finishing = forms.ModelChoiceField(queryset=get_queryset('Finishing'),
                                        initial=get_one_object('Pour, Finish, Control Joints'))
     sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
@@ -41,30 +41,33 @@ class StandardConcreteForm(forms.Form):
 
     helper = FormHelper()
     helper.form_method = 'POST'
-    helper.add_input(Submit('login', 'Bid Driveway', css_class='btn=primary'))
+    helper.add_input(Submit('login', 'Bid Standard Concrete', css_class='btn=primary'))
 
 
 
     """
-    1. removal -required(no), default=Removal - Concrete/Tar (sq/ft)
-    2. saw cutting  -required(no), default=nothing
-    3. forming grading and setup - required(no), default=Forming / Grading / Setup (sq/ft)
-    3.1 fill - required(no), default(none)
-    4. rebar - required(no), default (1/2 non-coated), option for none
-    5. felt - required(no), float field
-    5.1 pour finish control joint - required=true, default=calculated on sq
-    6. cement (min load load charge, less than 5 yards), add %5 extra, required=yes
-    7. sealer (required=no), default=(Sealer - Cure n Seal)
+    x1. removal -required(no), default=Removal - Concrete/Tar (sq/ft)
+    x2. saw cutting  -required(no), default=nothing
+    x3. forming grading and setup - required(no), default=Forming / Grading / Setup (sq/ft)
+    x3.1 fill - required(no), default(none)
+    x4. rebar - required(no), default (1/2 non-coated), option for none
+    x5. felt - required(no), float field
+    x5.1 pour finish control joint - required=true, default=calculated on sq
+    x6. cement (min load load charge, less than 5 yards), add %5 extra, required=yes
+    x7. sealer (required=no), default=(Sealer - Cure n Seal)
     """
 
 
 class DecorativeConcreteForm(forms.Form):
 
+    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
     length = forms.IntegerField(label='Length in Feet')
     width = forms.IntegerField(label='Width in Feet')
     thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
     concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
                                            initial=get_one_object('Concrete Colored $$'))
+    washout = forms.ModelChoiceField(queryset=get_queryset('Washout'),
+                                     initial=get_one_object('Concrete Truck Washout Fee'))
     rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), required=False,
                                         initial=get_one_object('Rebar 1/2 Non-Coated'))
     removal = forms.ModelChoiceField(queryset=get_queryset('Removal-Square-Foot'), required=False,
@@ -73,43 +76,60 @@ class DecorativeConcreteForm(forms.Form):
     forming = forms.ModelChoiceField(queryset=get_queryset('Forming'), required=False,
                                      initial=get_one_object('Forming, Grading and Setup'))
     expansion_felt = forms.IntegerField(label='Expansion Felt in Feet or Blank for None', required=False)
-    fill = forms.ModelChoiceField(queryset=get_queryset('Fill'), required=False, empty_label="(Nothing)")
+    fill = forms.ModelChoiceField(queryset=get_queryset('Fill'), required=False)
     finishing = forms.ModelChoiceField(queryset=get_queryset('Finishing'),
                                        initial=get_one_object('Pour, Finish, Control Joints Colored/Stamped'))
-    stamps = forms.BooleanField(required=True, initial=False)
+    stamps = forms.BooleanField(required=False)
     sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
                                     initial=get_one_object('Sealer - Lumiseal Plus'))
 
     helper = FormHelper()
     helper.form_method = 'POST'
-    helper.add_input(Submit('login', 'Bid Driveway', css_class='btn=primary'))
+    helper.add_input(Submit('login', 'Bid Decorative Concrete', css_class='btn=primary'))
 
     """
-    1. removal -required(no), default=Removal - Concrete/Tar (sq/ft).
-    2. saw cutting  -required(no), default=nothing
-    3. forming grading and setup - required(no), default=Forming / Grading / Setup (sq/ft)
-    3.1 fill - required(no), default(none)
-    4. rebar - required(no), default (1/2 non-coated), option for none
-    5. felt - required(no), float field
-    5.1 pour finish control joint - required=true, default=calculated on sq, more expensive for colored
-    6. cement (min load load charge, less than 5 yards), add %5 extra, required=yes, more expensive
-    7. colored washout fee ($60), always
-    8. stamps (true/false)
-    9 7. sealer (required=no), default=(Sealer - Lumiseal +)
+    x1. removal -required(no), default=Removal - Concrete/Tar (sq/ft).
+    x2. saw cutting  -required(no), default=nothing
+    x3. forming grading and setup - required(no), default=Forming / Grading / Setup (sq/ft)
+    x3.1 fill - required(no), default(none)
+    x4. rebar - required(no), default (1/2 non-coated), option for none
+    x5. felt - required(no), float field
+    x5.1 pour finish control joint - required=true, default=calculated on sq, more expensive for colored
+    x6. cement (min load load charge, less than 5 yards), add %5 extra, required=yes, more expensive
+    x7. colored washout fee ($60), always
+    x8. stamps (true/false)
+    x9  sealer (required=no), default=(Sealer - Lumiseal +)
     """
 
 
 class StepsForm(forms.Form):
-    pass
+
+    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
+    length = forms.IntegerField(label='Depth of Steps in Feet')
+    width = forms.IntegerField(label='Width of Steps in Feet')
+    thickness = forms.IntegerField(label='Height of Steps in Inches')
+    num_risers = forms.IntegerField(label='Total Number of Steps')
+    concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
+                                           initial=get_one_object('Concrete Driveway Mix'))
+    removal = forms.FloatField(label='Cost to Remove Existing Steps or Blank for None')
+    short_load = forms.BooleanField(required=False)
+    railing = forms.ModelChoiceField(queryset=get_queryset('Railing'), required=False)
+    sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
+                                    initial=get_one_object('Sealer - Lumiseal Plus'))
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Bid Steps', css_class='btn=primary'))
 
     """
-    length (required)
-    width (required)
-    risers (int, required)
-    removal = float field
-    short_load_fee = true/false, default=none
-    railing (required=no, default=none)
-    sealer (required=no), default=(Sealer - Lumiseal +)
+    xlength (required)
+    xwidth (required)
+    xthickness (required)
+    xrisers (int, required)
+    xremoval = float field
+    xshort_load_fee = true/false, default=none
+    xrailing (required=no, default=none)
+    xsealer (required=no), default=(Sealer - Lumiseal +)
     """
 
 
@@ -127,17 +147,45 @@ class FoundationForm(forms.Form):
 
 
 class FootingsForm(forms.Form):
-    pass
+
+    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
+    length = forms.IntegerField(label='Length of Footing')
+    width = forms.IntegerField(label='Width of Footing')
+    thickness = forms.IntegerField(label='Depth of Footing')
+    quantity = forms.IntegerField(label='Number of Footings')
 
     """
     length
     width
     height
+    quantity
     """
 
 
 class EgressWindowForm(forms.Form):
-    pass
+
+    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
+    wood = forms.ModelChoiceField(queryset=get_queryset('Wood'),
+                                  initial=get_one_object('Pressure Treated Wood'))
+    dig_out = forms.ModelChoiceField(queryset=get_queryset('Window-Dig-Out'),
+                                     initial=get_one_object('Dig Out Window Well'))
+    flashing = forms.ModelChoiceField(queryset=get_queryset('Flashing'),
+                                      initial=get_one_object('Flashing'))
+    window = forms.ModelChoiceField(queryset=get_queryset('Window'),
+                                    initial=get_one_object('Standard Egress Window'))
+    window_well = forms.ModelChoiceField(queryset=get_queryset('Window-Well'),
+                                         initial=get_one_object('Standard Window Well'))
+    fasteners = forms.ModelChoiceField(queryset=get_queryset('Fasteners'),
+                                       initial=get_one_object('Window Fasteners'))
+    permit = forms.ModelChoiceField(queryset=get_queryset('Permit'),
+                                    initial=get_one_object('Egress Window Building Permit'), required=False)
+    rock = forms.ModelChoiceField(queryset=get_queryset('Rock'),
+                                  initial=get_one_object('Rock for Window Well'))
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Bid Egress Window', css_class='btn=primary'))
+
 
     """
     treated_wood, always true (value=?)

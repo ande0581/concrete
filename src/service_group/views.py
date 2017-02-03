@@ -17,6 +17,9 @@ def calculate_square_feet(length, width):
 
 def calculate_cubic_yards(length, width, thickness):
     cubic_yards = (length * width * (thickness / 12)) / 27
+
+    # add 5% extra
+    cubic_yards *= 1.05
     return round(cubic_yards, 2)
 
 
@@ -30,32 +33,25 @@ def insert_bid_item(**item_details):
     item.save()
 
 
-class StandardConcreteCreate(SuccessMessageMixin, FormView):
+class ConcreteCreate(SuccessMessageMixin, FormView):
     """
     (length x width x thickness) / 27 = yards
 
     """
     template_name = 'service_group/service_group_form.html'
-    form_class = StandardConcreteForm
 
     def get_success_url(self):
-        messages.success(self.request, "Standard Concrete Estimated")
+        messages.success(self.request, "Concrete Estimated")
         return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(DrivewayCreate, self).get_context_data(**kwargs)
-    #     #print('VIEW:', context['view'])
-    #     #print('FORM:', context['form'])
-    #     return context
-
     def form_valid(self, form):
-        #print('%%%%%%%', form.__dict__)
-        print("POST FORM SAVE:", form.cleaned_data)
+        # print("POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         length = form.cleaned_data['length']
         width = form.cleaned_data['width']
         thickness = form.cleaned_data['thickness']
         concrete = form.cleaned_data['concrete_type']
+        washout = form.cleaned_data.get('washout', None)
         rebar = form.cleaned_data['rebar_type']
         removal = form.cleaned_data['removal']
         saw_cutting_qty = form.cleaned_data['saw_cutting']
@@ -63,6 +59,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         forming = form.cleaned_data['forming']
         fill = form.cleaned_data['fill']
         finishing = form.cleaned_data['finishing']
+        stamps = form.cleaned_data.get('stamps', False)
         sealer = form.cleaned_data['sealer']
 
         sq_ft = calculate_square_feet(length, width)
@@ -77,6 +74,8 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
         # print('fill:', fill)
         # print('finishing:', finishing)
         # print('sealer:', sealer)
+        # print('washout_fee:', washout)
+        # print('stamps:', stamps)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -88,6 +87,27 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
                            'description': concrete_obj.description,
                            'total': (concrete_obj.cost * cubic_yards)}
         insert_bid_item(**concrete_record)
+
+        # Check For Short Load Fee
+        if cubic_yards < 5:
+            short_load_obj = get_one_object('Minimum Load Charge')
+            short_load_record = {'bid': bid_obj,
+                                 'job_type': job_type,
+                                 'quantity': 1,
+                                 'cost': short_load_obj.cost,
+                                 'description': short_load_obj.description,
+                                 'total': short_load_obj.cost}
+            insert_bid_item(**short_load_record)
+
+        if washout:
+            washout_obj = get_one_object('Concrete Truck Washout Fee')
+            washout_record = {'bid': bid_obj,
+                              'job_type': job_type,
+                              'quantity': 1,
+                              'cost': washout_obj.cost,
+                              'description': washout_obj.description,
+                              'total': washout_obj.cost}
+            insert_bid_item(**washout_record)
 
         if rebar:
             rebar_obj = get_one_object(rebar)
@@ -158,6 +178,16 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
                             'total': (finishing_obj.cost * sq_ft)}
         insert_bid_item(**finishing_record)
 
+        if stamps:
+            stamp_obj = get_one_object('Concrete Stamps')
+            stamp_record = {'bid': bid_obj,
+                            'job_type': job_type,
+                            'quantity': 1,
+                            'cost': stamp_obj.cost,
+                            'description': stamp_obj.description,
+                            'total': stamp_obj.cost}
+            insert_bid_item(**stamp_record)
+
         if sealer:
             sealer_obj = get_one_object(sealer)
             sealer_record = {'bid': bid_obj,
@@ -168,21 +198,7 @@ class StandardConcreteCreate(SuccessMessageMixin, FormView):
                              'total': (sealer_obj.cost * sq_ft)}
             insert_bid_item(**sealer_record)
 
-        return super(StandardConcreteCreate, self).form_valid(form)
-
-
-class DecorativeConcreteCreate(SuccessMessageMixin, FormView):
-
-    template_name = 'service_group/service_group_form.html'
-    form_class = DecorativeConcreteForm
-
-    def get_success_url(self):
-        messages.success(self.request, "Decorative Concrete Estimated")
-        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
-
-    def form_valid(self, form):
-
-        return super(DecorativeConcreteCreate, self).form_valid(form)
+        return super(ConcreteCreate, self).form_valid(form)
 
 
 class StepsCreate(SuccessMessageMixin, FormView):
@@ -195,6 +211,33 @@ class StepsCreate(SuccessMessageMixin, FormView):
         return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
+
+        print("POST FORM SAVE:", form.cleaned_data)
+        job_type = form.cleaned_data['job_type']
+        length = form.cleaned_data['length']
+        width = form.cleaned_data['width']
+        thickness = form.cleaned_data['thickness']
+        num_risers = form.cleaned_data['num_risers']
+        concrete = form.cleaned_data['concrete_type']
+        removal = form.cleaned_data['removal']
+        short_load = form.cleaned_data['short_load']
+        railing = form.cleaned_data['railing']
+        sealer = form.cleaned_data['sealer']
+
+        cubic_yards = calculate_cubic_yards(length, width, thickness)
+
+        print('job_type:', job_type)
+        print('cubic_yards:', cubic_yards)
+        print('num_risers:', num_risers)
+        print('concrete:', concrete)
+        print('removal:', removal)
+        print('short_load:', short_load)
+        print('railing:', railing)
+        print('sealer:', sealer)
+
+        bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
+
+        # TODO figure out step pricing formula
 
         return super(StepsCreate, self).form_valid(form)
 
@@ -237,5 +280,100 @@ class EgressWindowCreate(SuccessMessageMixin, FormView):
         return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
+
+        # print("POST FORM SAVE:", form.cleaned_data)
+        job_type = form.cleaned_data['job_type']
+        wood = form.cleaned_data['wood']
+        dig_out = form.cleaned_data['dig_out']
+        flashing = form.cleaned_data['flashing']
+        window = form.cleaned_data['window']
+        window_well = form.cleaned_data['window_well']
+        fasteners = form.cleaned_data['fasteners']
+        permit = form.cleaned_data['permit']
+        rock = form.cleaned_data['rock']
+
+        # print('job_type:', job_type)
+        # print('wood:', wood)
+        # print('dig_out:', dig_out)
+        # print('flashing:', flashing)
+        # print('window:', window)
+        # print('window_well', window_well)
+        # print('fasteners:', fasteners)
+        # print('permit:', permit)
+        # print('rock:', rock)
+
+        bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
+
+        wood_obj = get_one_object(wood)
+        wood_record = {'bid': bid_obj,
+                       'job_type': job_type,
+                       'quantity': 1,
+                       'cost': wood_obj.cost,
+                       'description': wood_obj.description,
+                       'total': wood_obj.cost}
+        insert_bid_item(**wood_record)
+
+        dig_out_obj = get_one_object(dig_out)
+        dig_out_record = {'bid': bid_obj,
+                          'job_type': job_type,
+                          'quantity': 1,
+                          'cost': dig_out_obj.cost,
+                          'description': dig_out_obj.description,
+                          'total': dig_out_obj.cost}
+        insert_bid_item(**dig_out_record)
+
+        flashing_obj = get_one_object(flashing)
+        flashing_record = {'bid': bid_obj,
+                           'job_type': job_type,
+                           'quantity': 1,
+                           'cost': flashing_obj.cost,
+                           'description': flashing_obj.description,
+                           'total': flashing_obj.cost}
+        insert_bid_item(**flashing_record)
+
+        window_obj = get_one_object(window)
+        window_record = {'bid': bid_obj,
+                         'job_type': job_type,
+                         'quantity': 1,
+                         'cost': window_obj.cost,
+                         'description': window_obj.description,
+                         'total': window_obj.cost}
+        insert_bid_item(**window_record)
+
+        window_well_obj = get_one_object(window_well)
+        window_well_record = {'bid': bid_obj,
+                              'job_type': job_type,
+                              'quantity': 1,
+                              'cost': window_well_obj.cost,
+                              'description': window_well_obj.description,
+                              'total': window_obj.cost}
+        insert_bid_item(**window_well_record)
+
+        fasteners_obj = get_one_object(fasteners)
+        fasteners_record = {'bid': bid_obj,
+                            'job_type': job_type,
+                            'quantity': 1,
+                            'cost': fasteners_obj.cost,
+                            'description': fasteners_obj.description,
+                            'total': fasteners_obj.cost}
+        insert_bid_item(**fasteners_record)
+
+        permit_obj = get_one_object(permit)
+        permit_record = {'bid': bid_obj,
+                         'job_type': job_type,
+                         'quantity': 1,
+                         'cost': permit_obj.cost,
+                         'description': permit_obj.description,
+                         'total': permit_obj.cost}
+        insert_bid_item(**permit_record)
+
+        rock_obj = get_one_object(rock)
+        rock_record = {'bid': bid_obj,
+                       'job_type': job_type,
+                       'quantity': 1,
+                       'cost': rock_obj.cost,
+                       'description': rock_obj.description,
+                       'total': rock_obj.cost}
+        insert_bid_item(**rock_record)
 
         return super(EgressWindowCreate, self).form_valid(form)
