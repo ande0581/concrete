@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
+from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from bid.models import Bid
@@ -49,3 +51,30 @@ class BidItemDelete(DeleteView):
     def get_success_url(self):
         messages.success(self.request, "Successfully Deleted")
         return reverse('bid_app:bid_update', kwargs={'pk': self.bid_pk})
+
+
+class BidItemGroupDelete(DeleteView):
+    # http://stackoverflow.com/questions/16606762/using-two-parameters-to-delete-using-a-django-deleteview
+
+    model = BidItem
+
+    def get_object(self, queryset=None):
+
+        # Job name spaces were replaced with dunders when generating url, reversing that modification
+        job_name = self.kwargs['job_name'].replace('__', ' ')
+
+        context = job_name
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        bid_id = self.kwargs['bid_id']
+
+        # Job name spaces were replaced with dunders when generating url, reversing that modification
+        job_name = self.kwargs['job_name'].replace('__', ' ')
+
+        biditemgroup = BidItem.objects.filter(bid_id=bid_id, job_type=job_name)
+        biditemgroup.delete()
+
+        messages.success(self.request, "Successfully Deleted Job")
+        return HttpResponseRedirect(reverse('bid_app:bid_update', kwargs={'pk': bid_id}))
+
