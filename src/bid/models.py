@@ -23,6 +23,11 @@ class Bid(models.Model):
     final_payment_amount = models.FloatField(default=0)
     final_payment_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=2000, choices=BID_STATUS, default='Needs Bid')
+    billto_name = models.CharField(max_length=100, blank=True, verbose_name='Alternative Bill To Name')
+    billto_street = models.CharField(max_length=100, blank=True, verbose_name='Alternative Bill To Street')
+    billto_city_st_zip = models.CharField(max_length=100, blank=True, verbose_name="Alternative Bill To City, ST, ZIP")
+    billto_telephone = models.CharField(max_length=10, blank=True, verbose_name="Alternative Bill To Telephone Number")
+
 
     class Meta:
         verbose_name_plural = 'Bids'

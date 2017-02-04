@@ -90,21 +90,30 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         179 Marvy ST<br />
         Lino Lakes, MN 55014<br />
         (612) 508-2484 <br />
-        concrete@madsenconcrete.com
+        concrete@madsenconcrete.com <br />
+        MN License: BC690748
         """
 
     logo = os.path.join(settings.STATIC_ROOT, 'img/logo.jpg')
     denominator = 5
     image = Image(logo, width=800 / denominator, height=269 / denominator)
 
-    invoice_paragraph = """
-        Date: {}<br />
-        Invoice #: {:04d} <br />
-    """.format(datetime.date.today(), obj.id)
+    if invoice:
+        proposal_invoice_paragraph = """
+            Date: {}<br />
+            Invoice #: {:04d} <br />
+        """.format(datetime.date.today(), obj.id)
+    else:
+        proposal_invoice_paragraph = """
+            Submitted By: <br />
+            Tom Madsen <br />
+            Date: {}<br />
+            Proposal #: {:04d} <br />
+        """.format(datetime.date.today(), obj.id)
 
     data1 = [[Paragraph(company_paragraph, styles['Line_Data_Large']),
               image,
-              Paragraph(invoice_paragraph, styles['Line_Data_Large'])]]
+              Paragraph(proposal_invoice_paragraph, styles['Line_Data_Large'])]]
 
     t1 = Table(data1, colWidths=(7 * cm, 8 * cm, 4.6 * cm))
     t1.setStyle(TableStyle([
@@ -151,7 +160,12 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
     description_paragraph = obj.description
 
-    data1 = [[Paragraph('To', styles["Line_Data_Large"]),
+    if invoice:
+        address = 'Bill To'
+    else:
+        address = 'Job Address'
+
+    data1 = [[Paragraph(address, styles["Line_Data_Large"]),
               Paragraph('Job Description', styles["Line_Data_Large"])],
 
              [Paragraph(customer_paragraph, styles["Line_Data_Large"]),

@@ -27,7 +27,8 @@ class BidForm(forms.ModelForm):
         model = Bid
         fields = ('description', 'notes', 'status', 'scheduled_bid_date',
                   'tentative_start', 'actual_start', 'completion_date', 'down_payment_amount', 'down_payment_date',
-                  'final_payment_amount', 'final_payment_date')
+                  'final_payment_amount', 'final_payment_date',
+                  'billto_name', 'billto_street', 'billto_city_st_zip', 'billto_telephone')
 
     helper = FormHelper()
     helper.layout = Layout(
@@ -55,6 +56,18 @@ class BidForm(forms.ModelForm):
             Div(
                 Div('final_payment_amount', css_class='col-xs-6'),
                 Div('final_payment_date', css_class='col-xs-6'),
+                css_class='row-fluid'),
+            Div(
+                Div('billto_name', css_class='col-xs-12'),
+                css_class='row-fluid'),
+            Div(
+                Div('billto_street', css_class='col-xs-12'),
+                css_class='row-fluid'),
+            Div(
+                Div('billto_city_st_zip', css_class='col-xs-12'),
+                css_class='row-fluid'),
+            Div(
+                Div('billto_telephone', css_class='col-xs-12'),
                 css_class='row-fluid'),
             FormActions(Submit('Save Bid', 'Save Bid', css_class='btn-primary'))
             )
