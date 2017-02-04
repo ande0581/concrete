@@ -22,12 +22,10 @@ class BidItemForm(forms.ModelForm):
 
 
 class BidItemUpdateForm(forms.ModelForm):
-    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    # TODO, way to keep default job_type value on update?
 
     class Meta:
         model = BidItem
-        fields = ('job_type', 'description', 'quantity', 'cost')
+        fields = ('description', 'quantity', 'cost')
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -39,8 +37,8 @@ class BidItemCustomForm(forms.ModelForm):
 
     class Meta:
         model = BidItem
-        fields = ('job_type', 'description', 'total')
+        fields = ('job_type', 'description', 'quantity', 'cost')
 
-        helper = FormHelper()
-        helper.form_method = 'POST'
-        helper.add_input(Submit('login', 'Save Custom Item', css_class='btn=primary'))
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Save Custom Item', css_class='btn=primary'))

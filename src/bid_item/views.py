@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from bid.models import Bid
 from bid_item.models import BidItem
 from service.models import Service
-from bid_item.forms import BidItemForm, BidItemUpdateForm
+from bid_item.forms import BidItemForm, BidItemCustomForm, BidItemUpdateForm
 
 
 class BidItemCreate(SuccessMessageMixin, CreateView):
@@ -25,7 +25,7 @@ class BidItemCreate(SuccessMessageMixin, CreateView):
 
 class BidItemCustomCreate(SuccessMessageMixin, CreateView):
     template_name = 'bid_item/biditem_form.html'
-    form_class = BidItemUpdateForm
+    form_class = BidItemCustomForm
     success_message = "Successfully Added Item"
 
     def form_valid(self, form):

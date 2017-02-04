@@ -12,7 +12,6 @@ from bid_item.models import BidItem
 from journal.models import Journal
 from pdf.models import PDFImage
 from bid.forms import BidInitialForm, BidForm
-import pprint
 
 
 def create_bid_item_dict(bid_obj):
@@ -35,9 +34,6 @@ def create_bid_item_dict(bid_obj):
         bid_item_dict.setdefault(job, {})
         bid_item_dict[job]['bid_items'] = bid_items
         bid_item_dict[job]['total'] = total
-
-    pp = pprint.PrettyPrinter(indent=4)
-    print('Bid_Item_Dict:', pp.pprint(bid_item_dict))
 
     return bid_item_dict
 
