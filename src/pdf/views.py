@@ -39,7 +39,8 @@ def view_pdf(request, **kwargs):
 def save_pdf(request, **kwargs):
 
     obj = Bid.objects.get(pk=kwargs['bid_id'])
-    response = generate_pdf(request, obj=obj, save_to_disk=True)
+    bid_item_dict = create_bid_item_dict(obj)
+    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, save_to_disk=True)
     return response
 
 
