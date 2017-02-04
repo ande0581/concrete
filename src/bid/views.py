@@ -15,11 +15,6 @@ from bid.forms import BidInitialForm, BidForm
 
 
 def create_bid_item_dict(bid_obj):
-    """
-    :param bid_obj:
-    :return: dictionary where the key is the job_type and the value is biditem_obj that matches that job_type
-    """
-    # items.aggregate(Sum('total'))['total__sum']
 
     bid_item_obj = BidItem.objects.filter(bid=bid_obj.id)
 

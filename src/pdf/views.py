@@ -28,19 +28,19 @@ def create_bid_item_dict(bid_obj):
     return bid_item_dict
 
 
-def view_pdf(request, **kwargs):
+def view_pdf(request, invoice=False, **kwargs):
 
     obj = Bid.objects.get(pk=kwargs['bid_id'])
     bid_item_dict = create_bid_item_dict(obj)
-    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, save_to_disk=False)
+    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, invoice=invoice, save_to_disk=False)
     return response
 
 
-def save_pdf(request, **kwargs):
+def save_pdf(request, invoice=False, **kwargs):
 
     obj = Bid.objects.get(pk=kwargs['bid_id'])
     bid_item_dict = create_bid_item_dict(obj)
-    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, save_to_disk=True)
+    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, invoice=invoice, save_to_disk=True)
     return response
 
 

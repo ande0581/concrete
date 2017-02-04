@@ -43,7 +43,7 @@ class NumberedCanvas(canvas.Canvas):
                              "Page {} of {}".format(self._pageNumber, page_count))
 
 
-def generate_pdf(request, obj, bid_item_dict, save_to_disk=False):
+def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     buff = BytesIO()
 
     # The page width totals 19.6cm
@@ -81,9 +81,9 @@ def generate_pdf(request, obj, bid_item_dict, save_to_disk=False):
     styles.add(ParagraphStyle(name='Line_Data_Large', alignment=TA_LEFT, fontSize=12, leading=12))
     styles.add(ParagraphStyle(name='Line_Data_Large_Right', alignment=TA_RIGHT, fontSize=12, leading=12))
     styles.add(ParagraphStyle(name='Invoice_Date', alignment=TA_LEFT, fontSize=12, leading=12))
-    styles.add(ParagraphStyle(name='Line_Data_Largest', alignment=TA_LEFT, fontSize=14, leading=15))
-    styles.add(ParagraphStyle(name='Line_Label', font='Helvetica-Bold', fontSize=10, leading=12, alignment=TA_LEFT))
-    styles.add(ParagraphStyle(name='Line_Label_Center', font='Helvetica-Bold', fontSize=7, alignment=TA_CENTER))
+    styles.add(ParagraphStyle(name='Line_Data_Largest', fontName='Times-BoldItalic', alignment=TA_CENTER, fontSize=22, leading=15))
+    styles.add(ParagraphStyle(name='Line_Label', fontSize=10, leading=12, alignment=TA_LEFT))
+    styles.add(ParagraphStyle(name='Line_Label_Center', fontSize=7, alignment=TA_CENTER))
 
     # Add Company Address, Logo and Invoice Info
     company_paragraph = """
@@ -109,6 +109,22 @@ def generate_pdf(request, obj, bid_item_dict, save_to_disk=False):
     t1 = Table(data1, colWidths=(7 * cm, 8 * cm, 4.6 * cm))
     t1.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    ]))
+
+    story.append(t1)
+
+    # Add Proposal or Invoice Title to PDF
+
+    if invoice:
+        pdf_type = 'Invoice'
+    else:
+        pdf_type = 'Proposal'
+
+    data1 = [[Paragraph(pdf_type, styles["Line_Data_Largest"])]]
+
+    t1 = Table(data1, colWidths=(19.6 * cm))
+    t1.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'TOP')
     ]))
 
     story.append(t1)

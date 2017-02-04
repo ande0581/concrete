@@ -152,14 +152,17 @@
 
 
 <br>
-    <a href="{% url 'pdf_app:pdf_view' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
-       role="button">View PDF</a>
+    <a href="{% url 'pdf_app:pdf_view_proposal' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
+       role="button">View Proposal</a>
 
-    <a href="" target="_blank" class="btn btn-sm btn-info"
-       role="button">View PDF Invoice-TODO</a>
+    <a href="{% url 'pdf_app:pdf_view_invoice' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
+       role="button">View Invoice</a>
 
-    <a href="{% url 'pdf_app:pdf_save' bid_id=bid.id %}" class="btn btn-sm btn-warning"
-       role="button">Save PDF</a>
+    <a href="{% url 'pdf_app:pdf_save_proposal' bid_id=bid.id %}" class="btn btn-sm btn-success"
+       role="button">Save Proposal</a>
+
+    <a href="{% url 'pdf_app:pdf_save_invoice' bid_id=bid.id %}" class="btn btn-sm btn-success"
+       role="button">Save Invoice</a>
 
     <a href="{% url 'pdf_app:pdf_list' pk=bid.id %}" class="btn btn-sm btn-warning"
        role="button">PDF Archive</a>
