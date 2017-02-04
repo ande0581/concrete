@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load format_telephone %}
+{% load static %}
+
+{% block content %}
+
+<h4><strong>Bid Details</a></strong>
+    <a href="{% url 'bid_app:bid_update' pk=bid.id %}" class="btn btn-sm btn-success">Edit</a>
+</h4>
+<div class="datagrid">
+    <table>
+        <thead>
+          <tr>
+            <th width="50%">Job Address</th>
+            <th width="50%">Bill To Address</th>
+          </tr>
+        </thead>
+
+          <tr>
+            <td>
+                {% if bid.customer.company_name %}{{ bid.customer.company_name }}<br>{% endif %}
+                {{ bid.customer.first_name }} {{ bid.customer.last_name }}<br>
+                {{ bid.address.street }}<br>
+                {{ bid.address.city }}, {{ bid.address.state }} {{ bid.address.zip }}<br>
+                {{ bid.customer.telephone|format_telephone }}
+            </td>
+
+
+            {% if bid.billto_street %}
+            <td style="vertical-align:top">
+                {% if bid.billto_name %}{{ bid.billto_name }}<br>{% endif %}
+                {{ bid.billto_street }}<br>
+                {{ bid.billto_city_st_zip }}<br>
+                {{ bid.billto_telephone|format_telephone }}
+            </td>
+            {% else %}
+            <td>
+                {% if bid.customer.company_name %}{{ bid.customer.company_name }}<br>{% endif %}
+                {{ bid.customer.first_name }} {{ bid.customer.last_name }}<br>
+                {{ bid.address.street }}<br>
+                {{ bid.address.city }}, {{ bid.address.state }} {{ bid.address.zip }}<br>
+                {{ bid.customer.telephone|format_telephone }}
+            </td>
+            {% endif %}
+          </tr>
+
+        <thead>
+          <tr>
+            <th colspan="2">Job Description</th>
+          </tr>
+        </thead>
+
+          <tr>
+            <td colspan="2">{{ bid.description }}</td>
+          </tr>
+
+        {% if bid.notes %}
+        <thead>
+          <tr>
+            <th colspan="2">Notes</th>
+          </tr>
+        </thead>
+
+          <tr>
+            <td colspan="2">{{ bid.notes }}</td>
+          </tr>
+        {% endif %}
+
+       <thead>
+          <tr>
+              <th width="25%">Details</th>
+              <th></th>
+          </tr>
+       </thead>
+
+          <tr style="background: white">
+              <td><strong>Bid Status</strong></td>
+              <td>{{ bid.status }}</td>
+          </tr>
+          <tr style="background: #F0F0F0">
+              <td><strong>Scheduled Bid Date</strong></td>
+              <td>{{ bid.scheduled_bid_date }}</td>
+          </tr>
+          <tr style="background: white">
+              <td><strong>Tentative Start Date</strong></td>
+              <td>{{ bid.tentative_start }}</td>
+          </tr>
+          <tr style="background: #F0F0F0">
+              <td><strong>Actual Start Date</strong></td>
+              <td>{{ bid.actual_start }}</td>
+          </tr>
+          <tr style="background: white">
+              <td><strong>Completion Date</strong></td>
+              <td>{{ bid.completion_date }}</td>
+          </tr>
+          <tr style="background: #F0F0F0">
+              <td><strong>Down Payment Amount</strong></td>
+              <td>${{ bid.down_payment_amount|floatformat:2 }}</td>
+          </tr>
+          <tr style="background: white">
+              <td><strong>Down Payment Date</strong></td>
+              <td>{{ bid.down_payment_date }}</td>
+          </tr>
+          <tr style="background: #F0F0F0">
+              <td><strong>Final Payment Amount</strong></td>
+              <td>${{ bid.final_payment_amount|floatformat:2 }}</td>
+          </tr>
+          <tr style="background: white">
+              <td><strong>Final Payment Date</strong></td>
+              <td>{{ bid.final_payment_date }}</td>
+          </tr>
+    </table>
+
+</div>
+
+<br>
+<h4><strong>Journal Entries:</strong>
+    <a href="{% url 'journal_app:journal_create' bid=bid.id %}" class="btn btn-sm btn-success">Add</a>
+</h4>
+<div class="datagrid">
+<table>
+      <thead>
+        <tr>
+          <th width="50px"><strong>Date</strong></th>
+          <th width="200px"><strong>Journal Entry</strong></th>
+          <th width="50px"><strong>Delete</strong></th>
+        </tr>
+      </thead>
+
+      {% for entry in journal_entries %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td>{{ entry.timestamp }}</td>
+              <td><a href="{% url 'journal_app:journal_update' pk=entry.id %}">{{ entry.body }}</a></td>
+              <td><a href="{% url 'journal_app:journal_delete' pk=entry.id %}">Delete</a></td>
+          </tr>
+      {% endfor %}
+</table>
+</div>
+<br>
+<br>
+
+
+<div class="datagrid">
+<table>
+      <thead>
+      <tr>
+            <th width="50px"><strong>Add Services</strong></th>
+            <th width="50px"><strong>Add Items</strong></th>
+            <th width="50px"><strong>Photos</strong></th>
+      </tr>
+      </thead>
+
+      <tr style="background: white">
+            <td><a href="{% url 'service_group_app:standard_concrete_create' bid=bid.id %}">Standard Concrete</a></td>
+            <td><a href="{% url 'bid_item_app:bid_item_create' bid=bid.id %}">Standard Item</a></td>
+            <td><a href="{% url 'photo_app:photo_list' bid_id=bid.id %}">Photos</a></td>
+      </tr>
+
+      <tr style="background: #F0F0F0">
+            <td><a href="{% url 'service_group_app:decorative_concrete_create' bid=bid.id %}">Decorative Concrete</a></td>
+            <td><a href="{% url 'bid_item_app:bid_item_custom_create' bid=bid.id %}">Custom Item</a></td>
+            <td></td>
+      </tr>
+
+      <tr style="background: white">
+          <td><a href="{% url 'service_group_app:steps_create' bid=bid.id %}">Steps</a></td>
+            <td></td>
+            <td></td>
+      </tr>
+
+      <tr style="background: #F0F0F0">
+            <td><a href="{% url 'service_group_app:foundation_create' bid=bid.id %}">Foundation</a></td>
+            <td></td>
+            <td></td>
+      </tr>
+
+       <tr style="background: white">
+            <td><a href="{% url 'service_group_app:footings_create' bid=bid.id %}">Footings</a></td>
+            <td></td>
+            <td></td>
+       </tr>
+
+       <tr style="background: #F0F0F0">
+            <td><a href="{% url 'service_group_app:egress_window_create' bid=bid.id %}">Egress Window</a></td>
+            <td></td>
+            <td></td>
+       </tr>
+</table>
+</div>
+<br>
+<br>
+
+<h4><strong>Job Bids</strong></h4>
+{% for job_name, job_dict in bid_item_dict.items %}
+<div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="5" style="background: black"><strong>{{ job_name }}</strong></th>
+          <th style="background: black; text-align:right"><strong>
+              <a href="{% url 'bid_item_app:bid_item_group_delete' bid_id=job_dict.bid_items.0.bid.id job_name=job_name.split|join:'__' %}">Delete Job</a></strong></th>
+        </tr>
+        <tr>
+          <th width="50px" style="background:gray"><strong>Description</strong></th>
+          <th width="50px" style="background:gray; text-align:center"><strong>Edit</strong></th>
+          <th width="50px" style="background:gray; text-align:center"><strong>Delete</strong></th>
+          <th width="75px" style="background:gray; text-align:right"><strong>Quantity</strong></th>
+          <th width="30px" style="background:gray; text-align:right"><strong>Cost</strong></th>
+          <th width="30px" style="background:gray; text-align:right"><strong>Total</strong></th>
+        </tr>
+      </thead>
+
+        {% for item in job_dict.bid_items %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td>{{ item.description }}</td>
+              <td style="text-align:center"><a href="{% url 'bid_item_app:bid_item_update' pk=item.id %}">Edit</a></td>
+              <td style="text-align:center"><a href="{% url 'bid_item_app:bid_item_delete' pk=item.id %}">Delete</a></td>
+              <td style="text-align:right">{% if item.quantity %}{{ item.quantity }}{% endif %}</td>
+              <td style="text-align:right">{% if item.cost %}{{ item.cost|floatformat:2 }}{% endif %}</td>
+              <td style="text-align:right">{{ item.total|floatformat:2 }}</td>
+          </tr>
+        {% endfor %}
+
+      <thead>
+      <tr>
+          <th colspan="5" width="75px" style="background:gray"><strong>{{ job_name }} Total</strong></th>
+          <th style="text-align:right; background:gray"><strong>${{ job_dict.total|floatformat:2 }}</strong></th>
+      </tr>
+      </thead>
+    </table>
+</div>
+<br>
+{% endfor %}
+
+{% if total_cost %}
+<div class="datagrid">
+<table>
+      <thead>
+        <tr>
+          <th colspan="5" style="background: black"><strong>Grand Total For All Jobs</strong></th>
+          <th style="text-align:right; background:black"><strong>${{ total_cost|floatformat:2 }}</strong></th>
+        </tr>
+      </thead>
+</table>
+</div>
+{% endif %}
+
+
+<br>
+    <a href="{% url 'pdf_app:pdf_view_proposal' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
+       role="button">View Proposal</a>
+
+    <a href="{% url 'pdf_app:pdf_view_invoice' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
+       role="button">View Invoice</a>
+
+    <a href="{% url 'pdf_app:pdf_save_proposal' bid_id=bid.id %}" class="btn btn-sm btn-success"
+       role="button">Save Proposal</a>
+
+    <a href="{% url 'pdf_app:pdf_save_invoice' bid_id=bid.id %}" class="btn btn-sm btn-success"
+       role="button">Save Invoice</a>
+
+    <a href="{% url 'pdf_app:pdf_list' pk=bid.id %}" class="btn btn-sm btn-warning"
+       role="button">PDF Archive</a>
+
+    <a href="{% url 'customer_app:customer_detail' pk=bid.customer.id %}" class="btn btn-sm btn-primary"
+       role="button">Return to Customer</a>
+
+
+{% endblock content %}

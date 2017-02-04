@@ -3,6 +3,7 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
+from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
@@ -46,6 +47,23 @@ class BidCreate(SuccessMessageMixin, CreateView):
         form.instance.address = Address.objects.get(pk=self.kwargs['address'])
         form.instance.customer = form.instance.address.customer
         return super(BidCreate, self).form_valid(form)
+
+
+class BidDetail(SuccessMessageMixin, DetailView):
+
+    template_name = 'bid/bid_detail.html'
+    model = Bid
+
+    def get_context_data(self, **kwargs):
+        context = super(BidDetail, self).get_context_data(**kwargs)
+        bid_obj = Bid.objects.get(id=self.kwargs['pk'])
+        bid_item_obj = BidItem.objects.filter(bid=self.kwargs['pk'])
+        bid_item_dict = create_bid_item_dict(bid_obj)
+        context['bid_item_dict'] = bid_item_dict
+        context['total_cost'] = bid_item_obj.aggregate(Sum('total'))['total__sum']
+        context['pdfs'] = PDFImage.objects.all().filter(bid=self.kwargs['pk'])
+        context['journal_entries'] = Journal.objects.all().filter(bid=self.kwargs['pk']).order_by('-timestamp')
+        return context
 
 
 class BidUpdate(SuccessMessageMixin, UpdateView):

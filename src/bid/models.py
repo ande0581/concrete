@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import pre_save
 from django.core.urlresolvers import reverse
 
 BID_STATUS = [
@@ -36,4 +37,13 @@ class Bid(models.Model):
         return self.description
 
     def get_absolute_url(self):
-        return reverse('bid_app:bid_update', kwargs={'pk': self.id})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.id})
+
+
+def bid_model_pre_save_receiver(sender, instance, *args, **kwargs):
+        instance.billto_name = instance.billto_name.upper()
+        instance.billto_street = instance.billto_street.upper()
+        instance.billto_city_st_zip = instance.billto_city_st_zip.upper()
+
+
+pre_save.connect(bid_model_pre_save_receiver, sender=Bid)
