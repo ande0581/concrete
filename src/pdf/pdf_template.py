@@ -187,7 +187,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
                   Paragraph(location_paragraph, styles["Line_Data_Large"])]
                  ]
 
-        t1 = Table(data1)
+        t1 = Table(data1, colWidths=(9.3 * cm, 9.3 * cm))
         t1.setStyle(TableStyle([
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
@@ -199,7 +199,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         data1 = [[Paragraph('Job Description', styles["Line_Data_Large"])],
                  [Paragraph(description_paragraph, styles["Line_Data_Large"])]]
 
-        t1 = Table(data1)
+        t1 = Table(data1, colWidths=(18.6 * cm))
         t1.setStyle(TableStyle([
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
