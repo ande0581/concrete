@@ -1,3 +1,4 @@
+from datetime import date
 from django.db.models import Q
 from django.db.models import Sum
 from django.contrib import messages
@@ -60,11 +61,17 @@ class BidDetail(SuccessMessageMixin, DetailView):
         bid_obj = Bid.objects.get(id=self.kwargs['pk'])
         bid_item_obj = BidItem.objects.filter(bid=self.kwargs['pk'])
         bid_item_dict = create_bid_item_dict(bid_obj)
+        total_cost = bid_item_obj.aggregate(Sum('total'))['total__sum']
+        payment_obj = Payment.objects.filter(bid=self.kwargs['pk'])
+        total_payments = payment_obj.aggregate(Sum('amount'))['amount__sum']
+
         context['bid_item_dict'] = bid_item_dict
-        context['total_cost'] = bid_item_obj.aggregate(Sum('total'))['total__sum']
+        context['total_cost'] = total_cost
         context['pdfs'] = PDFImage.objects.all().filter(bid=self.kwargs['pk'])
         context['journal_entries'] = Journal.objects.all().filter(bid=self.kwargs['pk']).order_by('-timestamp')
         context['payments'] = Payment.objects.all().filter(bid=self.kwargs['pk']).order_by('date')
+        context['date'] = date.today()
+        context['remaining_balance'] = total_cost - total_payments
 
         return context
 

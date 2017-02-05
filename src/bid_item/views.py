@@ -76,5 +76,5 @@ class BidItemGroupDelete(DeleteView):
         biditemgroup.delete()
 
         messages.success(self.request, "Successfully Deleted Job")
-        return HttpResponseRedirect(reverse('bid_app:bid_update', kwargs={'pk': bid_id}))
+        return HttpResponseRedirect(reverse('bid_app:bid_detail', kwargs={'pk': bid_id}))
 

@@ -95,52 +95,12 @@
               <td>{{ bid.completion_date }}</td>
           </tr>
           <tr style="background: #F0F0F0">
-              <td><strong>Down Payment Amount</strong></td>
+              <td><strong>Custom Down Payment Amount</strong></td>
               <td>${{ bid.down_payment_amount|floatformat:2 }}</td>
-          </tr>
-          <tr style="background: white">
-              <td><strong>Down Payment Date</strong></td>
-              <td>{{ bid.down_payment_date }}</td>
-          </tr>
-          <tr style="background: #F0F0F0">
-              <td><strong>Final Payment Amount</strong></td>
-              <td>${{ bid.final_payment_amount|floatformat:2 }}</td>
-          </tr>
-          <tr style="background: white">
-              <td><strong>Final Payment Date</strong></td>
-              <td>{{ bid.final_payment_date }}</td>
           </tr>
     </table>
 
 </div>
-
-<br>
-<h4><strong>Payments:</strong>
-    <a href="{% url 'payment_app:payment_create' bid_id=bid.id %}" class="btn btn-sm btn-success">Add</a>
-</h4>
-<div class="datagrid">
-<table>
-      <thead>
-        <tr>
-          <th width="50px"><strong>Date</strong></th>
-          <th width="200px"><strong>Description</strong></th>
-          <th width="50px"><strong>Amount</strong></th>
-          <th width="50px"><strong>Delete</strong></th>
-        </tr>
-      </thead>
-
-      {% for payment in payments %}
-          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
-              <td>{{ payment.date }}</td>
-              <td><a href="{% url 'payment_app:payment_update' pk=payment.id %}">{{ payment.description }}</a></td>
-              <td>{{ payment.amount }}</td>
-              <td><a href="{% url 'payment_app:payment_delete' pk=payment.id %}">Delete</a></td>
-          </tr>
-      {% endfor %}
-</table>
-</div>
-
-
 
 
 <br>
@@ -228,7 +188,8 @@
         <tr>
           <th colspan="5" style="background: black"><strong>{{ job_name }}</strong></th>
           <th style="background: black; text-align:right"><strong>
-              <a href="{% url 'bid_item_app:bid_item_group_delete' bid_id=job_dict.bid_items.0.bid.id job_name=job_name.split|join:'__' %}">Delete Job</a></strong></th>
+              <a href="{% url 'bid_item_app:bid_item_group_delete' bid_id=job_dict.bid_items.0.bid.id job_name=job_name.split|join:'__' %}">
+                  <font color="white">Delete Job</font></a></strong></th>
         </tr>
         <tr>
           <th width="50px" style="background:gray"><strong>Description</strong></th>
@@ -267,10 +228,35 @@
 <table>
       <thead>
         <tr>
-          <th colspan="5" style="background: black"><strong>Grand Total For All Jobs</strong></th>
-          <th style="text-align:right; background:black"><strong>${{ total_cost|floatformat:2 }}</strong></th>
+          <th colspan="5" style="background: black"><strong>Payment History</strong></th>
+          <th style="text-align:right; background:black"><strong>
+              <a href="{% url 'payment_app:payment_create' bid_id=bid.id %}"><font color="white">Add</font></a></strong></th>
         </tr>
       </thead>
+
+      <tr>
+          <td width="100px">{{ date }}</td>
+          <td colspan="4">Initial Balance</td>
+          <td style="text-align:right;">{{ total_cost|floatformat:2 }}</td>
+      </tr>
+
+      {% for payment in payments %}
+          <tr style="{% cycle 'background: #F0F0F0' 'background: #white' %}">
+              <td>{{ payment.date }}</td>
+              <td colspan="3">
+                  <a href="{% url 'payment_app:payment_update' pk=payment.id %}">{{ payment.description }}</a></td>
+              <td style="text-align:center;"><a href="{% url 'payment_app:payment_delete' pk=payment.id %}">Delete</a></td>
+              <td style="text-align:right;">{{ payment.amount|floatformat:2 }}</td>
+          </tr>
+      {% endfor %}
+
+      <thead>
+        <tr>
+          <th colspan="5" style="background: black"><strong>Remaining Balance</strong></th>
+          <th style="text-align:right; background:black"><strong>${{ remaining_balance|floatformat:2 }}</strong></th>
+        </tr>
+      </thead>
+
 </table>
 </div>
 {% endif %}
