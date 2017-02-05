@@ -119,7 +119,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
               image,
               Paragraph(proposal_invoice_paragraph, styles['Line_Data_Large'])]]
 
-    t1 = Table(data1, colWidths=(6 * cm, 8 * cm, 4.6 * cm))
+    t1 = Table(data1, colWidths=(6.7 * cm, 8 * cm, 4.6 * cm))
     t1.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))
