@@ -19,16 +19,13 @@ class Bid(models.Model):
     tentative_start = models.DateField(null=True, blank=True)
     actual_start = models.DateField(null=True, blank=True)
     completion_date = models.DateField(null=True, blank=True)
-    down_payment_amount = models.FloatField(default=0)
-    down_payment_date = models.DateField(null=True, blank=True)
-    final_payment_amount = models.FloatField(default=0)
-    final_payment_date = models.DateField(null=True, blank=True)
+    custom_down_payment = models.FloatField(null=True, blank=True,
+                                            verbose_name='Custom Down Payment: Entering 0 means no down payment, leave blank for standard down payment, or enter custom value')
     status = models.CharField(max_length=2000, choices=BID_STATUS, default='Needs Bid')
     billto_name = models.CharField(max_length=100, blank=True, verbose_name='Alternative Bill To Name')
     billto_street = models.CharField(max_length=100, blank=True, verbose_name='Alternative Bill To Street')
     billto_city_st_zip = models.CharField(max_length=100, blank=True, verbose_name="Alternative Bill To City, ST, ZIP")
     billto_telephone = models.CharField(max_length=10, blank=True, verbose_name="Alternative Bill To Telephone Number")
-
 
     class Meta:
         verbose_name_plural = 'Bids'

@@ -26,8 +26,7 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = ('description', 'notes', 'status', 'scheduled_bid_date',
-                  'tentative_start', 'actual_start', 'completion_date', 'down_payment_amount', 'down_payment_date',
-                  'final_payment_amount', 'final_payment_date',
+                  'tentative_start', 'actual_start', 'completion_date', 'custom_down_payment',
                   'billto_name', 'billto_street', 'billto_city_st_zip', 'billto_telephone')
 
     helper = FormHelper()
@@ -50,12 +49,7 @@ class BidForm(forms.ModelForm):
                 Div('completion_date', css_class='col-xs-6'),
                 css_class='row-fluid'),
             Div(
-                Div('down_payment_amount', css_class='col-xs-6'),
-                Div('down_payment_date', css_class='col-xs-6'),
-                css_class='row-fluid'),
-            Div(
-                Div('final_payment_amount', css_class='col-xs-6'),
-                Div('final_payment_date', css_class='col-xs-6'),
+                Div('custom_down_payment', css_class='col-xs-12'),
                 css_class='row-fluid'),
             Div(
                 Div('billto_name', css_class='col-xs-12'),

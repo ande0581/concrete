@@ -95,8 +95,8 @@
               <td>{{ bid.completion_date }}</td>
           </tr>
           <tr style="background: #F0F0F0">
-              <td><strong>Custom Down Payment Amount</strong></td>
-              <td>${{ bid.down_payment_amount|floatformat:2 }}</td>
+              <td><strong>Custom Down Payment</strong></td>
+              <td>{% if bid.custom_down_payment %}${{ bid.custom_down_payment|floatformat:2 }}{% endif %}</td>
           </tr>
     </table>
 
