@@ -34,4 +34,4 @@ class JournalDelete(DeleteView):
 
     def get_success_url(self):
         messages.success(self.request, "Successfully Deleted")
-        return reverse('bid_app:bid_update', kwargs={'pk': self.bid_pk})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.bid_pk})

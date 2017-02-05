@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^job_type/', include('job_type.urls')),
     url(r'^journal/', include('journal.urls')),
     url(r'^overview/', include('overview.urls')),
+    url(r'^payment/', include('payment.urls')),
     url(r'^pdf/', include('pdf.urls')),
     url(r'^photo/', include('photo.urls')),
     url(r'^service/', include('service.urls')),

@@ -11,4 +11,4 @@ class Journal(models.Model):
         return self.body
 
     def get_absolute_url(self):
-        return reverse('bid_app:bid_update', kwargs={'pk': self.bid.id})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.bid.id})

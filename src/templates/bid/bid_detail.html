@@ -115,6 +115,35 @@
 </div>
 
 <br>
+<h4><strong>Payments:</strong>
+    <a href="{% url 'payment_app:payment_create' bid_id=bid.id %}" class="btn btn-sm btn-success">Add</a>
+</h4>
+<div class="datagrid">
+<table>
+      <thead>
+        <tr>
+          <th width="50px"><strong>Date</strong></th>
+          <th width="200px"><strong>Description</strong></th>
+          <th width="50px"><strong>Amount</strong></th>
+          <th width="50px"><strong>Delete</strong></th>
+        </tr>
+      </thead>
+
+      {% for payment in payments %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td>{{ payment.date }}</td>
+              <td><a href="{% url 'payment_app:payment_update' pk=payment.id %}">{{ payment.description }}</a></td>
+              <td>{{ payment.amount }}</td>
+              <td><a href="{% url 'payment_app:payment_delete' pk=payment.id %}">Delete</a></td>
+          </tr>
+      {% endfor %}
+</table>
+</div>
+
+
+
+
+<br>
 <h4><strong>Journal Entries:</strong>
     <a href="{% url 'journal_app:journal_create' bid=bid.id %}" class="btn btn-sm btn-success">Add</a>
 </h4>

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'job_type',
     'journal',
     'overview',
+    'payment',
     'pdf',
     'photo',
     'service',
