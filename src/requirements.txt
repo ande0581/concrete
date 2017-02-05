@@ -1,5 +1,0 @@
-Django==1.10.4
-django-crispy-forms==1.6.1
-olefile==0.44
-Pillow==4.0.0
-reportlab==3.3.0
