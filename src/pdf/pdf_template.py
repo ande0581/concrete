@@ -148,7 +148,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     else:
         company = ""
 
-    customer_paragraph = """
+    location_paragraph = """
         {first} {last}<br />
         {company}
         {street}<br />
@@ -158,27 +158,68 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
                           street=obj.address.street, city=obj.address.city, state=obj.address.state,
                           zip=obj.address.zip, telephone=telephone, email=obj.customer.email)
 
+    if invoice:
+        if len(obj.billto_telephone) == 10:
+            billto_telephone = obj.billto_telephone
+            billto_telephone = "({}) {}-{}".format(billto_telephone[:3], billto_telephone[3:6], billto_telephone[6:])
+
+        billto_paragraph = """
+        {name}<br />
+        {street}<br />
+        {city_st_zip}<br />
+        {telephone}""".format(name=obj.billto_name,
+                              street=obj.billto_street,
+                              city_st_zip=obj.billto_city_st_zip,
+                              telephone=billto_telephone)
+    else:
+        billto_paragraph = location_paragraph
+
     description_paragraph = obj.description
 
     if invoice:
-        address = 'Bill To'
+        data1 = [[Paragraph('Bill To Address', styles["Line_Data_Large"]),
+                  Paragraph('Job Address', styles["Line_Data_Large"])],
+
+                 [Paragraph(billto_paragraph, styles["Line_Data_Large"]),
+                  Paragraph(location_paragraph, styles["Line_Data_Large"])]
+                 ]
+
+        t1 = Table(data1)
+        t1.setStyle(TableStyle([
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
+        ]))
+
+        story.append(t1)
+        story.append(Spacer(4, 20))
+
+        data1 = [[Paragraph('Job Description', styles["Line_Data_Large"])],
+                 [Paragraph(description_paragraph, styles["Line_Data_Large"])]]
+
+        t1 = Table(data1)
+        t1.setStyle(TableStyle([
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
+        ]))
+
+        story.append(t1)
+
     else:
-        address = 'Job Address'
 
-    data1 = [[Paragraph(address, styles["Line_Data_Large"]),
-              Paragraph('Job Description', styles["Line_Data_Large"])],
+        data1 = [[Paragraph('Job Address', styles["Line_Data_Large"]),
+                  Paragraph('Job Description', styles["Line_Data_Large"])],
 
-             [Paragraph(customer_paragraph, styles["Line_Data_Large"]),
-              Paragraph(description_paragraph, styles["Line_Data_Large"])]
-             ]
+                 [Paragraph(billto_paragraph, styles["Line_Data_Large"]),
+                  Paragraph(description_paragraph, styles["Line_Data_Large"])]
+                 ]
 
-    t1 = Table(data1, colWidths=(7 * cm, 12.6 * cm))
-    t1.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
-    ]))
+        t1 = Table(data1, colWidths=(7 * cm, 12.6 * cm))
+        t1.setStyle(TableStyle([
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
+        ]))
 
-    story.append(t1)
+        story.append(t1)
 
     # Add Bid Items to PDF
     story.append(Spacer(4, 32))
