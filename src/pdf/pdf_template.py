@@ -13,6 +13,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import cm
 from reportlab.lib.units import mm, inch
 from reportlab.pdfgen import canvas
+from reportlab.platypus import KeepTogether
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 
 from bid_item.models import BidItem
@@ -123,7 +124,6 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     story.append(t1)
 
     # Add Proposal or Invoice Title to PDF
-
     if invoice:
         pdf_type = 'Invoice'
     else:
@@ -269,22 +269,69 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         story.append(t1)
         story.append(Spacer(4, 12))
 
-    # Add Grand Total to PDF
+    # Calculate Bid Total
     items = BidItem.objects.all().filter(bid=obj.id)
-    total = items.aggregate(Sum('total'))['total__sum']
-    data1 = [[Paragraph('Grand Total', styles["Line_Data_Large"]),
-              Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
-             ]
+    bid_total = items.aggregate(Sum('total'))['total__sum']
 
-    t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
-    t1.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-        ('BOX', (0, 0), (-1, -1), .25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
-    ]))
+    # We Propose Section
+    if not invoice:
 
-    story.append(t1)
+        if obj.custom_down_payment:
+            down_payment = obj.custom_down_payment
+            final_payment = bid_total - down_payment
+        else:
+            down_payment = bid_total / 2
+            final_payment = bid_total - down_payment
+
+        we_propose = 'Hereby to furnish material and labor complete in accordance with above specifications,' \
+                     ' for the sum of'
+
+        data1 = [
+            [Paragraph('We Propose', styles["Line_Data_Large"]),
+             None],
+            [Paragraph(we_propose, styles["Line_Data_Large"]),
+             Paragraph(str("${0:.2f}".format(round(bid_total, 2))), styles["Line_Data_Large_Right"])],
+            [Paragraph('Payment Outline', styles["Line_Data_Large"]),
+             None],
+            [Paragraph('Deposit', styles["Line_Data_Large"]),
+             Paragraph(str("${0:.2f}".format(round(down_payment, 2))), styles["Line_Data_Large_Right"])],
+            [Paragraph('Remaining Balance Due Upon Completion of the Contract', styles["Line_Data_Large"]),
+             Paragraph(str("${0:.2f}".format(round(final_payment, 2))), styles["Line_Data_Large_Right"])],
+            [Paragraph('Acceptance of Proposal', styles["Line_Data_Large"]),
+             None],
+                 ]
+
+        t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
+        t1.setStyle(TableStyle([
+            #('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), .25, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # we propose
+            ('BACKGROUND', (0, 2), (-1, 2), colors.lightgrey),  # payment outline
+            ('BACKGROUND', (0, 5), (-1, 5), colors.lightgrey),  # acceptance of proposal
+        ]))
+
+        story.append(KeepTogether(t1))
+
+
+
+
+    # Add Grand Total to PDF
+    # items = BidItem.objects.all().filter(bid=obj.id)
+    # total = items.aggregate(Sum('total'))['total__sum']
+    # data1 = [[Paragraph('Grand Total', styles["Line_Data_Large"]),
+    #           Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
+    #          ]
+    #
+    # t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
+    # t1.setStyle(TableStyle([
+    #     ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+    #     ('BOX', (0, 0), (-1, -1), .25, colors.black),
+    #     ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    #     ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
+    # ]))
+    #
+    # story.append(t1)
 
     # doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
     doc.build(story, canvasmaker=NumberedCanvas)
