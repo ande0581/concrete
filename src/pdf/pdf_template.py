@@ -165,6 +165,8 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         if len(obj.billto_telephone) == 10:
             billto_telephone = obj.billto_telephone
             billto_telephone = "({}) {}-{}".format(billto_telephone[:3], billto_telephone[3:6], billto_telephone[6:])
+        else:
+            billto_telephone = obj.billto_telephone
 
         billto_paragraph = """
         {name}<br />
@@ -207,7 +209,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
         story.append(t1)
 
-    else:
+    else:  # Proposal
 
         data1 = [[Paragraph('Job Address', styles["Line_Data_Large"]),
                   Paragraph('Job Description', styles["Line_Data_Large"])],
