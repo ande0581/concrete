@@ -40,16 +40,16 @@ class NumberedCanvas(canvas.Canvas):
 
     def draw_page_number(self, page_count):
         # Change the position of this to wherever you want the page number to be
-        self.drawRightString(200 * mm, 5 * mm + (0.2 * inch),
+        self.drawRightString(115 * mm, 25 * mm + (0.2 * inch),
                              "Page {} of {}".format(self._pageNumber, page_count))
 
 
 def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     buff = BytesIO()
 
-    # The page width totals 19.6cm
-    doc = SimpleDocTemplate(buff, rightMargin=.5 * cm, leftMargin=.5 * cm,
-                            topMargin=.5 * cm, bottomMargin=1.5 * cm)
+    # The page width totals 18.6cm
+    doc = SimpleDocTemplate(buff, rightMargin=2 * cm, leftMargin=2 * cm,
+                            topMargin=1.5 * cm, bottomMargin=3.75 * cm)
 
     def _header_footer(canvas, doc):
         # Save the state of our canvas so we can draw on it
@@ -116,7 +116,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
               image,
               Paragraph(proposal_invoice_paragraph, styles['Line_Data_Large'])]]
 
-    t1 = Table(data1, colWidths=(7 * cm, 8 * cm, 4.6 * cm))
+    t1 = Table(data1, colWidths=(6 * cm, 8 * cm, 4.6 * cm))
     t1.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))
@@ -131,7 +131,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
     data1 = [[Paragraph(pdf_type, styles["Line_Data_Largest"])]]
 
-    t1 = Table(data1, colWidths=(19.6 * cm))
+    t1 = Table(data1, colWidths=(18.6 * cm))
     t1.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'TOP')
     ]))
@@ -213,7 +213,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
                   Paragraph(description_paragraph, styles["Line_Data_Large"])]
                  ]
 
-        t1 = Table(data1, colWidths=(7 * cm, 12.6 * cm))
+        t1 = Table(data1, colWidths=(7 * cm, 11.6 * cm))
         t1.setStyle(TableStyle([
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
@@ -229,7 +229,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
                   Paragraph('', styles["Line_Data_Large"])]
                  ]
 
-        t1 = Table(title, colWidths=(16 * cm, 3.6 * cm))
+        t1 = Table(title, colWidths=(15 * cm, 3.6 * cm))
         t1.setStyle(TableStyle([
             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
             ('BOX', (0, 0), (-1, -1), .25, colors.black),
@@ -243,7 +243,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
                   Paragraph(str("{0:.2f}".format(round(item.total, 2))), styles["Line_Data_Large_Right"])] for item in
                  items]
 
-        t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
+        t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
         t1.setStyle(TableStyle([
             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
             ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
@@ -258,7 +258,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
                   Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
                  ]
 
-        t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
+        t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
         t1.setStyle(TableStyle([
             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
             ('BOX', (0, 0), (-1, -1), .25, colors.black),
@@ -286,6 +286,10 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         we_propose = 'Hereby to furnish material and labor complete in accordance with above specifications,' \
                      ' for the sum of'
 
+        acceptance = """The above prices, specifications and conditions are satisfactory and are hereby accepted.
+        You are authorized to do the work as specified. Payment will be made as outlined above.
+        I have received a copy of the Pre-Lien notice."""
+
         data1 = [
             [Paragraph('We Propose', styles["Line_Data_Large"]),
              None],
@@ -299,16 +303,23 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
              Paragraph(str("${0:.2f}".format(round(final_payment, 2))), styles["Line_Data_Large_Right"])],
             [Paragraph('Acceptance of Proposal', styles["Line_Data_Large"]),
              None],
-                 ]
+            [Paragraph(acceptance, styles["Line_Data_Large"]),
+             None],
+            [Paragraph('Signature:', styles["Line_Label"]),
+             Paragraph('Date:', styles["Line_Label"])],
+            [Paragraph('X__________________________________________________________________', styles["Line_Label"]),
+             Paragraph('_____________________', styles["Line_Label"])],
+        ]
 
-        t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
+        t1 = Table(data1, colWidths=(14 * cm, 4.6 * cm))
         t1.setStyle(TableStyle([
-            #('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
             ('BOX', (0, 0), (-1, -1), .25, colors.black),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
             ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # we propose
             ('BACKGROUND', (0, 2), (-1, 2), colors.lightgrey),  # payment outline
             ('BACKGROUND', (0, 5), (-1, 5), colors.lightgrey),  # acceptance of proposal
+            ('SPAN', (0, 6), (-1, 6)),  # span acceptance text across both columns
+            ('BOTTOMPADDING', (0, 7), (-1, 7), 40)
         ]))
 
         story.append(KeepTogether(t1))
