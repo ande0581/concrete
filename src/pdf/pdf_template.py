@@ -224,6 +224,19 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
         story.append(t1)
 
+        if obj.notes:
+            story.append(Spacer(2, 10))
+            data1 = [[Paragraph('Notes', styles["Line_Data_Large"])],
+                     [Paragraph(obj.notes, styles["Line_Data_Large"])]]
+
+            t1 = Table(data1, colWidths=(18.6 * cm))
+            t1.setStyle(TableStyle([
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
+            ]))
+
+            story.append(t1)
+
     # Add Bid Items to PDF
     story.append(Spacer(4, 32))
 
@@ -270,16 +283,32 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         ]))
 
         story.append(t1)
-        story.append(Spacer(4, 12))
+        story.append(Spacer(4, 32))
 
     # Calculate Bid Total
     items = BidItem.objects.all().filter(bid=obj.id)
     bid_total = items.aggregate(Sum('total'))['total__sum']
 
-    # We Propose Section
-    if not invoice:
+    if invoice:
+        data1 = [
+            [Paragraph('We Propose', styles["Line_Data_Large"]),
+             None],
+        ]
 
-        story.append(Spacer(4, 32))
+        t1 = Table(data1, colWidths=(14 * cm, 4.6 * cm))
+        t1.setStyle(TableStyle([
+            ('BOX', (0, 0), (-1, -1), .25, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            # ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # we propose
+            # ('BACKGROUND', (0, 2), (-1, 2), colors.lightgrey),  # payment outline
+            # ('BACKGROUND', (0, 5), (-1, 5), colors.lightgrey),  # acceptance of proposal
+            # ('SPAN', (0, 6), (-1, 6)),  # span acceptance text across both columns
+            # ('BOTTOMPADDING', (0, 7), (-1, 7), 40)
+        ]))
+
+        story.append(KeepTogether(t1))
+
+    else:  # Proposal
 
         if obj.custom_down_payment:
             down_payment = obj.custom_down_payment
