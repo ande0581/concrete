@@ -19,7 +19,7 @@ class BidItem(models.Model):
         return self.description
 
     def get_absolute_url(self):
-        return reverse('bid_app:bid_update', kwargs={'pk': self.bid.id})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.bid.id})
 
 
 def biditem_model_pre_save_receiver(sender, instance, *args, **kwargs):

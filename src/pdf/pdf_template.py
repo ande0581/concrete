@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal, ROUND_HALF_UP
 from django.conf import settings
 from django.contrib import messages
 from django.core.files.base import ContentFile
@@ -14,6 +15,7 @@ from reportlab.lib.pagesizes import cm
 from reportlab.lib.units import mm, inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import KeepTogether
+from reportlab.platypus import PageBreak
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 
 from bid_item.models import BidItem
@@ -81,6 +83,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     styles.add(ParagraphStyle(name='Line_Data_Medium', alignment=TA_LEFT, fontSize=10, leading=8))
     styles.add(ParagraphStyle(name='Line_Data_Large', alignment=TA_LEFT, fontSize=12, leading=12))
     styles.add(ParagraphStyle(name='Line_Data_Large_Right', alignment=TA_RIGHT, fontSize=12, leading=12))
+    styles.add(ParagraphStyle(name='Line_Data_Large_Center', alignment=TA_CENTER, fontSize=12, leading=12))
     styles.add(ParagraphStyle(name='Invoice_Date', alignment=TA_LEFT, fontSize=12, leading=12))
     styles.add(ParagraphStyle(name='Line_Data_Largest', fontName='Times-BoldItalic', alignment=TA_CENTER, fontSize=22, leading=15))
     styles.add(ParagraphStyle(name='Line_Label', fontSize=10, leading=12, alignment=TA_LEFT))
@@ -276,12 +279,15 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     # We Propose Section
     if not invoice:
 
+        story.append(Spacer(4, 32))
+
         if obj.custom_down_payment:
             down_payment = obj.custom_down_payment
-            final_payment = bid_total - down_payment
         else:
             down_payment = bid_total / 2
-            final_payment = bid_total - down_payment
+
+        cents = Decimal('0.01')
+        final_payment = Decimal(bid_total - down_payment).quantize(cents, ROUND_HALF_UP)
 
         we_propose = 'Hereby to furnish material and labor complete in accordance with above specifications,' \
                      ' for the sum of'
@@ -324,25 +330,27 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
         story.append(KeepTogether(t1))
 
+        # Add Pre-Lien Notice to PDF
+        story.append(PageBreak())
 
+        pre_lien_notice = """
+        <br />
+        ANY PERSON OR COMPANY SUPPLYING LABOR OR MATERIALS FOR THIS IMPROVEMENT TO YOUR PROPERTY MAY FILE A LIEN
+        AGAINST YOUR PROPERTY IF THAT PERSON OR COMPANY IS NOT PAID FOR THE CONTRIBUTIONS.<br /><br />
 
+        UNDER MINNESOTA LAW, YOU HAVE THE RIGHT TO PAY PERSONS WHO SUPPLIED LABOR OR MATERIALS FOR THIS IMPROVEMENT
+         DIRECTLY AND DEDUCT THIS AMOUNT FROM OUR CONTRACT PRICE, OR WITHHOLD THE AMOUNTS DUE THEM FROM US UNTIL
+         120 DAYS AFTER COMPLETION OF THE IMPROVEMENT UNLESS WE GIVE YOU A LIEN WAIVER SIGNED BY PERSONS WHO SUPPLIED
+         ANY LABOR OR MATERIAL FOR THE IMPROVEMENT AND WHO GAVE YOU TIMELY NOTICE.
+        """
 
-    # Add Grand Total to PDF
-    # items = BidItem.objects.all().filter(bid=obj.id)
-    # total = items.aggregate(Sum('total'))['total__sum']
-    # data1 = [[Paragraph('Grand Total', styles["Line_Data_Large"]),
-    #           Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
-    #          ]
-    #
-    # t1 = Table(data1, colWidths=(16 * cm, 3.6 * cm))
-    # t1.setStyle(TableStyle([
-    #     ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-    #     ('BOX', (0, 0), (-1, -1), .25, colors.black),
-    #     ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-    #     ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
-    # ]))
-    #
-    # story.append(t1)
+        data1 = [
+            [Paragraph('PRE-LIEN NOTICE', styles["Line_Data_Large_Center"])],
+            [Paragraph(pre_lien_notice, styles["Line_Data_Large"])]
+            ]
+
+        t1 = Table(data1)
+        story.append(t1)
 
     # doc.build(story, onFirstPage=_header_footer, onLaterPages=_header_footer, canvasmaker=NumberedCanvas)
     doc.build(story, canvasmaker=NumberedCanvas)
