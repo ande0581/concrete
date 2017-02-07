@@ -42,7 +42,7 @@ class ConcreteCreate(SuccessMessageMixin, FormView):
 
     def get_success_url(self):
         messages.success(self.request, "Concrete Estimated")
-        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
         # print("POST FORM SAVE:", form.cleaned_data)
@@ -208,7 +208,7 @@ class StepsCreate(SuccessMessageMixin, FormView):
 
     def get_success_url(self):
         messages.success(self.request, "Steps Estimated")
-        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
 
@@ -249,7 +249,7 @@ class FoundationCreate(SuccessMessageMixin, FormView):
 
     def get_success_url(self):
         messages.success(self.request, "Foundation Estimated")
-        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
 
@@ -263,7 +263,7 @@ class FootingsCreate(SuccessMessageMixin, FormView):
 
     def get_success_url(self):
         messages.success(self.request, "Footings Estimated")
-        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
 
@@ -277,7 +277,7 @@ class EgressWindowCreate(SuccessMessageMixin, FormView):
 
     def get_success_url(self):
         messages.success(self.request, "Egress Window Estimated")
-        return reverse('bid_app:bid_update', kwargs={'pk': self.kwargs['bid']})
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
 

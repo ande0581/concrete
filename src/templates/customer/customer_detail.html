@@ -40,7 +40,7 @@
             <td>{{ address.state}}</td>
             <td>{{ address.zip}}</td>
             <td>
-                <a href="{% url 'bid_app:bid_create' address=address.pk %}" class="btn btn-sm btn-primary">Schedule Bid</a>
+                <a href="{% url 'bid_app:bid_create' address=address.pk %}" class="btn btn-sm btn-primary">Create Bid</a>
 
                 <a href="{% url 'address_app:address_update' pk=address.pk %}" class="btn btn-sm btn-info">Edit</a>
 

@@ -19,6 +19,7 @@ from reportlab.platypus import PageBreak
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 
 from bid_item.models import BidItem
+from payment.models import Payment
 from pdf.models import PDFImage
 
 
@@ -106,14 +107,14 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         proposal_invoice_paragraph = """
             Date: {}<br />
             Invoice #: {:04d} <br />
-        """.format(datetime.date.today(), obj.id)
+        """.format(datetime.date.today().strftime('%x'), obj.id)
     else:
         proposal_invoice_paragraph = """
             Submitted By: <br />
             Tom Madsen <br />
             Date: {}<br />
             Proposal #: {:04d} <br />
-        """.format(datetime.date.today(), obj.id)
+        """.format(datetime.date.today().strftime('%x'), obj.id)
 
     data1 = [[Paragraph(company_paragraph, styles['Line_Data_Large']),
               image,
@@ -161,7 +162,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
                           street=obj.address.street, city=obj.address.city, state=obj.address.state,
                           zip=obj.address.zip, telephone=telephone, email=obj.customer.email)
 
-    if invoice:
+    if obj.billto_city_st_zip:  # check if this is an alternate billto field populated
         if len(obj.billto_telephone) == 10:
             billto_telephone = obj.billto_telephone
             billto_telephone = "({}) {}-{}".format(billto_telephone[:3], billto_telephone[3:6], billto_telephone[6:])
@@ -182,7 +183,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     description_paragraph = obj.description
 
     if invoice:
-        data1 = [[Paragraph('Bill To Address', styles["Line_Data_Large"]),
+        data1 = [[Paragraph('Bill To', styles["Line_Data_Large"]),
                   Paragraph('Job Address', styles["Line_Data_Large"])],
 
                  [Paragraph(billto_paragraph, styles["Line_Data_Large"]),
@@ -272,7 +273,8 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
         # Calculate total per job and add to PDF
         total = items.aggregate(Sum('total'))['total__sum']
-        data1 = [[Paragraph('Total', styles["Line_Data_Large"]),
+        total_text = "{} Total".format(job_name)
+        data1 = [[Paragraph(total_text, styles["Line_Data_Large"]),
                   Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
                  ]
 
@@ -291,21 +293,45 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     items = BidItem.objects.all().filter(bid=obj.id)
     bid_total = items.aggregate(Sum('total'))['total__sum']
 
-    if invoice:
+    if not bid_total:
+        bid_total = 0
+
+    if invoice:  # Calculate Balance Due and Payment History for Invoice
+        payments = Payment.objects.all().filter(bid=obj.id)
+        payment_total = payments.aggregate(Sum('amount'))['amount__sum']
+
+        cents = Decimal('0.01')
+        if payment_total:
+            remaining_balance = Decimal(bid_total - payment_total).quantize(cents, ROUND_HALF_UP)
+        else:
+            remaining_balance = bid_total
+
         data1 = [
-            [Paragraph('We Propose', styles["Line_Data_Large"]),
+            [Paragraph('Invoice Summary', styles["Line_Data_Large"]),
              None],
+            [Paragraph('Initial Balance', styles["Line_Data_Large"]),
+             Paragraph(str("{0:.2f}".format(round(bid_total, 2))), styles["Line_Data_Large_Right"])],
         ]
 
-        t1 = Table(data1, colWidths=(14 * cm, 4.6 * cm))
+        data2 = [[Paragraph(str("Received Payment {}".format(payment.date.strftime('%x'))),
+                            styles["Line_Data_Large"]),
+                  Paragraph(str("-{0:.2f}".format(round(payment.amount, 2))), styles["Line_Data_Large_Right"])] for
+                 payment in payments]
+
+        last_row = len(data2) + 2
+
+        data3 = [[Paragraph('Remaining Balance Due', styles["Line_Data_Large"]),
+                 Paragraph(str("${0:.2f}".format(round(remaining_balance, 2))),
+                           styles["Line_Data_Large_Right"])]]
+
+        all_data = data1 + data2 + data3
+
+        t1 = Table(all_data, colWidths=(14 * cm, 4.6 * cm))
         t1.setStyle(TableStyle([
             ('BOX', (0, 0), (-1, -1), .25, colors.black),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            # ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # we propose
-            # ('BACKGROUND', (0, 2), (-1, 2), colors.lightgrey),  # payment outline
-            # ('BACKGROUND', (0, 5), (-1, 5), colors.lightgrey),  # acceptance of proposal
-            # ('SPAN', (0, 6), (-1, 6)),  # span acceptance text across both columns
-            # ('BOTTOMPADDING', (0, 7), (-1, 7), 40)
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # we propose
+            ('BACKGROUND', (0, last_row), (-1, last_row), colors.lightgrey),  # payment outline
         ]))
 
         story.append(KeepTogether(t1))
@@ -315,10 +341,19 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         if obj.custom_down_payment:
             down_payment = obj.custom_down_payment
         else:
-            down_payment = bid_total / 2
+            if bid_total:
+                down_payment = bid_total / 2
+            else:
+                down_payment = 0
 
-        cents = Decimal('0.01')
-        final_payment = Decimal(bid_total - down_payment).quantize(cents, ROUND_HALF_UP)
+        if bid_total:
+            cents = Decimal('0.01')
+            final_payment = Decimal(bid_total - down_payment).quantize(cents, ROUND_HALF_UP)
+        else:
+            final_payment = 0
+
+        if not bid_total:
+            bid_total = 0
 
         we_propose = 'Hereby to furnish material and labor complete in accordance with above specifications,' \
                      ' for the sum of'
