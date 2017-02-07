@@ -21,7 +21,7 @@ from django.conf.urls import include
 
 urlpatterns = [
     url(r'^', include('overview.urls')),
-    url(r'^accounts/', include('accounts.urls')),
+    url(r'^account/', include('account.urls')),
     url(r'^address/', include('address.urls')),
     url(r'^bid/', include('bid.urls')),
     url(r'^bid_item/', include('bid_item.urls')),

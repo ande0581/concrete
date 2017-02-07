@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
@@ -42,7 +43,7 @@ class CustomerDetail(DetailView):
         return context
 
 
-class CustomerList(ListView):
+class CustomerList(LoginRequiredMixin, ListView):
     model = Customer
     paginate_by = 20
 

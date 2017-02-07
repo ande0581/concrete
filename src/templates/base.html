@@ -27,6 +27,7 @@
           </button>
           <a class="navbar-brand" href="/overview">Madsen Concrete</a>
         </div>
+        {% if request.user.is_authenticated %}
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
               <li><a href="/customer">Customers</a></li>
@@ -35,9 +36,10 @@
               <li><a href="/category">Categories</a></li>
               <li><a href="/bid">Bids</a></li>
               <li><a href="/calculator">Calculator</a></li>
-              <li><a href="/accounts/logout">Logout</a></li>
+              <li><a href="/account/logout">Logout</a></li>
           </ul>
         </div>
+        {% endif %}
       </div>
     </div>
 

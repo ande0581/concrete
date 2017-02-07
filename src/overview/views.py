@@ -1,11 +1,16 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 
 from bid.models import Bid
 
 
-class OverviewList(ListView):
+class OverviewList(LoginRequiredMixin, ListView):
     model = Bid
     template_name = 'overview/overview_list.html'
+
+    # login_url = "/account/login/"
+    # redirect_field_name = "jimmy"
+    # #raise_exception = True
 
     def get_context_data(self, **kwargs):
         context = super(OverviewList, self).get_context_data(**kwargs)

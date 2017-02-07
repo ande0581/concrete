@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Custom Apps
-    'accounts',
+    'account',
     'address',
     'bid',
     'bid_item',
@@ -75,6 +75,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+LOGIN_URL = '/account/login/'
 ROOT_URLCONF = 'concrete_project.urls'
 
 TEMPLATES = [
