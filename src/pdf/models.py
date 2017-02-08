@@ -4,11 +4,11 @@ import datetime
 from django.urls import reverse
 
 
-def generate_filename(instance, _blank):
+def generate_filename(instance, pdf_type):
 
     name = instance.bid.customer.__str__().replace(' ', '_').lower()
     folder = "{}_{}".format(name, instance.bid.customer.id)
-    filename = "{}_{}.pdf".format(name, datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S'))
+    filename = "{}_{}_{}.pdf".format(name, pdf_type, datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S'))
     url = "customers/{}/{}".format(folder, filename)
 
     return url
@@ -22,4 +22,12 @@ class PDFImage(models.Model):
 
     def get_absolute_url(self):
         return reverse('pdf_app:pdf_list', kwargs={'pk': self.bid.id})
+
+    def shorten_filename(self):
+        folder1, folder2, filename = self.filename.name.split('/')
+        return filename
+
+
+
+
 

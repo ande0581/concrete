@@ -428,11 +428,19 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         myfile = ContentFile(pdf)
         db_model = PDFImage()
         db_model.bid = obj
-        db_model.filename.save('', myfile)
+        if invoice:
+            filename_temp = 'invoice'
+        else:
+            filename_temp = 'proposal'
+
+        db_model.filename.save(filename_temp, myfile)
         messages.success(request, "PDF was saved successfully!")
         return redirect('bid_app:bid_detail', pk=obj.id)
 
-    filename = obj.customer.__str__().replace(' ', '_').lower()
+    if invoice:
+        filename = "{}_invoice_{}".format(obj.customer.__str__().replace(' ', '_').lower(), datetime.date.today())
+    else:
+        filename = "{}_proposal_{}".format(obj.customer.__str__().replace(' ', '_').lower(), datetime.date.today())
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'filename={}.pdf'.format(filename)
     response.write(pdf)
