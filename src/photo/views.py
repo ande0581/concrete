@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.edit import FormView, DeleteView
@@ -8,7 +9,7 @@ from photo.models import Attachment
 from photo.forms import UploadForm
 
 
-class PhotoList(ListView):
+class PhotoList(LoginRequiredMixin, ListView):
     model = Attachment
     template_name = 'photo/photo_list.html'
 
@@ -22,7 +23,7 @@ class PhotoList(ListView):
         return context
 
 
-class PhotoUpload(FormView):
+class PhotoUpload(LoginRequiredMixin, FormView):
 
     template_name = 'photo/photo_form.html'
     form_class = UploadForm
@@ -43,7 +44,7 @@ class PhotoUpload(FormView):
         return reverse('photo_app:photo_list', kwargs={'bid_id': self.kwargs['bid_id']})
 
 
-class PhotoDelete(DeleteView):
+class PhotoDelete(LoginRequiredMixin, DeleteView):
 
     model = Attachment
     template_name = 'photo/photo_delete.html'

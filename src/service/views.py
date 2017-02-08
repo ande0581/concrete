@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -10,7 +11,7 @@ from service.models import Service
 from service.forms import ServiceForm
 
 
-class ServiceCreate(SuccessMessageMixin, CreateView):
+class ServiceCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'service/service_form.html'
     form_class = ServiceForm
     success_message = "Successfully Created Service"
@@ -19,13 +20,13 @@ class ServiceCreate(SuccessMessageMixin, CreateView):
         return reverse('service_app:service_list')
 
 
-class ServiceUpdate(SuccessMessageMixin, UpdateView):
+class ServiceUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Service
     form_class = ServiceForm
     success_message = "Successfully Updated Service"
 
 
-class ServiceDelete(DeleteView):
+class ServiceDelete(LoginRequiredMixin, DeleteView):
     model = Service
 
     def get_object(self, queryset=None):
@@ -40,7 +41,7 @@ class ServiceDelete(DeleteView):
         return reverse('service_app:service_list')
 
 
-class ServiceList(ListView):
+class ServiceList(LoginRequiredMixin, ListView):
     model = Service
 
     def get_queryset(self):

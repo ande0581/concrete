@@ -1,7 +1,7 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
-from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
@@ -11,7 +11,7 @@ from service.models import Service
 from bid_item.forms import BidItemForm, BidItemCustomForm, BidItemUpdateForm
 
 
-class BidItemCreate(SuccessMessageMixin, CreateView):
+class BidItemCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'bid_item/biditem_form.html'
     form_class = BidItemForm
     success_message = "Successfully Added Item"
@@ -23,7 +23,7 @@ class BidItemCreate(SuccessMessageMixin, CreateView):
         return super(BidItemCreate, self).form_valid(form)
 
 
-class BidItemCustomCreate(SuccessMessageMixin, CreateView):
+class BidItemCustomCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'bid_item/biditem_form.html'
     form_class = BidItemCustomForm
     success_message = "Successfully Added Item"
@@ -33,14 +33,14 @@ class BidItemCustomCreate(SuccessMessageMixin, CreateView):
         return super(BidItemCustomCreate, self).form_valid(form)
 
 
-class BidItemUpdate(SuccessMessageMixin, UpdateView):
+class BidItemUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = 'bid_item/biditem_form.html'
     model = BidItem
     form_class = BidItemUpdateForm
     success_message = "Successfully Updated Item"
 
 
-class BidItemDelete(DeleteView):
+class BidItemDelete(LoginRequiredMixin, DeleteView):
     model = BidItem
 
     def get_object(self, queryset=None):
@@ -53,7 +53,7 @@ class BidItemDelete(DeleteView):
         return reverse('bid_app:bid_update', kwargs={'pk': self.bid_pk})
 
 
-class BidItemGroupDelete(DeleteView):
+class BidItemGroupDelete(LoginRequiredMixin, DeleteView):
     # http://stackoverflow.com/questions/16606762/using-two-parameters-to-delete-using-a-django-deleteview
 
     model = BidItem

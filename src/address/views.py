@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
@@ -8,7 +9,7 @@ from customer.models import Customer
 from address.forms import AddressForm
 
 
-class AddressCreate(SuccessMessageMixin, CreateView):
+class AddressCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'address/address_form.html'
     form_class = AddressForm
     success_message = "Successfully Created: %(street)s"
@@ -18,13 +19,13 @@ class AddressCreate(SuccessMessageMixin, CreateView):
         return super(AddressCreate, self).form_valid(form)
 
 
-class AddressUpdate(SuccessMessageMixin, UpdateView):
+class AddressUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Address
     form_class = AddressForm
     success_message = "Successfully Updated: %(street)s"
 
 
-class AddressDelete(DeleteView):
+class AddressDelete(LoginRequiredMixin, DeleteView):
     model = Address
 
     def get_object(self, queryset=None):

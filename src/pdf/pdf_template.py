@@ -430,7 +430,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         db_model.bid = obj
         db_model.filename.save('', myfile)
         messages.success(request, "PDF was saved successfully!")
-        return redirect('bid_app:bid_update', pk=obj.id)
+        return redirect('bid_app:bid_detail', pk=obj.id)
 
     filename = obj.customer.__str__().replace(' ', '_').lower()
     response = HttpResponse(content_type='application/pdf')

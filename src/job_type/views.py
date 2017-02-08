@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -9,7 +10,7 @@ from job_type.models import JobType
 from job_type.forms import JobTypeForm
 
 
-class JobTypeCreate(SuccessMessageMixin, CreateView):
+class JobTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'job_type/jobtype_form.html'
     form_class = JobTypeForm
     success_message = "Successfully Created Job Type"
@@ -18,13 +19,13 @@ class JobTypeCreate(SuccessMessageMixin, CreateView):
         return reverse('job_type_app:job_type_list')
 
 
-class JobTypeUpdate(SuccessMessageMixin, UpdateView):
+class JobTypeUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = JobType
     form_class = JobTypeForm
     success_message = "Successfully Updated Job Type"
 
 
-class JobTypeDelete(DeleteView):
+class JobTypeDelete(LoginRequiredMixin, DeleteView):
     model = JobType
 
     def get_success_url(self):
@@ -32,7 +33,7 @@ class JobTypeDelete(DeleteView):
         return reverse('job_type_app:job_type_list')
 
 
-class JobTypeList(ListView):
+class JobTypeList(LoginRequiredMixin, ListView):
     model = JobType
 
     def get_queryset(self):

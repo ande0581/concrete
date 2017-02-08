@@ -4,7 +4,7 @@
 
 <div class="entries">
   <a href="{% url 'photo_app:photo_upload' bid_id=bid_id %}" class="btn btn-sm btn-success" role="button">Add Photo</a>
-  <a href="{% url 'bid_app:bid_update' pk=bid_id %}" class="btn btn-sm btn-info" role="button">Return to Bid</a>
+  <a href="{% url 'bid_app:bid_detail' pk=bid_id %}" class="btn btn-sm btn-info" role="button">Return to Bid</a>
   <br><br>
 {% for photo in object_list %}
   <div class="row">

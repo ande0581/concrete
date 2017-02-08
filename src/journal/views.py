@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -8,7 +9,7 @@ from journal.models import Journal
 from journal.forms import JournalForm
 
 
-class JournalCreate(SuccessMessageMixin, CreateView):
+class JournalCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'address/address_form.html'
     form_class = JournalForm
     success_message = "Successfully Added Journal Entry"
@@ -18,13 +19,13 @@ class JournalCreate(SuccessMessageMixin, CreateView):
         return super(JournalCreate, self).form_valid(form)
 
 
-class JournalUpdate(SuccessMessageMixin, UpdateView):
+class JournalUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Journal
     form_class = JournalForm
     success_message = "Successfully Updated Journal Entry"
 
 
-class JournalDelete(DeleteView):
+class JournalDelete(LoginRequiredMixin, DeleteView):
     model = Journal
 
     def get_object(self, queryset=None):

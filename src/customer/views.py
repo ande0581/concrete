@@ -13,19 +13,19 @@ from customer.models import Customer
 from customer.forms import CustomerForm
 
 
-class CustomerCreate(SuccessMessageMixin, CreateView):
+class CustomerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'customer/customer_form.html'
     form_class = CustomerForm
     success_message = "Successfully Created: %(first_name)s %(last_name)s"
 
 
-class CustomerUpdate(SuccessMessageMixin, UpdateView):
+class CustomerUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Customer
     form_class = CustomerForm
     success_message = "Successfully Updated: %(first_name)s %(last_name)s"
 
 
-class CustomerDelete(DeleteView):
+class CustomerDelete(LoginRequiredMixin, DeleteView):
     model = Customer
 
     def get_success_url(self):
@@ -33,7 +33,7 @@ class CustomerDelete(DeleteView):
         return reverse('customer_app:customer_list')
 
 
-class CustomerDetail(DetailView):
+class CustomerDetail(LoginRequiredMixin, DetailView):
     model = Customer
 
     def get_context_data(self, **kwargs):

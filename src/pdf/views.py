@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic import DeleteView
 from django.views.generic import ListView
@@ -28,6 +30,7 @@ def create_bid_item_dict(bid_obj):
     return bid_item_dict
 
 
+@login_required()
 def view_pdf(request, invoice=False, **kwargs):
 
     obj = Bid.objects.get(pk=kwargs['bid_id'])
@@ -36,6 +39,7 @@ def view_pdf(request, invoice=False, **kwargs):
     return response
 
 
+@login_required()
 def save_pdf(request, invoice=False, **kwargs):
 
     obj = Bid.objects.get(pk=kwargs['bid_id'])
@@ -44,7 +48,7 @@ def save_pdf(request, invoice=False, **kwargs):
     return response
 
 
-class PDFImageList(ListView):
+class PDFImageList(LoginRequiredMixin, ListView):
     model = PDFImage
     queryset = PDFImage.objects.filter(bid=3)
 
@@ -54,7 +58,7 @@ class PDFImageList(ListView):
         return context
 
 
-class PDFImageDelete(DeleteView):
+class PDFImageDelete(LoginRequiredMixin, DeleteView):
     model = PDFImage
 
     def get_object(self, queryset=None):

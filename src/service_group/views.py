@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
@@ -33,7 +34,7 @@ def insert_bid_item(**item_details):
     item.save()
 
 
-class ConcreteCreate(SuccessMessageMixin, FormView):
+class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
     """
     (length x width x thickness) / 27 = yards
 
@@ -201,7 +202,7 @@ class ConcreteCreate(SuccessMessageMixin, FormView):
         return super(ConcreteCreate, self).form_valid(form)
 
 
-class StepsCreate(SuccessMessageMixin, FormView):
+class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     template_name = 'service_group/service_group_form.html'
     form_class = StepsForm
@@ -242,7 +243,7 @@ class StepsCreate(SuccessMessageMixin, FormView):
         return super(StepsCreate, self).form_valid(form)
 
 
-class FoundationCreate(SuccessMessageMixin, FormView):
+class FoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     template_name = 'service_group/service_group_form.html'
     form_class = FoundationForm
@@ -256,7 +257,7 @@ class FoundationCreate(SuccessMessageMixin, FormView):
         return super(FoundationCreate, self).form_valid(form)
 
 
-class FootingsCreate(SuccessMessageMixin, FormView):
+class FootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     template_name = 'service_group/service_group_form.html'
     form_class = FootingsForm
@@ -270,7 +271,7 @@ class FootingsCreate(SuccessMessageMixin, FormView):
         return super(FootingsCreate, self).form_valid(form)
 
 
-class EgressWindowCreate(SuccessMessageMixin, FormView):
+class EgressWindowCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     template_name = 'service_group/service_group_form.html'
     form_class = EgressWindowForm

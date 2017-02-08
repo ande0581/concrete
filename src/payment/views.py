@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -8,7 +9,7 @@ from payment.models import Payment
 from payment.forms import PaymentForm
 
 
-class PaymentCreate(SuccessMessageMixin, CreateView):
+class PaymentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'payment/payment_form.html'
     form_class = PaymentForm
     success_message = "Successfully Added Payment"
@@ -18,13 +19,13 @@ class PaymentCreate(SuccessMessageMixin, CreateView):
         return super(PaymentCreate, self).form_valid(form)
 
 
-class PaymentUpdate(SuccessMessageMixin, UpdateView):
+class PaymentUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Payment
     form_class = PaymentForm
     success_message = "Successfully Updated Payment"
 
 
-class PaymentDelete(DeleteView):
+class PaymentDelete(LoginRequiredMixin, DeleteView):
     model = Payment
 
     def get_object(self, queryset=None):

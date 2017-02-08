@@ -1,6 +1,7 @@
 from datetime import date
 from django.db.models import Q
 from django.db.models import Sum
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
@@ -36,7 +37,7 @@ def create_bid_item_dict(bid_obj):
     return bid_item_dict
 
 
-class BidCreate(SuccessMessageMixin, CreateView):
+class BidCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'bid/bid_form.html'
     form_class = BidInitialForm
     success_message = "Successfully Created Bid"
@@ -51,7 +52,7 @@ class BidCreate(SuccessMessageMixin, CreateView):
         return super(BidCreate, self).form_valid(form)
 
 
-class BidDetail(SuccessMessageMixin, DetailView):
+class BidDetail(LoginRequiredMixin, SuccessMessageMixin, DetailView):
 
     template_name = 'bid/bid_detail.html'
     model = Bid
@@ -79,7 +80,7 @@ class BidDetail(SuccessMessageMixin, DetailView):
         return context
 
 
-class BidUpdate(SuccessMessageMixin, UpdateView):
+class BidUpdate(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     template_name = 'bid/bid_update_form.html'
     model = Bid
@@ -98,7 +99,7 @@ class BidUpdate(SuccessMessageMixin, UpdateView):
         return context
 
 
-class BidDelete(DeleteView):
+class BidDelete(LoginRequiredMixin, DeleteView):
     model = Bid
 
     def get_object(self, queryset=None):
@@ -111,7 +112,7 @@ class BidDelete(DeleteView):
         return reverse('customer_app:customer_detail', kwargs={'pk': self.customer_pk})
 
 
-class BidList(ListView):
+class BidList(LoginRequiredMixin, ListView):
     model = Bid
     paginate_by = 20
 
