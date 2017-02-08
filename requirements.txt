@@ -3,4 +3,5 @@ django-crispy-forms==1.6.1
 django-multiupload==0.5.2
 olefile==0.44
 Pillow==4.0.0
+python-decouple==3.0
 reportlab==3.3.0

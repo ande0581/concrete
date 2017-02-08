@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,10 +24,11 @@ MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i&a60$jbndez_7m)ticb6m3&e3d7ovipw(@$6bk1*zd&!eh90='
+# https://simpleisbetterthancomplex.com/2015/11/26/package-of-the-week-python-decouple.html
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -55,6 +57,7 @@ INSTALLED_APPS = [
     'payment',
     'pdf',
     'photo',
+    'send_email',
     'service',
     'service_group',
 

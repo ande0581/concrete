@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^payment/', include('payment.urls')),
     url(r'^pdf/', include('pdf.urls')),
     url(r'^photo/', include('photo.urls')),
+    url(r'^send_email/', include('send_email.urls')),
     url(r'^service/', include('service.urls')),
     url(r'^service_group/', include('service_group.urls')),
     url(r'^admin/', admin.site.urls),
