@@ -19,7 +19,7 @@
         <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
             <td>{{ pdf.created_date }}</td>
             <td><a href="{{ MEDIA_URL }}{{ pdf.filename }}" target="_blank">{{ pdf.shorten_filename }}</a></td>
-            <td>Placeholder</td>
+            <td><a href="{% url 'send_email_app:customer_email_create' pdf_id=pdf.id %}">Email Customer</a></td>
             <td>Placeholder</td>
             <td><a href="{% url 'pdf_app:pdf_delete' pk=pdf.pk %}">Delete</a></td>
         </tr>

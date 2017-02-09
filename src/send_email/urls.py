@@ -1,10 +1,10 @@
 from django.conf.urls import url
-from category.views import CategoryList, CategoryCreate, CategoryUpdate, CategoryDelete
+from send_email.views import CustomerEmailCreate
+from send_email.forms import SendCustomerEmailForm
 
 app_name = 'send_email_app'
 urlpatterns = [
-    url(r'^$', CategoryList.as_view(), name='category_list'),
-    url(r'^(?P<pk>\d+)/update/$', CategoryUpdate.as_view(), name='category_update'),
-    url(r'^create/$', CategoryCreate.as_view(), name='category_create'),
-    url(r'^(?P<pk>\d+)/delete/$', CategoryDelete.as_view(), name='category_delete'),
+    #url(r'^$', CustomerEmailCreate.as_view(), name='customer_email_create'),
+    url(r'^create/(?P<pdf_id>\d+)/$', CustomerEmailCreate.as_view(form_class=SendCustomerEmailForm),
+        name='customer_email_create'),
 ]

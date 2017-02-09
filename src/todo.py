@@ -3,3 +3,4 @@
 # TODO delete confirmation cancel on item_group doesnt go anywhere
 # TODO, upload documents to bid like signed proposals
 # TODO, explore get_delete_url
+# TODO, remaining balance on bid detail with no payments isnt showing
