@@ -50,8 +50,6 @@ def save_pdf(request, invoice=False, **kwargs):
 
 class PDFImageList(LoginRequiredMixin, ListView):
     model = PDFImage
-    queryset = PDFImage.objects.filter(bid=3)
-    # TODO why is this value hardcoded, not good
 
     def get_context_data(self, **kwargs):
         context = super(PDFImageList, self).get_context_data(**kwargs)

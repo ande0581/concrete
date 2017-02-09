@@ -72,10 +72,11 @@ class BidDetail(LoginRequiredMixin, SuccessMessageMixin, DetailView):
         context['journal_entries'] = Journal.objects.all().filter(bid=self.kwargs['pk']).order_by('-timestamp')
         context['payments'] = Payment.objects.all().filter(bid=self.kwargs['pk']).order_by('date')
         context['date'] = date.today()
+
         if total_payments:
             context['remaining_balance'] = total_cost - total_payments
         else:
-            context['remaining_balance'] = None
+            context['remaining_balance'] = total_cost
 
         return context
 
