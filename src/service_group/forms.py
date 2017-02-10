@@ -130,6 +130,13 @@ class StepsForm(forms.Form):
     xshort_load_fee = true/false, default=none
     xrailing (required=no, default=none)
     xsealer (required=no), default=(Sealer - Lumiseal +)
+
+    revised 2/9/2017
+    landing width
+    landing depth
+    standard step depth is 12"
+    standard step height is 7.5"
+    recursion
     """
 
 
