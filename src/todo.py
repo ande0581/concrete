@@ -5,5 +5,4 @@
 # TODO, explore get_delete_url
 # TODO, fix the long attachment filename of pdf on email
 # TODO, delete custom item on deletion redirect goes to bid update instead of bid_detail
-# TODO, zero down on bid doesnt work, shows default half down instead
 # TODO, email customer just random message

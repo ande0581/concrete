@@ -338,8 +338,10 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
     else:  # Proposal
 
-        if obj.custom_down_payment:
+        if obj.custom_down_payment and obj.custom_down_payment != -1:
             down_payment = obj.custom_down_payment
+        elif obj.custom_down_payment == -1:
+            down_payment = 0
         else:
             if bid_total:
                 down_payment = bid_total / 2
