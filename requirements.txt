@@ -1,4 +1,4 @@
-Django==1.10.4
+Django==1.10.5
 django-crispy-forms==1.6.1
 django-multiupload==0.5.2
 olefile==0.44

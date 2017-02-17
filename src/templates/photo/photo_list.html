@@ -11,7 +11,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="{{ MEDIA_URL }}{{ photo.file }}">
-        <img src="{{ MEDIA_URL }}{{ photo.file }}" alt="Lights" style="width:100%">
+        <img src="{{ MEDIA_URL }}{{ photo.filename }}" style="width:100%">
         <div class="caption">
           <p><a href="{% url 'photo_app:photo_delete' pk=photo.pk %}" class="btn btn-sm btn-danger" r
                 ole="button">Delete</a></p>

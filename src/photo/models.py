@@ -20,7 +20,7 @@ def generate_filename(instance, filename):
 class Attachment(models.Model):
 
     bid = models.ForeignKey('bid.bid')
-    file = models.FileField(upload_to=generate_filename)
+    filename = models.FileField(upload_to=generate_filename)
 
     def get_absolute_url(self):
         return reverse('photo_app:photo_list', kwargs={'bid_id': self.bid.id})
