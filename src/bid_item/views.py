@@ -58,12 +58,19 @@ class BidItemGroupDelete(LoginRequiredMixin, DeleteView):
 
     model = BidItem
 
+    # This template doesnt rely on get_absolute_url, fixes issue with delete confirmation cancel button not working
+    template_name = 'bid_item/biditem_group_confirm_delete.html'
+
     def get_object(self, queryset=None):
 
         # Job name spaces were replaced with dunders when generating url, reversing that modification
         job_name = self.kwargs['job_name'].replace('__', ' ')
 
-        context = job_name
+        context = {
+            'job_name': job_name,
+            'bid_id': self.kwargs['bid_id']
+        }
+
         return context
 
     def delete(self, request, *args, **kwargs):
@@ -77,4 +84,5 @@ class BidItemGroupDelete(LoginRequiredMixin, DeleteView):
 
         messages.success(self.request, "Successfully Deleted Job")
         return HttpResponseRedirect(reverse('bid_app:bid_detail', kwargs={'pk': bid_id}))
+
 

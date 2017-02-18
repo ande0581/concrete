@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object.job_name }}"?</p>
+    <input class="btn btn-sm btn-danger" type="submit" value="Confirm" />
+    <a class="btn btn-sm btn-default"
+       href="{% url 'bid_app:bid_detail' pk=object.bid_id %}">Cancel</a>
+</form>
+
+{% endblock content %}
