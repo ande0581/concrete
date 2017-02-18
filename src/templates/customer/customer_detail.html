@@ -103,7 +103,7 @@
           <td>{{ email.to_address }}</td>
           <td>{{ email.subject }}</a></td>
           <td>{{ email.body }}</td>
-          <td>{{ email.successful }}</td>
+          {% if not email.successful %}<td style="color:red">{% else %}<td>{% endif %}{{ email.successful }}</td>
       </tr>
       {% endfor %}
     </table>

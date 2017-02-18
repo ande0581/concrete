@@ -156,7 +156,6 @@ class EmployeeEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
     template_name = 'send_email/send_email_form.html'
 
     def get_success_url(self):
-        messages.success(self.request, "Employee Email Sent Successfully")
         bid_obj = Bid.objects.get(pk=self.kwargs['bid_id'])
         return reverse('bid_app:bid_detail', kwargs={'pk': bid_obj.id})
 
@@ -164,8 +163,10 @@ class EmployeeEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         body = form.cleaned_data['body']
         to_address = form.cleaned_data['to_address']
         email_response = send_employee_bid_email(self.request, self.kwargs['bid_id'], to_address, body)
-        # TODO if email fails to send
-        print('Email Response: ', email_response)
+        if email_response:
+            messages.success(self.request, 'Successfully sent email to {}'.format(to_address))
+        else:
+            messages.error(self.request, 'Failed to send email to {}'.format(to_address))
         return super(EmployeeEmailCreate, self).form_valid(form)
 
 
@@ -174,25 +175,27 @@ class ProposalInvoiceEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormVi
     template_name = 'send_email/send_email_form.html'
 
     def get_success_url(self):
-        messages.success(self.request, "Customer Email Sent Successfully")
         pdf_obj = PDFImage.objects.get(pk=self.kwargs['pdf_id'])
         bid_id = pdf_obj.bid.id
-        return reverse('pdf_app:pdf_list', kwargs={'pk': bid_id})
+        return reverse('bid_app:bid_detail', kwargs={'pk': bid_id})
 
     def form_valid(self, form):
         body = form.cleaned_data['body']
+        pdf_obj = PDFImage.objects.get(pk=self.kwargs['pdf_id'])
+        to_address = pdf_obj.bid.customer.email
         email_response = send_customer_proposal_invoice_email(self.kwargs['pdf_id'], body)
-        # TODO if email fails to send
-        print('Email Response: ', email_response)
+        if email_response:
+            messages.success(self.request, 'Successfully sent email to {}'.format(to_address))
+        else:
+            messages.error(self.request, 'Failed to send email to {}'.format(to_address))
         return super(ProposalInvoiceEmailCreate, self).form_valid(form)
 
 
-class GeneralEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
+class GeneralEmailCreate(LoginRequiredMixin, FormView):
 
     template_name = 'send_email/send_email_form.html'
 
     def get_success_url(self):
-        messages.success(self.request, "General Email Sent Successfully")
         customer_obj = Customer.objects.get(pk=self.kwargs['customer_id'])
         return reverse('customer_app:customer_detail', kwargs={'pk': customer_obj.id})
 
@@ -202,7 +205,10 @@ class GeneralEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         customer_obj = Customer.objects.get(pk=self.kwargs['customer_id'])
         to_address = customer_obj.email
         email_response = send_general_email(customer_obj.id, to_address, subject, body)
-        # TODO if email fails to send
-        print('Email Response: ', email_response)
+        if email_response:
+            messages.success(self.request, 'Successfully sent email to {}'.format(to_address))
+        else:
+            messages.error(self.request, 'Failed to send email to {}'.format(to_address))
+
         return super(GeneralEmailCreate, self).form_valid(form)
 
