@@ -36,7 +36,7 @@ class PhotoUpload(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         for each in form.cleaned_data['attachments']:
             bid_obj = Bid.objects.get(pk=self.kwargs['bid_id'])
-            Attachment.objects.create(file=each, bid=bid_obj)
+            Attachment.objects.create(filename=each, bid=bid_obj)
         return super(PhotoUpload, self).form_valid(form)
 
     def get_success_url(self):
