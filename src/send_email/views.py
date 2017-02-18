@@ -13,6 +13,7 @@ from bid.models import Bid
 from customer.models import Customer
 from photo.models import Attachment
 from pdf.models import PDFImage
+from send_email.models import EmailLog
 from pdf.views import view_pdf
 
 
@@ -21,6 +22,18 @@ def generate_filename(instance):
     filename = "{}_Employee_Copy_{}.pdf".format(name, datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S'))
 
     return filename
+
+
+def log_email(**kwargs):
+    customer_obj = Customer.objects.get(pk=kwargs['customer_id'])
+
+    email_entry = EmailLog()
+    email_entry.to_address = kwargs['to_address']
+    email_entry.subject = kwargs['subject']
+    email_entry.body = kwargs['body']
+    email_entry.successful = kwargs['successful']
+    email_entry.customer = customer_obj
+    email_entry.save()
 
 
 def send_customer_proposal_invoice_email(pdf_id, body):
@@ -52,6 +65,17 @@ def send_customer_proposal_invoice_email(pdf_id, body):
 
     response = email.send()
 
+    # Log email in DB
+    email_log_entry = {
+        'to_address': to_address,
+        'subject': subject,
+        'body': body,
+        'successful': response,
+        'customer_id': pdf_obj.bid.customer.id
+    }
+
+    log_email(**email_log_entry)
+
     return response
 
 
@@ -81,13 +105,36 @@ def send_employee_bid_email(request, bid_id, to_address, body):
     # Send email
     response = email.send()
 
+    # Log email in DB
+    email_log_entry = {
+        'to_address': to_address,
+        'subject': subject,
+        'body': body,
+        'successful': response,
+        'customer_id': bid_obj.customer.id
+    }
+
+    log_email(**email_log_entry)
+
     return response
 
 
-def send_general_email(to_address, subject, body):
+def send_general_email(customer_id, to_address, subject, body):
+    customer_obj = Customer.objects.get(pk=customer_id)
     from_address = config('EMAIL_HOST_USER')
     email = EmailMessage(subject, body, from_address, [to_address])
     response = email.send()
+
+    # Log email in DB
+    email_log_entry = {
+        'to_address': to_address,
+        'subject': subject,
+        'body': body,
+        'successful': response,
+        'customer_id': customer_obj.id
+    }
+
+    log_email(**email_log_entry)
 
     return response
 
@@ -142,7 +189,7 @@ class GeneralEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         body = form.cleaned_data['body']
         customer_obj = Customer.objects.get(pk=self.kwargs['customer_id'])
         to_address = customer_obj.email
-        email_response = send_general_email(to_address, subject, body)
+        email_response = send_general_email(customer_obj.id, to_address, subject, body)
         # TODO if email fails to send
         print('Email Response: ', email_response)
         return super(GeneralEmailCreate, self).form_valid(form)

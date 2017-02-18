@@ -10,6 +10,7 @@ from django.views.generic.list import ListView
 from address.models import Address
 from bid.models import Bid
 from customer.models import Customer
+from send_email.models import EmailLog
 from customer.forms import CustomerForm
 
 
@@ -40,6 +41,7 @@ class CustomerDetail(LoginRequiredMixin, DetailView):
         context = super(CustomerDetail, self).get_context_data(**kwargs)
         context['addresses'] = Address.objects.filter(customer_id=self.kwargs['pk'])
         context['bids'] = Bid.objects.filter(customer_id=self.kwargs['pk'])
+        context['emails'] = EmailLog.objects.filter(customer_id=self.kwargs['pk'])
         return context
 
 
