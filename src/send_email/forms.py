@@ -33,3 +33,12 @@ class SendEmployeeEmailForm(forms.Form):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('login', 'Send Employee Email', css_class='btn=primary'))
+
+
+class SendGeneralEmailForm(forms.Form):
+    subject = forms.CharField()
+    body = forms.CharField(widget=forms.Textarea)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Send Customer Email', css_class='btn=primary'))

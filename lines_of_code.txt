@@ -1,3 +1,4 @@
 find /Users/janderson/PycharmProjects/concrete/src -name "*.py" -type f -exec cat {} + | wc -l
 
 2/5/2017: 3805
+2/17/2017: 4096

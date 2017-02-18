@@ -10,6 +10,7 @@ import os
 
 from concrete_project import settings
 from bid.models import Bid
+from customer.models import Customer
 from photo.models import Attachment
 from pdf.models import PDFImage
 from pdf.views import view_pdf
@@ -83,8 +84,12 @@ def send_employee_bid_email(request, bid_id, to_address, body):
     return response
 
 
-def send_generic_email():
-    pass
+def send_general_email(to_address, subject, body):
+    from_address = config('EMAIL_HOST_USER')
+    email = EmailMessage(subject, body, from_address, [to_address])
+    response = email.send()
+
+    return response
 
 
 class EmployeeEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
@@ -105,7 +110,7 @@ class EmployeeEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         return super(EmployeeEmailCreate, self).form_valid(form)
 
 
-class CustomerEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
+class ProposalInvoiceEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     template_name = 'send_email/send_email_form.html'
 
@@ -120,5 +125,25 @@ class CustomerEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         email_response = send_customer_proposal_invoice_email(self.kwargs['pdf_id'], body)
         # TODO if email fails to send
         print('Email Response: ', email_response)
-        return super(CustomerEmailCreate, self).form_valid(form)
+        return super(ProposalInvoiceEmailCreate, self).form_valid(form)
+
+
+class GeneralEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
+
+    template_name = 'send_email/send_email_form.html'
+
+    def get_success_url(self):
+        messages.success(self.request, "General Email Sent Successfully")
+        customer_obj = Customer.objects.get(pk=self.kwargs['customer_id'])
+        return reverse('customer_app:customer_detail', kwargs={'pk': customer_obj.id})
+
+    def form_valid(self, form):
+        subject = form.cleaned_data['subject']
+        body = form.cleaned_data['body']
+        customer_obj = Customer.objects.get(pk=self.kwargs['customer_id'])
+        to_address = customer_obj.email
+        email_response = send_general_email(to_address, subject, body)
+        # TODO if email fails to send
+        print('Email Response: ', email_response)
+        return super(GeneralEmailCreate, self).form_valid(form)
 

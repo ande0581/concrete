@@ -13,12 +13,13 @@
 
 <a href="{% url 'customer_app:customer_update' pk=object.pk %}" class="btn btn-sm btn-info"
    role="button">Edit</a>
+<a href="{% url 'send_email_app:general_email_create' customer_id=object.pk %}"
+   class="btn btn-sm btn-success" role="button">Send Email</a>
 <a href="{% url 'customer_app:customer_delete' pk=object.pk %}" class="btn btn-sm btn-danger"
    role="button">Delete</a>
 
-
 <div class="entries">
-  <h4><strong>Addresses </strong><a href="{% url 'address_app:address_create' customer=object.pk %}"
+  <h4><br><strong>Addresses </strong><a href="{% url 'address_app:address_create' customer=object.pk %}"
                                     class="btn btn-sm btn-success" role="button">Add</a></h4>
   <div class="datagrid">
     <table>
@@ -56,6 +57,35 @@
 
 <div class="entries">
   <h4><strong>Bids</strong></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="10%"><strong>Date</strong></th>
+          <th width="55%"><strong>Description</strong></th>
+          <th width="20%"><strong>Status</strong></th>
+          <th width="15%"><strong>Actions</strong></th>
+        </tr>
+      </thead>
+      {% for bid in bids %}
+      <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+          <td>{{ bid.timestamp }}</td>
+          <td>{{ bid.description }}</a></td>
+          <td>{{ bid.status }}</td>
+          <td>
+              <a href="{{ bid.get_absolute_url }}" class="btn btn-sm btn-info">Edit</a>
+
+              <a href="{% url 'bid_app:bid_delete' pk=bid.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+<br>
+
+<div class="entries">
+  <h4><strong>Email Log</strong></h4>
   <div class="datagrid">
     <table>
       <thead>
