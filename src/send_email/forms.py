@@ -7,8 +7,14 @@ email_body = """Attached is the proposal for your project. Please let me know if
 
 Thanks,
 
-Tom
+Tom Madsen - Owner
+Madsen Concrete Services
+612-508-2484
+concrete@madsenservices.com
 """
+
+EMPLOYEES = (('jeffrey.d.anderson@gmail.com', 'Jeff Anderson'),
+             ('concrete@madsenservices.com', 'Tom Madsen'),)
 
 
 class SendCustomerEmailForm(forms.Form):
@@ -21,7 +27,7 @@ class SendCustomerEmailForm(forms.Form):
 
 
 class SendEmployeeEmailForm(forms.Form):
-    to_address = forms.EmailField(initial='jeffrey.d.anderson@gmail.com')
+    to_address = forms.EmailField(widget=forms.Select(choices=EMPLOYEES))
     body = forms.CharField(widget=forms.Textarea)
 
     helper = FormHelper()

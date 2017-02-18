@@ -37,6 +37,7 @@ def send_customer_proposal_invoice_email(pdf_id, body):
         subject = 'Proposal for {}'.format(pdf_obj.bid.address.street)
     else:
         subject = 'Invoice for {}'.format(pdf_obj.bid.address.street)
+        body = body.replace('proposal', 'invoice')
 
     email = EmailMessage(subject, body, from_address, [to_address])
 
@@ -53,13 +54,12 @@ def send_customer_proposal_invoice_email(pdf_id, body):
     return response
 
 
-def send_employee_bid_email(request, bid_id, body):
+def send_employee_bid_email(request, bid_id, to_address, body):
     attachments = []
     bid_obj = Bid.objects.get(pk=bid_id)
     pdf_name = generate_filename(bid_obj)
 
     from_address = config('EMAIL_HOST_USER')
-    to_address = bid_obj.customer.email
     subject = 'Bid Details for {}'.format(bid_obj.address.street)
 
     email = EmailMessage(subject, body, from_address, [to_address])
@@ -98,7 +98,8 @@ class EmployeeEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
         body = form.cleaned_data['body']
-        email_response = send_employee_bid_email(self.request, self.kwargs['bid_id'], body)
+        to_address = form.cleaned_data['to_address']
+        email_response = send_employee_bid_email(self.request, self.kwargs['bid_id'], to_address, body)
         # TODO if email fails to send
         print('Email Response: ', email_response)
         return super(EmployeeEmailCreate, self).form_valid(form)
