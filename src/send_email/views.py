@@ -63,7 +63,11 @@ def send_customer_proposal_invoice_email(pdf_id, body):
         bid_explanation = os.path.join(settings.MEDIA_ROOT, 'global/bid_explanation.pdf')
         email.attach_file(bid_explanation)
 
-    response = email.send()
+    # Attempt to send email
+    try:
+        response = email.send()
+    except Exception:
+        response = 0
 
     # Log email in DB
     email_log_entry = {
@@ -102,8 +106,11 @@ def send_employee_bid_email(request, bid_id, to_address, body):
     for attachment in attachments:
         email.attach_file(attachment.filename.path)
 
-    # Send email
-    response = email.send()
+    # Attempt to send email
+    try:
+        response = email.send()
+    except Exception:
+        response = 0
 
     # Log email in DB
     email_log_entry = {
@@ -123,7 +130,12 @@ def send_general_email(customer_id, to_address, subject, body):
     customer_obj = Customer.objects.get(pk=customer_id)
     from_address = config('EMAIL_HOST_USER')
     email = EmailMessage(subject, body, from_address, [to_address])
-    response = email.send()
+
+    # Attempt to send email
+    try:
+        response = email.send()
+    except Exception:
+        response = 0
 
     # Log email in DB
     email_log_entry = {
