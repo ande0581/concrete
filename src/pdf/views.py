@@ -31,20 +31,21 @@ def create_bid_item_dict(bid_obj):
 
 
 @login_required()
-def view_pdf(request, invoice=False, **kwargs):
-
+def view_pdf(request, invoice=False, employee=False, return_file_object=False, **kwargs):
     obj = Bid.objects.get(pk=kwargs['bid_id'])
     bid_item_dict = create_bid_item_dict(obj)
-    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, invoice=invoice, save_to_disk=False)
+    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, invoice=invoice, employee=employee,
+                            save_to_disk=False, return_file_object=return_file_object)
     return response
 
 
 @login_required()
-def save_pdf(request, invoice=False, **kwargs):
+def save_pdf(request, invoice=False, employee=False, **kwargs):
 
     obj = Bid.objects.get(pk=kwargs['bid_id'])
     bid_item_dict = create_bid_item_dict(obj)
-    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, invoice=invoice, save_to_disk=True)
+    response = generate_pdf(request, obj=obj, bid_item_dict=bid_item_dict, invoice=invoice, employee=employee,
+                            save_to_disk=True)
     return response
 
 

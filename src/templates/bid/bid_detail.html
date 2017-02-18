@@ -136,26 +136,26 @@
       <tr>
             <th width="50px"><strong>Add Services</strong></th>
             <th width="50px"><strong>Add Items</strong></th>
-            <th width="50px"><strong>Photos</strong></th>
+            <th width="50px"><strong>Files</strong></th>
       </tr>
       </thead>
 
       <tr style="background: white">
             <td><a href="{% url 'service_group_app:standard_concrete_create' bid=bid.id %}">Standard Concrete</a></td>
             <td><a href="{% url 'bid_item_app:bid_item_create' bid=bid.id %}">Standard Item</a></td>
-            <td><a href="{% url 'photo_app:photo_list' bid_id=bid.id %}">Photos</a></td>
+            <td><a href="{% url 'pdf_app:pdf_list' pk=bid.id %}">Saved Bids and Invoices</a></td>
       </tr>
 
       <tr style="background: #F0F0F0">
             <td><a href="{% url 'service_group_app:decorative_concrete_create' bid=bid.id %}">Decorative Concrete</a></td>
             <td><a href="{% url 'bid_item_app:bid_item_custom_create' bid=bid.id %}">Custom Item</a></td>
-            <td></td>
+            <td><a href="{% url 'photo_app:photo_list' bid_id=bid.id %}">Photos</a></td>
       </tr>
 
       <tr style="background: white">
           <td><a href="{% url 'service_group_app:steps_create' bid=bid.id %}">Steps</a></td>
             <td></td>
-            <td></td>
+            <td>File Upload Placeholder</td>
       </tr>
 
       <tr style="background: #F0F0F0">
@@ -263,7 +263,7 @@
 
 
 <br>
-    <a href="{% url 'pdf_app:pdf_view_proposal' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
+    <a href="{% url 'pdf_app:pdf_view_proposal_customer' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
        role="button">View Proposal</a>
 
     <a href="{% url 'pdf_app:pdf_view_invoice' bid_id=bid.id %}" target="_blank" class="btn btn-sm btn-info"
@@ -275,8 +275,8 @@
     <a href="{% url 'pdf_app:pdf_save_invoice' bid_id=bid.id %}" class="btn btn-sm btn-success"
        role="button">Save Invoice</a>
 
-    <a href="{% url 'pdf_app:pdf_list' pk=bid.id %}" class="btn btn-sm btn-warning"
-       role="button">PDF Archive</a>
+    <a href="{% url 'send_email_app:employee_email_create' bid_id=bid.id %}" class="btn btn-sm btn-warning"
+       role="button">Email Employee</a>
 
     <a href="{% url 'customer_app:customer_detail' pk=bid.customer.id %}" class="btn btn-sm btn-primary"
        role="button">Return to Customer</a>

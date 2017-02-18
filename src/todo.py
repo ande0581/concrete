@@ -6,3 +6,5 @@
 # TODO, fix the long attachment filename of pdf on email
 # TODO, delete custom item on deletion redirect goes to bid update instead of bid_detail
 # TODO, email customer just random message
+# TODO, signed document upload
+# TODO, change request

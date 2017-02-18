@@ -47,7 +47,7 @@ class NumberedCanvas(canvas.Canvas):
                              "Page {} of {}".format(self._pageNumber, page_count))
 
 
-def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
+def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=False, return_file_object=False):
     buff = BytesIO()
 
     # The page width totals 18.6cm
@@ -130,6 +130,8 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
     # Add Proposal or Invoice Title to PDF
     if invoice:
         pdf_type = 'Invoice'
+    elif employee:
+        pdf_type = 'Employee Copy'
     else:
         pdf_type = 'Proposal'
 
@@ -258,36 +260,53 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
         story.append(t1)
 
-        data1 = [[Paragraph(str(item.description), styles["Line_Data_Large"]),
-                  Paragraph(str("{0:.2f}".format(round(item.total, 2))), styles["Line_Data_Large_Right"])] for item in
-                 items]
+        if employee:  # Add quantities but remove pricing
+            data1 = [[Paragraph(str(item.description), styles["Line_Data_Large"]),
+                      Paragraph(str(item.quantity), styles["Line_Data_Large_Right"])] for item in
+                     items]
 
-        t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
-        t1.setStyle(TableStyle([
-            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ]))
+            t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
+            t1.setStyle(TableStyle([
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ]))
 
-        story.append(t1)
+            story.append(t1)
+            story.append(Spacer(4, 32))
 
-        # Calculate total per job and add to PDF
-        total = items.aggregate(Sum('total'))['total__sum']
-        total_text = "{} Total".format(job_name)
-        data1 = [[Paragraph(total_text, styles["Line_Data_Large"]),
-                  Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
-                 ]
+        else:  # Add pricing but not quantity for end customer
+            data1 = [[Paragraph(str(item.description), styles["Line_Data_Large"]),
+                      Paragraph(str("{0:.2f}".format(round(item.total, 2))), styles["Line_Data_Large_Right"])] for item
+                     in
+                     items]
 
-        t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
-        t1.setStyle(TableStyle([
-            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-            ('BOX', (0, 0), (-1, -1), .25, colors.black),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
-        ]))
+            t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
+            t1.setStyle(TableStyle([
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ]))
 
-        story.append(t1)
-        story.append(Spacer(4, 32))
+            story.append(t1)
+
+            # Calculate total per job and add to PDF
+            total = items.aggregate(Sum('total'))['total__sum']
+            total_text = "{} Total".format(job_name)
+            data1 = [[Paragraph(total_text, styles["Line_Data_Large"]),
+                      Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
+                     ]
+
+            t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
+            t1.setStyle(TableStyle([
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                ('BOX', (0, 0), (-1, -1), .25, colors.black),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey)
+            ]))
+
+            story.append(t1)
+            story.append(Spacer(4, 32))
 
     # Calculate Bid Total
     items = BidItem.objects.all().filter(bid=obj.id)
@@ -335,6 +354,9 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
         ]))
 
         story.append(KeepTogether(t1))
+
+    elif employee:  # If employee skip rest of bid info
+        pass
 
     else:  # Proposal
 
@@ -425,6 +447,10 @@ def generate_pdf(request, obj, bid_item_dict, invoice, save_to_disk=False):
 
     pdf = buff.getvalue()
     buff.close()
+
+    if return_file_object:
+        # For send pdf to employee which isnt stored to database, return the file object
+        return pdf
 
     if save_to_disk:
         myfile = ContentFile(pdf)

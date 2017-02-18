@@ -17,4 +17,13 @@ class SendCustomerEmailForm(forms.Form):
 
     helper = FormHelper()
     helper.form_method = 'POST'
-    helper.add_input(Submit('login', 'Send Email', css_class='btn=primary'))
+    helper.add_input(Submit('login', 'Send Customer Email', css_class='btn=primary'))
+
+
+class SendEmployeeEmailForm(forms.Form):
+    to_address = forms.EmailField(initial='jeffrey.d.anderson@gmail.com')
+    body = forms.CharField(widget=forms.Textarea)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Send Employee Email', css_class='btn=primary'))
