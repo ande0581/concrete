@@ -11,7 +11,7 @@
           <th><strong>Customer</strong></th>
           <th><strong>Bid Description</strong></th>
           <th><strong>Status</strong></th>
-          <th><strong>Age</strong></th>
+          <th><strong>Date</strong></th>
         </tr>
       </thead>
       {% for bid in object_list %}
@@ -20,7 +20,7 @@
                   {% else %}{{ bid.customer.first_name }} {{ bid.customer.last_name }}{% endif %}</a></td>
               <td><a href="{{ bid.get_absolute_url }}">{{ bid.description|truncatechars:100 }}</a></td>
               <td>{{ bid.status }}</td>
-              <td>{{ bid.timestamp|timesince }}</td>
+              <td>{{ bid.timestamp|date }}</td>
           </tr>
       {% endfor %}
     </table>
