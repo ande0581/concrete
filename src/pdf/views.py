@@ -55,6 +55,7 @@ class PDFImageList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(PDFImageList, self).get_context_data(**kwargs)
         context['object_list'] = PDFImage.objects.filter(bid=self.kwargs['pk']).order_by('-created_date')
+        context['bid_id'] = self.kwargs['pk']
         return context
 
 
@@ -63,7 +64,7 @@ class PDFImageDelete(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         obj = super(PDFImageDelete, self).get_object()
-        self.bid_pk = obj.id
+        self.bid_pk = obj.bid.id
         return obj
 
     def get_success_url(self):

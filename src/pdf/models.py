@@ -21,7 +21,7 @@ class PDFImage(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
-        return reverse('pdf_app:pdf_list', kwargs={'pk': self.bid.id})
+        return reverse('pdf_app:pdf_list', kwargs={'pk': self.bid_id})
 
     def shorten_filename(self):
         folder1, folder2, filename = self.filename.name.split('/')
