@@ -13,6 +13,14 @@ Madsen Concrete Services
 concrete@madsenservices.com
 """
 
+generic_email_body = """
+
+Tom Madsen - Owner
+Madsen Concrete Services
+612-508-2484
+concrete@madsenservices.com
+"""
+
 EMPLOYEES = (('jeffrey.d.anderson@gmail.com', 'Jeff Anderson'),
              ('concrete@madsenservices.com', 'Tom Madsen'),)
 
@@ -37,7 +45,7 @@ class SendEmployeeEmailForm(forms.Form):
 
 class SendGeneralEmailForm(forms.Form):
     subject = forms.CharField()
-    body = forms.CharField(widget=forms.Textarea)
+    body = forms.CharField(initial=generic_email_body, widget=forms.Textarea)
 
     helper = FormHelper()
     helper.form_method = 'POST'

@@ -89,7 +89,7 @@ def send_employee_bid_email(request, bid_id, to_address, body):
     pdf_name = generate_filename(bid_obj)
 
     from_address = config('EMAIL_HOST_USER')
-    subject = 'Bid Details for {}'.format(bid_obj.address.street)
+    subject = 'Job Details for {}'.format(bid_obj.address.street)
 
     email = EmailMessage(subject, body, from_address, [to_address])
 

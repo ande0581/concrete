@@ -2,3 +2,5 @@
 # TODO, upload documents to bid like signed proposals
 # TODO, explore get_delete_url
 # TODO, change order
+# TODO, explore decimal rounding on money
+
