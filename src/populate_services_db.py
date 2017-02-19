@@ -4,6 +4,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'concrete_project.settings')
 import django
 django.setup()
 from category.models import Category
+from job_type.models import JobType
 from service.models import Service
 
 
@@ -124,11 +125,26 @@ def populate():
 
     ]
 
+    job_type_records = [
+        {'description': 'Basement Floor'},
+        {'description': 'Curb'},
+        {'description': 'Driveway'},
+        {'description': 'Egress Window'},
+        {'description': 'Garage Floor'},
+        {'description': 'Patio'},
+        {'description': 'Retaining Wall'},
+        {'description': 'Sidewalk'},
+        {'description': 'Steps'},
+    ]
+
     for record in category_records:
         add_category(record)
 
     for record in service_records:
         add_service(record)
+
+    for record in job_type_records:
+        add_job_type(record)
 
 
 def add_category(category_entry):
@@ -143,6 +159,12 @@ def add_service(service_entry):
     service_entry['category'] = category_obj
     item = Service(**service_entry)
     item.save()
+
+
+def add_job_type(job_type_entry):
+        print('Job Type:', job_type_entry['description'])
+        item = JobType(**job_type_entry)
+        item.save()
 
 
 if __name__ == '__main__':

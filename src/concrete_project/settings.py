@@ -72,7 +72,8 @@ INSTALLED_APPS = [
 
     # 3rd Party Apps
     'crispy_forms',
-    'multiupload',
+    'django_cleanup',  # needs to be after installed apps, removes files from local system after being delete from db
+    'multiupload',  # allows for multiple files to be uploads in one form
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
