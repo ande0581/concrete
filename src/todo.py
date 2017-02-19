@@ -3,4 +3,4 @@
 # TODO, explore get_delete_url
 # TODO, change order
 # TODO, explore decimal rounding on money
-
+# TODO, delete actual file from media folder not just db

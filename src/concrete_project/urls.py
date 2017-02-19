@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^account/', include('account.urls')),
     url(r'^address/', include('address.urls')),
     url(r'^bid/', include('bid.urls')),
+    url(r'^bid_attachment/', include('bid_attachment.urls')),
     url(r'^bid_item/', include('bid_item.urls')),
     url(r'^calculator/', include('calculator.urls')),
     url(r'^category/', include('category.urls')),

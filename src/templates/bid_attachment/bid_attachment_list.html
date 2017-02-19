@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="entries">
+    <h4>Saved Documents</h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th width="100px"><strong>Date</strong></th>
+          <th width="200px"><strong>Filename</strong></th>
+          <th width="50px"><strong>Description</strong></th>
+          <th width="50px"><strong>Delete</strong></th>
+        </tr>
+      </thead>
+      {% for document in object_list %}
+        <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+            <td>{{ document.uploaded_date }}</td>
+            <td><a href="{{ MEDIA_URL }}{{ document.filename }}" target="_blank">{{ document.shorten_filename }}</a></td>
+            <td>{{ document.description }}</td>
+            <td><a href="{% url 'bid_attachment_app:bid_attachment_delete' pk=document.pk %}">Delete</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<br>
+<a href="{% url 'bid_attachment_app:bid_attachment_upload' bid_id=bid_id %}" class="btn btn-sm btn-success"
+   role="button">Add Document</a>
+<a href="{% url 'bid_app:bid_detail' pk=bid_id %}" class="btn btn-sm btn-info" role="button">Return to Bid</a>
+
+{% endblock content %}

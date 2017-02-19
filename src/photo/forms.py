@@ -1,5 +1,5 @@
 from django import forms
-from multiupload.fields import MultiFileField, MultiMediaField, MultiImageField
+from multiupload.fields import MultiFileField
 
 
 class UploadForm(forms.Form):

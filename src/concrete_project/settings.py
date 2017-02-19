@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'account',
     'address',
     'bid',
+    'bid_attachment',
     'bid_item',
     'calculator',
     'category',

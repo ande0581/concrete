@@ -23,6 +23,9 @@ class PDFImage(models.Model):
     def get_absolute_url(self):
         return reverse('pdf_app:pdf_list', kwargs={'pk': self.bid_id})
 
+    def __str__(self):
+        return str(self.filename)
+
     def shorten_filename(self):
         folder1, folder2, filename = self.filename.name.split('/')
         return filename
