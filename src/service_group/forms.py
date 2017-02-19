@@ -6,18 +6,30 @@ from crispy_forms.layout import Submit, Div
 from job_type.models import JobType
 from service.models import Service
 
+import sys
+# http://stackoverflow.com/questions/42024101/problems-with-migrations
+# http://stackoverflow.com/questions/39535983/migration-clashes-with-forms-py
+if 'makemigrations' in sys.argv or 'migrate' in sys.argv or 'showmigrations' in sys.argv:
+    "Prevent querying of DB while initializing the applications, will fail to migrate otherwise"
 
-def get_queryset(category_name):
-    return Service.objects.all().filter(category__name__exact=category_name)
+    def get_queryset(category_name):
+        pass
 
 
-def get_one_object(service_name):
-    my_obj = Service.objects.get(description=service_name)
-    return my_obj.pk
+    def get_one_object(service_name):
+        pass
+else:
+
+    def get_queryset(category_name):
+        return Service.objects.all().filter(category__name__exact=category_name)
+
+
+    def get_one_object(service_name):
+        my_obj = Service.objects.get(description=service_name)
+        return my_obj.pk
 
 
 class StandardConcreteForm(forms.Form):
-# TODO http://stackoverflow.com/questions/32383978/no-such-column-error-in-django-models, an issue??
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
     length = forms.IntegerField(label='Length in Feet')
@@ -38,6 +50,7 @@ class StandardConcreteForm(forms.Form):
                                        initial=get_one_object('Pour, Finish, Control Joints'))
     sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
                                     initial=get_one_object('Sealer - Cure n Seal'))
+
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -205,28 +218,3 @@ class EgressWindowForm(forms.Form):
     rock 3/8- rock (always true, flat rate)
 
     """
-
-
-# Place holder to start db from nothing
-# class StandardConcreteForm:
-#     pass
-#
-#
-# class DecorativeConcreteForm:
-#     pass
-#
-#
-# class StepsForm:
-#     pass
-#
-#
-# class FoundationForm:
-#     pass
-#
-#
-# class FootingsForm:
-#     pass
-#
-#
-# class EgressWindowForm:
-#     pass

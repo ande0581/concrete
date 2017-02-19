@@ -3,34 +3,11 @@
 # TODO, explore decimal rounding on money
 
 """
-TODO, when i delete all migrations except the migration folder and __init__.py file it will not let me migrate
-because of the service_group form. I need to comment out my forms and put this in its place to get makemigrations to
-run
-
-class StandardConcreteForm:
-    pass
-
-
-class DecorativeConcreteForm:
-    pass
-
-
-class StepsForm:
-    pass
-
-
-class FoundationForm:
-    pass
-
-
-class FootingsForm:
-    pass
-
-
-class EgressWindowForm:
-    pass
-
-after nuking db:
+To nuke db delete all migrations but keep migration folder and __init__.py
+python manage.py showmigrations
+python manage.py makemigrations
+python manage.py migrate
 python populate_services_db.py
 python manage.py createsuperuser
+python manage.py runserver
 """

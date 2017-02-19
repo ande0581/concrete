@@ -7,6 +7,7 @@ from django.views.generic.edit import FormView
 from bid.models import Bid
 from bid_item.models import BidItem
 from service.models import Service
+
 from service_group.forms import StandardConcreteForm, DecorativeConcreteForm, StepsForm, FoundationForm, \
     FootingsForm, EgressWindowForm
 
