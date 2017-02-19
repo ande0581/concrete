@@ -205,3 +205,28 @@ class EgressWindowForm(forms.Form):
     rock 3/8- rock (always true, flat rate)
 
     """
+
+
+# Place holder to start db from nothing
+# class StandardConcreteForm:
+#     pass
+#
+#
+# class DecorativeConcreteForm:
+#     pass
+#
+#
+# class StepsForm:
+#     pass
+#
+#
+# class FoundationForm:
+#     pass
+#
+#
+# class FootingsForm:
+#     pass
+#
+#
+# class EgressWindowForm:
+#     pass

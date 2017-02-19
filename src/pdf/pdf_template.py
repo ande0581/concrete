@@ -332,7 +332,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
              Paragraph(str("{0:.2f}".format(round(bid_total, 2))), styles["Line_Data_Large_Right"])],
         ]
 
-        data2 = [[Paragraph(str("Received Payment {}".format(payment.date.strftime('%x'))),
+        data2 = [[Paragraph(str("Received Payment on {}".format(payment.date.strftime('%x'))),
                             styles["Line_Data_Large"]),
                   Paragraph(str("-{0:.2f}".format(round(payment.amount, 2))), styles["Line_Data_Large_Right"])] for
                  payment in payments]
