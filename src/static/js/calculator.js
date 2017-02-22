@@ -19,7 +19,7 @@ function CalculateRound(){
 	var diameter = document.getElementById('round-diameter').valueAsNumber;
 	var depth = document.getElementById('round-depth').valueAsNumber;
 	var quantity = document.getElementById('round-quantity').valueAsNumber;
-	var area = 3.1456 * Math.pow(((diameter / 12) / 2), 2);
+	var area = 3.14159265359 * Math.pow(((diameter / 12) / 2), 2);
 	depth /= 12;
 
 	var cubic_yards = ((area * depth * quantity) /27).toFixed(2);
