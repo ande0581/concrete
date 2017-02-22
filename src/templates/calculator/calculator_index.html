@@ -2,6 +2,52 @@
 {% load staticfiles %}
 
 {% block content %}
-<h4>This is the calculator page</h4>
+
+  <div>
+    <h4>Calculate Slab, Square Footings or Walls</h4>
+    Width Feet: <input id="slab-width" type=number step=.1><br>
+    Length Feet: <input id="slab-length" type=number step=.1><br>
+    Thickness in Inches: <input id="slab-thickness" step=.1 type=number><br>
+    Quantity: <input id="slab-quantity" type=number><br>
+    <input id="slab-calculate" type="button" value="Calculate">
+  </div>
+  <div>
+    <br>
+    <div><strong>Cubic Yards:</strong><span id="slab-cubic-yards"></span></div>
+    <div><strong>80lb Bags:</strong><span id="slab-80lb"></span></div>
+    <div><strong>60lb Bags:</strong><span id="slab-60lb"></span></div>
+  </div>
+
+  <hr>
+  <div>
+    <h4>Calculate Hole, Column or Round Footings</h4>
+    Diameter in Inches: <input id="round-diameter" step=.1 type=number><br>
+    Depth or Height in Inches: <input id="round-depth" type=number step=.1><br>
+    Quantity: <input id="round-quantity" type=number><br>
+    <input id="round-calculate" type="button" value="Calculate">
+  </div>
+  <div>
+    <br>
+    <div><strong>Cubic Yards:</strong><span id="round-cubic-yards"></span></div>
+    <div><strong>80lb Bags:</strong><span id="round-80lb"></span></div>
+    <div><strong>60lb Bags:</strong><span id="round-60lb"></span></div>
+  </div>
+
+  <hr>
+  <div>
+    <h4>Calculate Triangle</h4>
+    Side A: <input id="triangle-sideA" step=.1 type=number><br>
+    Side B: <input id="triangle-sideB" type=number step=.1><br>
+    Side C: <input id="triangle-sideC" type=number step=.1><br>
+    Thickness in Inches: <input id="triangle-thickness" type=number step=.1><br>
+    <input id="triangle-calculate" type="button" value="Calculate">
+  </div>
+  <div>
+    <br>
+    <div><strong>Cubic Yards:</strong><span id="triangle-cubic-yards"></span></div>
+    <div><strong>80lb Bags:</strong><span id="triangle-80lb"></span></div>
+    <div><strong>60lb Bags:</strong><span id="triangle-60lb"></span></div>
+  </div>
+
 
 {% endblock content %}
