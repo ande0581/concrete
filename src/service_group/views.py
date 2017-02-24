@@ -35,6 +35,53 @@ def insert_bid_item(**item_details):
     item.save()
 
 
+def calculate_steps_cubic_yards(length, width, num_steps):
+    """
+    revised 2/9/2017
+    landing length
+    landing width
+    standard step depth is 12"
+    standard step height is 7.5"
+    recursion
+
+    """
+    total_area = []
+    for i in range(num_steps):
+        area = calculate_cubic_yards(length=length, width=width, thickness=7.5)
+        total_area.append(area)
+        length += 1  # add one foot for the depth of each step
+
+    return round(sum(total_area), 2)
+
+
+def calculate_steps_square_feet(length, width, num_steps):
+
+    total_sq_ft = []
+    for i in range(num_steps):
+        if i == 0:
+            surface = length * width
+        else:
+            surface = width * 1
+
+        left_side = length * 1
+        front_side = width * 1
+        right_side = length * 1
+        total = left_side + front_side + right_side + surface
+        total_sq_ft.append(total)
+        length += 1  # add one foot for each new step
+
+        print("Step:", i)
+        print('Surface:', surface)
+        print('Total:', total)
+        print("_" * 30)
+
+    return round(sum(total_sq_ft), 2)
+
+
+def calculate_railing_length(length, num_steps):
+    return length + ((num_steps - 1) * 1)
+
+
 class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
     """
     (length x width x thickness) / 27 = yards
@@ -203,6 +250,11 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         return super(ConcreteCreate, self).form_valid(form)
 
 
+class FloatingSlabCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
+    # TODO floating slab
+    pass
+
+
 class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     template_name = 'service_group/service_group_form.html'
@@ -218,19 +270,20 @@ class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         job_type = form.cleaned_data['job_type']
         length = form.cleaned_data['length']
         width = form.cleaned_data['width']
-        thickness = form.cleaned_data['thickness']
-        num_risers = form.cleaned_data['num_risers']
+        num_steps = form.cleaned_data['num_steps']
         concrete = form.cleaned_data['concrete_type']
         removal = form.cleaned_data['removal']
         short_load = form.cleaned_data['short_load']
         railing = form.cleaned_data['railing']
         sealer = form.cleaned_data['sealer']
 
-        cubic_yards = calculate_cubic_yards(length, width, thickness)
+        cubic_yards = calculate_steps_cubic_yards(length=length, width=width, num_steps=num_steps)
+        sq_ft = calculate_steps_square_feet(length=length, width=width, num_steps=num_steps)
+        railing_length = calculate_railing_length(length=length, num_steps=num_steps)
 
         print('job_type:', job_type)
         print('cubic_yards:', cubic_yards)
-        print('num_risers:', num_risers)
+        print('num_steps:', num_steps)
         print('concrete:', concrete)
         print('removal:', removal)
         print('short_load:', short_load)
@@ -239,7 +292,53 @@ class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
-        # TODO figure out step pricing formula
+        if removal:
+            removal_record = {'bid': bid_obj,
+                              'job_type': job_type,
+                              'quantity': 1,
+                              'cost': removal,
+                              'description': 'Remove Existing Steps',
+                              'total': removal}
+            insert_bid_item(**removal_record)
+
+        concrete_obj = get_one_object(concrete)
+        concrete_record = {'bid': bid_obj,
+                           'job_type': job_type,
+                           'quantity': cubic_yards,
+                           'cost': concrete_obj.cost,
+                           'description': concrete_obj.description,
+                           'total': (concrete_obj.cost * cubic_yards)}
+        insert_bid_item(**concrete_record)
+
+        if short_load:
+            short_load_obj = get_one_object('Minimum Load Charge')
+            short_load_record = {'bid': bid_obj,
+                                 'job_type': job_type,
+                                 'quantity': 1,
+                                 'cost': short_load_obj.cost,
+                                 'description': short_load_obj.description,
+                                 'total': short_load_obj.cost}
+            insert_bid_item(**short_load_record)
+
+        if railing:
+            railing_obj = get_one_object(railing)
+            railing_record = {'bid': bid_obj,
+                              'job_type': job_type,
+                              'quantity': railing_length,
+                              'cost': railing_obj.cost,
+                              'description': railing_obj.description,
+                              'total': railing_obj.cost * railing_length}
+            insert_bid_item(**railing_record)
+
+        if sealer:
+            sealer_obj = get_one_object(sealer)
+            sealer_record = {'bid': bid_obj,
+                             'job_type': job_type,
+                             'quantity': sq_ft,
+                             'cost': sealer_obj.cost,
+                             'description': sealer_obj.description,
+                             'total': (sealer_obj.cost * sq_ft)}
+            insert_bid_item(**sealer_record)
 
         return super(StepsCreate, self).form_valid(form)
 

@@ -118,13 +118,12 @@ class DecorativeConcreteForm(forms.Form):
 class StepsForm(forms.Form):
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    length = forms.IntegerField(label='Depth of Steps in Feet')
+    length = forms.IntegerField(label='Length of Steps in Feet')
     width = forms.IntegerField(label='Width of Steps in Feet')
-    thickness = forms.IntegerField(label='Height of Steps in Inches')
-    num_risers = forms.IntegerField(label='Total Number of Steps')
+    num_steps = forms.IntegerField(label='Total Number of Steps, Count the Landing as a Step')
     concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
-                                           initial=get_one_object('Concrete Driveway Mix'))
-    removal = forms.FloatField(label='Cost to Remove Existing Steps or Blank for None')
+                                           initial=get_one_object('Concrete Steps'))
+    removal = forms.FloatField(label='Cost to Remove Existing Steps or Blank for None', required=False)
     short_load = forms.BooleanField(required=False)
     railing = forms.ModelChoiceField(queryset=get_queryset('Railing'), required=False)
     sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
@@ -153,6 +152,10 @@ class StepsForm(forms.Form):
     """
 
 
+class FloatingSlabForm(forms.Form):
+    pass
+
+
 class FoundationForm(forms.Form):
     pass
 
@@ -163,6 +166,16 @@ class FoundationForm(forms.Form):
     removal_sqft
     removal_unit
     add_footing to this form
+
+
+      -Block foundation- Footing included. I just need to enter in linear feet and put a value to that.
+      Footings are always the same linear feet as the foundation. The only difference would be 8" or 12" wide
+      foundation. It would be nice to have the concrete volume come up automatically so i don't have to figure out how
+      much concrete to order every time. 8 inches thick divided by 41 square feet. Foundation = Length x Height divided
+      by 41, plus footing = 1.8' wide(always) x 12" thick(always) x total linear length. 12 inches thick divided by 27
+      square feet. I can put a value on the concrete volume figured.
+
+
     """
 
 
