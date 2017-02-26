@@ -8,8 +8,7 @@ from bid.models import Bid
 from bid_item.models import BidItem
 from service.models import Service
 
-from service_group.forms import StandardConcreteForm, DecorativeConcreteForm, StepsForm, FoundationForm, \
-    FootingsForm, EgressWindowForm
+from service_group.forms import StepsForm, BlockFoundationForm, FootingsForm, EgressWindowForm
 
 
 def calculate_square_feet(length, width):
@@ -343,18 +342,23 @@ class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         return super(StepsCreate, self).form_valid(form)
 
 
-class FoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
+class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     template_name = 'service_group/service_group_form.html'
-    form_class = FoundationForm
+    form_class = BlockFoundationForm
 
     def get_success_url(self):
-        messages.success(self.request, "Foundation Estimated")
+        messages.success(self.request, "Block Foundation Estimated")
         return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
 
-        return super(FoundationCreate, self).form_valid(form)
+        print("BLOCK FOUNDATION POST FORM SAVE:", form.cleaned_data)
+        job_type = form.cleaned_data['job_type']
+        linear_feet = form.cleaned_data['linear_feet']
+        width = form.cleaned_data['width']
+
+        return super(BlockFoundationCreate, self).form_valid(form)
 
 
 class FootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):

@@ -156,8 +156,14 @@ class FloatingSlabForm(forms.Form):
     pass
 
 
-class FoundationForm(forms.Form):
-    pass
+class BlockFoundationForm(forms.Form):
+    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
+    linear_feet = forms.IntegerField(label='Linear Feet')
+    width = forms.ChoiceField(label='Width', choices=((8, "8 inches"), (12, "12 Inches")))
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Bid Block Foundation', css_class='btn=primary'))
 
     """
     length

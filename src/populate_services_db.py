@@ -128,6 +128,7 @@ def populate():
 
     job_type_records = [
         {'description': 'Basement Floor'},
+        {'description': 'Block Foundation'},
         {'description': 'Curb'},
         {'description': 'Driveway'},
         {'description': 'Egress Window'},
