@@ -8,7 +8,7 @@ from bid.models import Bid
 from bid_item.models import BidItem
 from service.models import Service
 
-from service_group.forms import StepsForm, BlockFoundationForm, FootingsForm, EgressWindowForm
+from service_group.forms import StepsForm, BlockFoundationForm, FootingsForm, EgressWindowForm, FloatingSlabForm
 
 
 def calculate_square_feet(length, width):
@@ -251,7 +251,18 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
 class FloatingSlabCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
     # TODO floating slab
-    pass
+    template_name = 'service_group/service_group_form.html'
+    form_class = FloatingSlabForm
+
+    def get_success_url(self):
+        messages.success(self.request, "Floating Slab Estimated")
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
+
+    def form_valid(self, form):
+
+        print("BLOCK FOUNDATION POST FORM SAVE:", form.cleaned_data)
+
+        return super(FloatingSlabCreate, self).form_valid(form)
 
 
 class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
@@ -356,7 +367,28 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         print("BLOCK FOUNDATION POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         linear_feet = form.cleaned_data['linear_feet']
-        width = form.cleaned_data['width']
+        width = int(form.cleaned_data['width'])
+        height = form.cleaned_data['height']
+        concrete = form.cleaned_data['concrete']
+
+        # TODO verify if width is 1.8 feet or 1 foot 8 inches
+        cubic_yards_footing = calculate_cubic_yards(length=linear_feet, width=1.8, thickness=12)
+        cubic_yards_foundation = calculate_cubic_yards(length=linear_feet, width=width, thickness=height)
+        cubic_yards = cubic_yards_footing + cubic_yards_foundation
+        print('cubic yards footings:', cubic_yards_footing)
+        print('cubic yards foundation:', cubic_yards_foundation)
+        print('cubic yards total:', cubic_yards)
+
+        bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
+
+        concrete_obj = get_one_object(concrete)
+        concrete_record = {'bid': bid_obj,
+                           'job_type': job_type,
+                           'quantity': cubic_yards,
+                           'cost': concrete_obj.cost,
+                           'description': concrete_obj.description,
+                           'total': (concrete_obj.cost * cubic_yards)}
+        insert_bid_item(**concrete_record)
 
         return super(BlockFoundationCreate, self).form_valid(form)
 

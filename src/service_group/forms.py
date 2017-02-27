@@ -153,13 +153,35 @@ class StepsForm(forms.Form):
 
 
 class FloatingSlabForm(forms.Form):
-    pass
+
+    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
+    length = forms.IntegerField(label='Length in Feet')
+    width = forms.IntegerField(label='Width in Feet')
+    thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
+    concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
+                                           initial=get_one_object('Concrete Floating Slab'))
+    rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), required=False,
+                                        initial=get_one_object('Rebar 1/2 Non-Coated'))
+    forming = forms.ModelChoiceField(queryset=get_queryset('Forming'), required=False,
+                                     initial=get_one_object('Forming, Grading and Setup Floating Slab'))
+    finishing = forms.ModelChoiceField(queryset=get_queryset('Finishing'),
+                                       initial=get_one_object('Pour, Finish, Control Joints Floating Slab'))
+    sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
+                                    initial=get_one_object('Sealer - Cure n Seal'))
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Bid Floating Slab', css_class='btn=primary'))
 
 
 class BlockFoundationForm(forms.Form):
+
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    linear_feet = forms.IntegerField(label='Linear Feet')
+    linear_feet = forms.FloatField(label='Linear Feet')
     width = forms.ChoiceField(label='Width', choices=((8, "8 inches"), (12, "12 Inches")))
+    height = forms.FloatField(label='Height of Foundation in Inches')
+    concrete = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
+                                      initial=get_one_object('Concrete Block Foundation'))
 
     helper = FormHelper()
     helper.form_method = 'POST'
