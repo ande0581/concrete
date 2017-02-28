@@ -81,6 +81,23 @@ def calculate_railing_length(length, num_steps):
     return length + ((num_steps - 1) * 1)
 
 
+def calculate_floating_slab_square_foot(length, width):
+    sq_ft = (length - 1) * (width - 1)
+    perimeter = (length + width) * 2
+    perimeter += perimeter / 2
+    sq_ft += perimeter
+    return round(sq_ft, 2)
+
+
+def calculate_floating_slab_cubic_yards(length, width, thickness):
+    # TODO, calculate cubic yards for floating slab
+    cubic_yards = (length * width * (thickness / 12)) / 27
+
+    # add 5% extra
+    cubic_yards *= 1.05
+    return round(cubic_yards, 2)
+
+
 class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
     """
     (length x width x thickness) / 27 = yards
@@ -112,18 +129,6 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
         sq_ft = calculate_square_feet(length, width)
         cubic_yards = calculate_cubic_yards(length, width, thickness)
-        # print('sq_ft:', sq_ft)
-        # print('cubic_yards', cubic_yards)
-        # print('concrete:', concrete)
-        # print('rebar:', rebar)
-        # print('removal:', removal)
-        # print('saw_cutting:', saw_cutting_qty)
-        # print('expansion_felt:', expansion_felt_qty)
-        # print('fill:', fill)
-        # print('finishing:', finishing)
-        # print('sealer:', sealer)
-        # print('washout_fee:', washout)
-        # print('stamps:', stamps)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -261,6 +266,82 @@ class FloatingSlabCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
     def form_valid(self, form):
 
         print("BLOCK FOUNDATION POST FORM SAVE:", form.cleaned_data)
+        job_type = form.cleaned_data['job_type']
+        length = form.cleaned_data['length']
+        width = form.cleaned_data['width']
+        thickness = form.cleaned_data['thickness']
+        concrete = form.cleaned_data['concrete_type']
+        rebar = form.cleaned_data['rebar_type']
+        forming = form.cleaned_data['forming']
+        finishing = form.cleaned_data['finishing']
+        sealer = form.cleaned_data['sealer']
+
+        sq_ft = calculate_floating_slab_square_foot(length=length, width=width)
+        cubic_yards = calculate_floating_slab_cubic_yards(length=length, width=width, thickness=thickness)
+
+        print('Floating Slab Square Feet:', sq_ft)
+        print('Floating Slab Cubic Yards:', cubic_yards)
+
+        bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
+
+        concrete_obj = get_one_object(concrete)
+        concrete_record = {'bid': bid_obj,
+                           'job_type': job_type,
+                           'quantity': cubic_yards,
+                           'cost': concrete_obj.cost,
+                           'description': concrete_obj.description,
+                           'total': (concrete_obj.cost * cubic_yards)}
+        insert_bid_item(**concrete_record)
+
+        # Check For Short Load Fee
+        if cubic_yards < 5:
+            short_load_obj = get_one_object('Minimum Load Charge')
+            short_load_record = {'bid': bid_obj,
+                                 'job_type': job_type,
+                                 'quantity': 1,
+                                 'cost': short_load_obj.cost,
+                                 'description': short_load_obj.description,
+                                 'total': short_load_obj.cost}
+            insert_bid_item(**short_load_record)
+
+        if rebar:
+            rebar_obj = get_one_object(rebar)
+            rebar_record = {'bid': bid_obj,
+                            'job_type': job_type,
+                            'quantity': sq_ft,
+                            'cost': rebar_obj.cost,
+                            'description': rebar_obj.description,
+                            'total': (rebar_obj.cost * sq_ft)}
+            insert_bid_item(**rebar_record)
+
+        if forming:
+            forming_obj = get_one_object(forming)
+            forming_record = {'bid': bid_obj,
+                              'job_type': job_type,
+                              'quantity': sq_ft,
+                              'cost': forming_obj.cost,
+                              'description': forming_obj.description,
+                              'total': (forming_obj.cost * sq_ft)}
+            insert_bid_item(**forming_record)
+
+        finishing_obj = get_one_object(finishing)
+        finishing_record = {'bid': bid_obj,
+                            'job_type': job_type,
+                            'quantity': sq_ft,
+                            'cost': finishing_obj.cost,
+                            'description': finishing_obj.description,
+                            'total': (finishing_obj.cost * sq_ft)}
+        insert_bid_item(**finishing_record)
+
+        if sealer:
+            sealer_obj = get_one_object(sealer)
+            sealer_record = {'bid': bid_obj,
+                             'job_type': job_type,
+                             'quantity': sq_ft,
+                             'cost': sealer_obj.cost,
+                             'description': sealer_obj.description,
+                             'total': (sealer_obj.cost * sq_ft)}
+            insert_bid_item(**sealer_record)
 
         return super(FloatingSlabCreate, self).form_valid(form)
 
@@ -395,6 +476,7 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
 class FootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
+    # TODO Footings Create
     template_name = 'service_group/service_group_form.html'
     form_class = FootingsForm
 

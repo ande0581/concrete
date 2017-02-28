@@ -130,8 +130,6 @@ def populate():
         {'description': 'Dig Out Window Well', 'cost': 30, 'category': 'Window-Dig-Out', 'measurement': 'each',
          'protected': True},
 
-
-
     ]
 
     job_type_records = [
@@ -140,6 +138,7 @@ def populate():
         {'description': 'Curb'},
         {'description': 'Driveway'},
         {'description': 'Egress Window'},
+        {'description': 'Floating Slab'},
         {'description': 'Garage Floor'},
         {'description': 'Patio'},
         {'description': 'Retaining Wall'},
@@ -172,9 +171,9 @@ def add_service(service_entry):
 
 
 def add_job_type(job_type_entry):
-        print('Job Type:', job_type_entry['description'])
-        item = JobType(**job_type_entry)
-        item.save()
+    print('Job Type:', job_type_entry['description'])
+    item = JobType(**job_type_entry)
+    item.save()
 
 
 if __name__ == '__main__':
