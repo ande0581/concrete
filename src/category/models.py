@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
+    protected = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['name']

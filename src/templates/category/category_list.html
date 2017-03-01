@@ -10,6 +10,7 @@
       <thead>
         <tr>
           <th width="200px"><strong>Category</strong></th>
+          <th width="50px"><strong>Protected</strong></th>
           <th width="50px"><strong>Edit</strong></th>
           <th width="50px"><strong>Delete</strong></th>
         </tr>
@@ -17,8 +18,9 @@
       {% for category in object_list %}
         <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
             <td>{{ category.name }}</td>
+            {% if category.protected %}<td style="color:red">{% else %}<td>{% endif %}{{ category.protected }}</td>
             <td><a href="{% url 'category_app:category_update' pk=category.pk %}">Edit</a></td>
-            <td><a href="{% url 'category_app:category_delete' pk=category.pk %}">Delete</a></td>
+            <td>{% if not category.protected %}<a href="{% url 'category_app:category_delete' pk=category.pk %}">Delete</a>{% endif %}</td>
         </tr>
       {% endfor %}
     </table>

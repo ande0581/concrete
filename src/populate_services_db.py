@@ -30,7 +30,6 @@ def populate():
         {'name': 'Soil'},
         {'name': 'Stamps'},
         {'name': 'Short-Load'},
-        {'name': 'Steps'},
         {'name': 'Washout'},
         {'name': 'Window'},
         {'name': 'Window-Dig-Out'},

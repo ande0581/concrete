@@ -1,5 +1,5 @@
 # TODO, explore get_delete_url
-# TODO, change order
+# TODO, change order document
 # TODO, explore decimal rounding on money or storing as integers
 
 """
