@@ -8,8 +8,6 @@ class Category(models.Model):
 
     class Meta:
         ordering = ['name']
-
-    class Meta:
         verbose_name_plural = 'Categories'
 
     def __str__(self):
