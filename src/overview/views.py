@@ -8,10 +8,6 @@ class OverviewList(LoginRequiredMixin, ListView):
     model = Bid
     template_name = 'overview/overview_list.html'
 
-    # login_url = "/account/login/"
-    # redirect_field_name = "jimmy"
-    # #raise_exception = True
-
     def get_context_data(self, **kwargs):
         context = super(OverviewList, self).get_context_data(**kwargs)
         bid_obj_list = Bid.objects.all()

@@ -200,20 +200,26 @@ class BlockFoundationForm(forms.Form):
       Footings are always the same linear feet as the foundation. The only difference would be 8" or 12" wide
       foundation. It would be nice to have the concrete volume come up automatically so i don't have to figure out how
       much concrete to order every time. 8 inches thick divided by 41 square feet. Foundation = Length x Height divided
-      by 41, plus footing = 1.8' wide(always) x 12" thick(always) x total linear length. 12 inches thick divided by 27
+      by 41, plus footing = 20" wide(always) x 12" thick(always) x total linear length. 12 inches thick divided by 27
       square feet. I can put a value on the concrete volume figured.
 
 
     """
 
 
-class FootingsForm(forms.Form):
+class PierFootingsForm(forms.Form):
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    length = forms.IntegerField(label='Length of Footing')
-    width = forms.IntegerField(label='Width of Footing')
-    thickness = forms.IntegerField(label='Depth of Footing')
+    length = forms.IntegerField(label='Length of Footing in Inches')
+    width = forms.IntegerField(label='Width of Footing in Inches')
+    height = forms.IntegerField(label='Depth of Footing in Inches')
+    auger = forms.BooleanField(required=False, initial=True)
+    sonotube = forms.BooleanField(required=False, initial=True)
     quantity = forms.IntegerField(label='Number of Footings')
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Bid Egress Window', css_class='btn=primary'))
 
     """
     length
@@ -259,3 +265,21 @@ class EgressWindowForm(forms.Form):
     rock 3/8- rock (always true, flat rate)
 
     """
+
+
+class RetainingWallForm(forms.Form):
+
+    job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
+    linear_foot = forms.IntegerField(label='Enter Linear Feet of Wall')
+    height = forms.IntegerField(label='Enter Height of Wall in Feet')
+    block_type = forms.ModelChoiceField(queryset=get_queryset('Block'))
+    cap_type = forms.ModelChoiceField(queryset=get_queryset('Block'), required=False)
+
+    removal_cost = forms.FloatField(label='Enter Price to Remove Existing Wall', required=False)
+    geogrid = forms.IntegerField(label='Enter number of rolls of GeoGrid', required=False)
+    rock = forms.BooleanField(initial=False)
+    drain_tile = forms.BooleanField(initial=False)
+
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('login', 'Bid Retaining Wall', css_class='btn=primary'))

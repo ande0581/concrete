@@ -8,7 +8,8 @@ from bid.models import Bid
 from bid_item.models import BidItem
 from service.models import Service
 
-from service_group.forms import StepsForm, BlockFoundationForm, FootingsForm, EgressWindowForm, FloatingSlabForm
+from service_group.forms import StepsForm, BlockFoundationForm, PierFootingsForm, EgressWindowForm, FloatingSlabForm, \
+    RetainingWallForm
 
 
 def calculate_square_feet(length, width):
@@ -452,9 +453,12 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         height = form.cleaned_data['height']
         concrete = form.cleaned_data['concrete']
 
-        # TODO verify if width is 1.8 feet or 1 foot 8 inches
-        cubic_yards_footing = calculate_cubic_yards(length=linear_feet, width=1.8, thickness=12)
-        cubic_yards_foundation = calculate_cubic_yards(length=linear_feet, width=width, thickness=height)
+        if width == 8:
+            cubic_yards_footing = calculate_cubic_yards(length=linear_feet, width=1.25, thickness=12)
+        else:  # width == 12
+            cubic_yards_footing = calculate_cubic_yards(length=linear_feet, width=1.67, thickness=12)
+
+        cubic_yards_foundation = calculate_cubic_yards(length=linear_feet, width=height / 12, thickness=width)
         cubic_yards = cubic_yards_footing + cubic_yards_foundation
         print('cubic yards footings:', cubic_yards_footing)
         print('cubic yards foundation:', cubic_yards_foundation)
@@ -474,11 +478,11 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         return super(BlockFoundationCreate, self).form_valid(form)
 
 
-class FootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
+class PierFootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     # TODO Footings Create
     template_name = 'service_group/service_group_form.html'
-    form_class = FootingsForm
+    form_class = PierFootingsForm
 
     def get_success_url(self):
         messages.success(self.request, "Footings Estimated")
@@ -486,7 +490,7 @@ class FootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
 
-        return super(FootingsCreate, self).form_valid(form)
+        return super(PierFootingsCreate, self).form_valid(form)
 
 
 class EgressWindowCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
@@ -596,3 +600,18 @@ class EgressWindowCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         insert_bid_item(**rock_record)
 
         return super(EgressWindowCreate, self).form_valid(form)
+
+
+class RetainingWallCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
+
+    # TODO Retaining Wall Create
+    template_name = 'service_group/service_group_form.html'
+    form_class = RetainingWallForm
+
+    def get_success_url(self):
+        messages.success(self.request, "Retaining Wall Estimated")
+        return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
+
+    def form_valid(self, form):
+
+        return super(RetainingWallCreate, self).form_valid(form)
