@@ -118,8 +118,8 @@ class DecorativeConcreteForm(forms.Form):
 class StepsForm(forms.Form):
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    length = forms.IntegerField(label='Length of Landing in Feet')
-    width = forms.IntegerField(label='Width of Landing in Feet')
+    length = forms.IntegerField(label='Length of Landing in Inches')
+    width = forms.IntegerField(label='Width of Landing in Inches')
     num_steps = forms.IntegerField(label='Total Number of Steps, Count the Landing as a Step')
     concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
                                            initial=get_one_object('Concrete Steps'))

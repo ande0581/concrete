@@ -360,8 +360,8 @@ class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
         print("POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
-        length = form.cleaned_data['length']
-        width = form.cleaned_data['width']
+        length = form.cleaned_data['length'] / 12
+        width = form.cleaned_data['width'] / 12
         num_steps = form.cleaned_data['num_steps']
         concrete = form.cleaned_data['concrete_type']
         removal = form.cleaned_data['removal']
