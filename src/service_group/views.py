@@ -25,6 +25,14 @@ def calculate_cubic_yards(length, width, thickness):
     return round(cubic_yards, 2)
 
 
+def calculate_cubic_yards_using_sq_ft(sq_ft, thickness):
+    cubic_yards = (sq_ft * (thickness / 12)) / 27
+
+    # add 5% extra
+    cubic_yards *= 1.05
+    return round(cubic_yards, 2)
+
+
 def get_one_object(service_name):
     obj = Service.objects.get(description=service_name)
     return obj
@@ -116,6 +124,7 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         length = form.cleaned_data['length']
         width = form.cleaned_data['width']
         thickness = form.cleaned_data['thickness']
+        sq_ft = form.cleaned_data['sq_ft']
         concrete = form.cleaned_data['concrete_type']
         washout = form.cleaned_data.get('washout', None)
         rebar = form.cleaned_data['rebar_type']
@@ -128,8 +137,11 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         stamps = form.cleaned_data.get('stamps', False)
         sealer = form.cleaned_data['sealer']
 
-        sq_ft = calculate_square_feet(length, width)
-        cubic_yards = calculate_cubic_yards(length, width, thickness)
+        if not sq_ft:
+            sq_ft = calculate_square_feet(length, width)
+            cubic_yards = calculate_cubic_yards(length, width, thickness)
+        else:
+            cubic_yards = calculate_cubic_yards_using_sq_ft(sq_ft, thickness)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 

@@ -32,8 +32,9 @@ else:
 class StandardConcreteForm(forms.Form):
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    length = forms.IntegerField(label='Length in Feet')
-    width = forms.IntegerField(label='Width in Feet')
+    length = forms.IntegerField(label='Length in Feet', required=False)
+    width = forms.IntegerField(label='Width in Feet', required=False)
+    sq_ft = forms.FloatField(label='Enter Square Feet Instead of Length and Width', required=False)
     thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
     concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
                                            initial=get_one_object('Concrete Driveway Mix'))
@@ -51,12 +52,21 @@ class StandardConcreteForm(forms.Form):
     sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
                                     initial=get_one_object('Sealer - Cure n Seal'))
 
-
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('login', 'Bid Standard Concrete', css_class='btn=primary'))
 
+    def clean(self):
+        cleaned_data = super(StandardConcreteForm, self).clean()
+        width = cleaned_data.get('width')
+        length = cleaned_data.get('length')
+        sq_ft = cleaned_data.get('sq_ft')
 
+        if width and length and sq_ft:
+            raise forms.ValidationError('Enter Only Length and Width or Sq_Ft but not both!')
+
+        if not width and not length and not sq_ft:
+            raise forms.ValidationError('You must enter Length and Width or Sq_Ft')
 
     """
     x1. removal -required(no), default=Removal - Concrete/Tar (sq/ft)
@@ -74,8 +84,9 @@ class StandardConcreteForm(forms.Form):
 class DecorativeConcreteForm(forms.Form):
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    length = forms.IntegerField(label='Length in Feet')
-    width = forms.IntegerField(label='Width in Feet')
+    length = forms.IntegerField(label='Length in Feet', required=False)
+    width = forms.IntegerField(label='Width in Feet', required=False)
+    sq_ft = forms.FloatField(label='Enter Square Feet Instead of Length and Width', required=False)
     thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
     concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
                                            initial=get_one_object('Concrete Colored $$'))
@@ -99,6 +110,18 @@ class DecorativeConcreteForm(forms.Form):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('login', 'Bid Decorative Concrete', css_class='btn=primary'))
+
+    def clean(self):
+        cleaned_data = super(DecorativeConcreteForm, self).clean()
+        width = cleaned_data.get('width')
+        length = cleaned_data.get('length')
+        sq_ft = cleaned_data.get('sq_ft')
+
+        if width and length and sq_ft:
+            raise forms.ValidationError('Enter Only Length and Width or Sq_Ft but not both!')
+
+        if not width and not length and not sq_ft:
+            raise forms.ValidationError('You must enter Length and Width or Sq_Ft')
 
     """
     x1. removal -required(no), default=Removal - Concrete/Tar (sq/ft).
