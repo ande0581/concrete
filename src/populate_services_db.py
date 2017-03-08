@@ -11,6 +11,8 @@ from service.models import Service
 def populate():
 
     category_records = [
+        {'name': 'Backhoe', 'protected': True},
+        {'name': 'Bobcat', 'protected': True},
         {'name': 'Concrete', 'protected': True},
         {'name': 'Drain-Tile', 'protected': False},
         {'name': 'Expansion-Felt', 'protected': True},
@@ -20,6 +22,7 @@ def populate():
         {'name': 'Forming', 'protected': True},
         {'name': 'Flashing', 'protected': True},
         {'name': 'Permit', 'protected': True},
+        {'name': 'Pump-Truck', 'protected': True},
         {'name': 'Railing', 'protected': True},
         {'name': 'Rebar', 'protected': True},
         {'name': 'Removal-Per-Load', 'protected': False},
@@ -31,6 +34,7 @@ def populate():
         {'name': 'Stamps', 'protected': True},
         {'name': 'Short-Load', 'protected': True},
         {'name': 'Washout', 'protected': True},
+        {'name': 'Waterproofing', 'protected': True},
         {'name': 'Window', 'protected': True},
         {'name': 'Window-Dig-Out', 'protected': True},
         {'name': 'Window-Well', 'protected': True},
@@ -72,7 +76,9 @@ def populate():
         {'description': 'Forming, Grading and Setup', 'cost': .73, 'category': 'Forming', 'measurement': 'square_foot',
          'protected': False},
         {'description': 'Forming, Grading and Setup Floating Slab', 'cost': 1.0, 'category': 'Forming', 'measurement':
-            'square_foot', 'protected': True},
+         'square_foot', 'protected': True},
+        {'description': 'Forming, Grading and Setup Block Foundation', 'cost': 1.5, 'category': 'Forming', 'measurement':
+         'square_foot', 'protected': True},
         {'description': 'Minimum Load Charge', 'cost': 120, 'category': 'Short-Load', 'measurement': 'each',
          'protected': True},
         {'description': 'Pour, Finish, Control Joints', 'cost': .78, 'category': 'Finishing',
@@ -81,12 +87,16 @@ def populate():
          'measurement': 'square_foot', 'protected': True},
         {'description': 'Pour, Finish, Control Joints Floating Slab', 'cost': 1.03, 'category': 'Finishing',
          'measurement': 'square_foot', 'protected': True},
+        {'description': 'Pour, Finish, Control Joints Block Foundation', 'cost': 1.15, 'category': 'Finishing',
+         'measurement': 'square_foot', 'protected': True},
         {'description': 'Railing Painted', 'cost': 70, 'category': 'Railing', 'measurement': 'linear_foot',
          'protected': False},
         {'description': 'Railing Powder Coated', 'cost': 90, 'category': 'Railing', 'measurement': 'linear_foot',
          'protected': False},
         {'description': 'Rebar 1/2 Non-Coated', 'cost': .84, 'category': 'Rebar', 'measurement': 'square_foot',
          'protected': True},
+        {'description': 'Rebar 1/2 Non-Coated Block Foundation', 'cost': 1.10, 'category': 'Rebar', 'measurement':
+         'square_foot', 'protected': True},
         {'description': 'Rebar 1/2 Coated', 'cost': .71, 'category': 'Rebar', 'measurement': 'square_foot',
          'protected': False},
         {'description': 'Rebar 3/8 Non-Coated', 'cost': .64, 'category': 'Rebar', 'measurement': 'square_foot',
@@ -127,6 +137,14 @@ def populate():
         {'description': 'Pressure Treated Wood', 'cost': 30, 'category': 'Wood', 'measurement': 'each',
          'protected': True},
         {'description': 'Dig Out Window Well', 'cost': 30, 'category': 'Window-Dig-Out', 'measurement': 'each',
+         'protected': True},
+        {'description': 'General Bobcat Labor', 'cost': 65, 'category': 'Bobcat', 'measurement': 'each',
+         'protected': True},
+        {'description': 'Waterproofing Block Foundation', 'cost': .7, 'category': 'waterproofing',
+         'measurement': 'square_foot', 'protected': True},
+        {'description': 'Concrete Pump Truck', 'cost': 1200, 'category': 'pump-truck', 'measurement': 'each',
+         'protected': True},
+        {'description': 'Backhoe', 'cost': 300, 'category': 'backhoe', 'measurement': 'each',
          'protected': True},
 
     ]

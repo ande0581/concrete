@@ -214,7 +214,7 @@
 
         {% for item in job_dict.bid_items %}
           <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
-              <td>{{ item.description }}</td>
+              <td width="30%">{{ item.description }}</td>
               <td style="text-align:center"><a href="{% url 'bid_item_app:bid_item_update' pk=item.id %}">Edit</a></td>
               <td style="text-align:center"><a href="{% url 'bid_item_app:bid_item_delete' pk=item.id %}">Delete</a></td>
               <td style="text-align:right">{% if item.quantity %}{{ item.quantity }}{% endif %}</td>

@@ -205,6 +205,16 @@ class BlockFoundationForm(forms.Form):
     height = forms.FloatField(label='Height of Foundation in Inches')
     concrete = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
                                       initial=get_one_object('Concrete Block Foundation'))
+    rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), required=False,
+                                        initial=get_one_object('Rebar 1/2 Non-Coated Block Foundation'))
+    forming = forms.ModelChoiceField(queryset=get_queryset('Forming'), required=False,
+                                     initial=get_one_object('Forming, Grading and Setup Block Foundation'))
+    finishing = forms.ModelChoiceField(queryset=get_queryset('Finishing'),
+                                       initial=get_one_object('Pour, Finish, Control Joints Block Foundation'))
+    backhoe = forms.BooleanField(required=False, initial=False)
+    waterproofing = forms.BooleanField(required=False, initial=False)
+    pump_truck = forms.BooleanField(required=False, initial=False)
+    bobcat_hours = forms.IntegerField(label='Enter Number of Hours for Bobcat Work or Blank for None', required=False)
 
     helper = FormHelper()
     helper.form_method = 'POST'

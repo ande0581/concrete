@@ -462,19 +462,36 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         job_type = form.cleaned_data['job_type']
         linear_feet = form.cleaned_data['linear_feet']
         width = int(form.cleaned_data['width'])
-        height = form.cleaned_data['height']
+        height = form.cleaned_data['height'] / 12
         concrete = form.cleaned_data['concrete']
+        rebar = form.cleaned_data['rebar_type']
+        forming = form.cleaned_data['forming']
+        finishing = form.cleaned_data['finishing']
+        backhoe = form.cleaned_data['backhoe']
+        waterproofing = form.cleaned_data['waterproofing']
+        pump_trunk = form.cleaned_data['pump_truck']
+        bobcat_hours = form.cleaned_data['bobcat_hours']
 
+        # Calculate Cubic Yards
         if width == 8:
             cubic_yards_footing = calculate_cubic_yards(length=linear_feet, width=1.25, thickness=12)
         else:  # width == 12
             cubic_yards_footing = calculate_cubic_yards(length=linear_feet, width=1.67, thickness=12)
 
-        cubic_yards_foundation = calculate_cubic_yards(length=linear_feet, width=height / 12, thickness=width)
-        cubic_yards = cubic_yards_footing + cubic_yards_foundation
+        cubic_yards_foundation = calculate_cubic_yards(length=linear_feet, width=height, thickness=width)
+        cubic_yards = round(cubic_yards_footing + cubic_yards_foundation, 2)
+
+        # Calculate Square Footage
+        sq_ft_footing = calculate_square_feet(length=linear_feet, width=1)
+        sq_ft_foundation = calculate_square_feet(length=linear_feet, width=height)
+        sq_ft = round(sq_ft_footing + sq_ft_foundation, 2)
+
         print('cubic yards footings:', cubic_yards_footing)
         print('cubic yards foundation:', cubic_yards_foundation)
         print('cubic yards total:', cubic_yards)
+        print('sq ft footings:', sq_ft_footing)
+        print('sq ft foundation:', sq_ft_foundation)
+        print('sq ft total:', sq_ft)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -486,6 +503,86 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
                            'description': concrete_obj.description,
                            'total': (concrete_obj.cost * cubic_yards)}
         insert_bid_item(**concrete_record)
+
+        # Check For Short Load Fee
+        if cubic_yards < 5:
+            short_load_obj = get_one_object('Minimum Load Charge')
+            short_load_record = {'bid': bid_obj,
+                                 'job_type': job_type,
+                                 'quantity': 1,
+                                 'cost': short_load_obj.cost,
+                                 'description': short_load_obj.description,
+                                 'total': short_load_obj.cost}
+            insert_bid_item(**short_load_record)
+
+        if rebar:
+            rebar_obj = get_one_object(rebar)
+            rebar_record = {'bid': bid_obj,
+                            'job_type': job_type,
+                            'quantity': sq_ft,
+                            'cost': rebar_obj.cost,
+                            'description': rebar_obj.description,
+                            'total': (rebar_obj.cost * sq_ft)}
+            insert_bid_item(**rebar_record)
+
+        if forming:
+            forming_obj = get_one_object(forming)
+            forming_record = {'bid': bid_obj,
+                              'job_type': job_type,
+                              'quantity': sq_ft,
+                              'cost': forming_obj.cost,
+                              'description': forming_obj.description,
+                              'total': (forming_obj.cost * sq_ft)}
+            insert_bid_item(**forming_record)
+
+        finishing_obj = get_one_object(finishing)
+        finishing_record = {'bid': bid_obj,
+                            'job_type': job_type,
+                            'quantity': sq_ft,
+                            'cost': finishing_obj.cost,
+                            'description': finishing_obj.description,
+                            'total': (finishing_obj.cost * sq_ft)}
+        insert_bid_item(**finishing_record)
+
+        if backhoe:
+            backhoe_obj = get_one_object('Backhoe')
+            backhoe_record = {'bid': bid_obj,
+                              'job_type': job_type,
+                              'quantity': 1,
+                              'cost': backhoe_obj.cost,
+                              'description': backhoe_obj.description,
+                              'total': backhoe_obj.cost}
+            insert_bid_item(**backhoe_record)
+
+        if waterproofing:
+            waterproofing_obj = get_one_object('Waterproofing Block Foundation')
+            waterproofing_record = {'bid': bid_obj,
+                                    'job_type': job_type,
+                                    'quantity': sq_ft,
+                                    'cost': waterproofing_obj.cost,
+                                    'description': waterproofing_obj.description,
+                                    'total': (waterproofing_obj.cost * sq_ft)}
+            insert_bid_item(**waterproofing_record)
+
+        if pump_trunk:
+            pump_trunk_obj = get_one_object('Concrete Pump Truck')
+            pump_trunk_record = {'bid': bid_obj,
+                                 'job_type': job_type,
+                                 'quantity': 1,
+                                 'cost': pump_trunk_obj.cost,
+                                 'description': pump_trunk_obj.description,
+                                 'total': pump_trunk_obj.cost}
+            insert_bid_item(**pump_trunk_record)
+
+        if bobcat_hours:
+            bobcat_obj = get_one_object('General Bobcat Labor')
+            bobcat_record = {'bid': bid_obj,
+                             'job_type': job_type,
+                             'quantity': bobcat_hours,
+                             'cost': bobcat_obj.cost,
+                             'description': bobcat_obj.description,
+                             'total': (bobcat_obj.cost * bobcat_hours)}
+            insert_bid_item(**bobcat_record)
 
         return super(BlockFoundationCreate, self).form_valid(form)
 
