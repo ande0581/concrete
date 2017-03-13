@@ -243,16 +243,16 @@ class BlockFoundationForm(forms.Form):
 class PierFootingsForm(forms.Form):
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    length = forms.IntegerField(label='Length of Footing in Inches')
-    width = forms.IntegerField(label='Width of Footing in Inches')
-    height = forms.IntegerField(label='Depth of Footing in Inches')
-    auger = forms.BooleanField(required=False, initial=True)
-    sonotube = forms.BooleanField(required=False, initial=True)
+    diameter = forms.IntegerField(label='Diameter of Footing in Inches')
+    depth = forms.IntegerField(label='Depth of Footing in Inches')
+    auger = forms.ModelChoiceField(queryset=get_queryset('Auger'), required=False)
+    sonotube = forms.ModelChoiceField(queryset=get_queryset('Sonotube'), required=False)
+    setup = forms.FloatField(label='Labor Cost Per Hole in Dollars For Setup')
     quantity = forms.IntegerField(label='Number of Footings')
 
     helper = FormHelper()
     helper.form_method = 'POST'
-    helper.add_input(Submit('login', 'Bid Egress Window', css_class='btn=primary'))
+    helper.add_input(Submit('login', 'Bid Pier Footings', css_class='btn=primary'))
 
     """
     length

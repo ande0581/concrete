@@ -50,7 +50,8 @@ class ServiceForm(forms.ModelForm):
 
         if category.name == 'Block' or category.name == 'Block-Cap':
             if height is None or width is None or depth is None:
-                raise forms.ValidationError('If category type is block, height, width and depth are required')
+                raise forms.ValidationError('Category Type is {}. You must enter height, width and depth'.
+                                            format(category.name))
 
     helper = FormHelper()
     helper.form_method = 'POST'

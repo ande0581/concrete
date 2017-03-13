@@ -186,6 +186,7 @@ def populate():
         {'description': 'Floating Slab'},
         {'description': 'Garage Floor'},
         {'description': 'Patio'},
+        {'description': 'Pier Footings'},
         {'description': 'Retaining Wall'},
         {'description': 'Sidewalk'},
         {'description': 'Steps'},

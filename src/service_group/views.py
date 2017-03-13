@@ -604,15 +604,32 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
 class PierFootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
-    # TODO Footings Create
+    # TODO Pier Footings Create
     template_name = 'service_group/service_group_form.html'
     form_class = PierFootingsForm
 
     def get_success_url(self):
-        messages.success(self.request, "Footings Estimated")
+        messages.success(self.request, "Pier Footings Estimated")
         return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
+
+        print("PIER FOOTINGS POST FORM SAVE:", form.cleaned_data)
+        job_type = form.cleaned_data['job_type']
+        diameter = form.cleaned_data['diameter']
+        depth = form.cleaned_data['depth']
+        auger = form.cleaned_data['auger']
+        sonotube = form.cleaned_data['sonotube']
+        setup = form.cleaned_data['setup']
+        quantity = form.cleaned_data['quantity']
+
+        print('Job Type:', job_type)
+        print('Diameter:', diameter)
+        print('Depth:', depth)
+        print('Auger:', auger)
+        print('Sonotube:', sonotube)
+        print('Setup:', setup)
+        print('Quantity:', quantity)
 
         return super(PierFootingsCreate, self).form_valid(form)
 
