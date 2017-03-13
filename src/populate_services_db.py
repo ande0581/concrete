@@ -13,6 +13,8 @@ def populate():
     category_records = [
         {'name': 'Auger', 'protected': True},
         {'name': 'Backhoe', 'protected': True},
+        {'name': 'Block', 'protected': True},
+        {'name': 'Block-Cap', 'protected': True},
         {'name': 'Bobcat', 'protected': True},
         {'name': 'Concrete', 'protected': True},
         {'name': 'Drain-Tile', 'protected': False},
@@ -165,6 +167,14 @@ def populate():
          'protected': False},
         {'description': 'Auger 10in x 4ft Hole', 'cost': 17, 'category': 'Auger', 'measurement': 'each',
          'protected': False},
+        {'description': 'Clifton wall strait 8" x 18" x 12"', 'cost': 4.79, 'category': 'Block', 'measurement': 'each',
+         'protected': False, 'height': 8, 'width': 18, 'depth': 12},
+        {'description': 'Crestone 3 1/2" x 11 1/2" x 7"', 'cost': 1.25, 'category': 'Block', 'measurement': 'each',
+         'protected': False, 'height': 3.5, 'width': 11.5, 'depth': 7},
+        {'description': 'Clifton wall xl strait cap 3 1/2" x 18" x 13"', 'cost': 4.75, 'category': 'Block-Cap',
+         'measurement': 'each', 'protected': False, 'height': 3.5, 'width': 18, 'depth': 13},
+        {'description': 'Crestone Cap 2 3/8" x 12 x 7 1/2"', 'cost': 1.78, 'category': 'Block-Cap',
+         'measurement': 'each', 'protected': False, 'height': 2.375, 'width': 12, 'depth': 7.5},
     ]
 
     job_type_records = [

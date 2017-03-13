@@ -7,6 +7,9 @@ class Service(models.Model):
     cost = models.FloatField()
     category = models.ForeignKey('category.Category', on_delete=models.CASCADE, null=True)
     measurement = models.CharField(max_length=30)
+    height = models.FloatField(blank=True, null=True)
+    width = models.FloatField(blank=True, null=True)
+    depth = models.FloatField(blank=True, null=True)
     protected = models.BooleanField(default=False)
 
     class Meta:
