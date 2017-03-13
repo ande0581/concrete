@@ -90,21 +90,21 @@ def calculate_railing_length(length, num_steps):
     return length + ((num_steps - 1) * 1)
 
 
-def calculate_floating_slab_square_foot(length, width):
-    sq_ft = (length - 1) * (width - 1)
-    perimeter = (length + width) * 2
-    perimeter += perimeter / 2
-    sq_ft += perimeter
-    return round(sq_ft, 2)
-
-
-def calculate_floating_slab_cubic_yards(length, width, thickness):
-    # TODO, calculate cubic yards for floating slab
-    cubic_yards = (length * width * (thickness / 12)) / 27
-
-    # add 5% extra
-    cubic_yards *= 1.05
-    return round(cubic_yards, 2)
+# def calculate_floating_slab_square_foot(length, width):
+#     sq_ft = (length - 1) * (width - 1)
+#     perimeter = (length + width) * 2
+#     perimeter += perimeter / 2
+#     sq_ft += perimeter
+#     return round(sq_ft, 2)
+#
+#
+# def calculate_floating_slab_cubic_yards(length, width, thickness):
+#     # TODO, calculate cubic yards for floating slab
+#     cubic_yards = (length * width * (thickness / 12)) / 27
+#
+#     # add 5% extra
+#     cubic_yards *= 1.05
+#     return round(cubic_yards, 2)
 
 
 class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
@@ -134,7 +134,7 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         forming = form.cleaned_data['forming']
         fill = form.cleaned_data['fill']
         finishing = form.cleaned_data['finishing']
-        stamps = form.cleaned_data.get('stamps', False)
+        stamps = form.cleaned_data['stamps']
         sealer = form.cleaned_data['sealer']
 
         if not sq_ft:
@@ -245,7 +245,7 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         insert_bid_item(**finishing_record)
 
         if stamps:
-            stamp_obj = get_one_object('Concrete Stamps')
+            stamp_obj = get_one_object(stamps)
             stamp_record = {'bid': bid_obj,
                             'job_type': job_type,
                             'quantity': 1,
@@ -289,11 +289,26 @@ class FloatingSlabCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         finishing = form.cleaned_data['finishing']
         sealer = form.cleaned_data['sealer']
 
-        sq_ft = calculate_floating_slab_square_foot(length=length, width=width)
-        cubic_yards = calculate_floating_slab_cubic_yards(length=length, width=width, thickness=thickness)
+        # sq_ft = calculate_floating_slab_square_foot(length=length, width=width)
+        # cubic_yards = calculate_floating_slab_cubic_yards(length=length, width=width, thickness=thickness)
+        linear_ft = (length + width) * 2
+        cubic_yards_floor = calculate_cubic_yards(length=length, width=width, thickness=thickness)
+        cubic_yards_perimeter = calculate_cubic_yards(length=linear_ft, width=1.25, thickness=12)
+        cubic_yards_perimeter_triangle = calculate_cubic_yards(length=linear_ft, width=1, thickness=12) / 2
+        cubic_yards = cubic_yards_floor + cubic_yards_perimeter + cubic_yards_perimeter_triangle
 
-        print('Floating Slab Square Feet:', sq_ft)
-        print('Floating Slab Cubic Yards:', cubic_yards)
+        print('Floating Slab Cubic Yards Floor', cubic_yards_floor)
+        print('Floating Slab Cubic Yards Perimeter', cubic_yards_perimeter)
+        print('Floating Slab Cubic Yards Perimeter Triangle', cubic_yards_perimeter_triangle)
+        print('Floating Slab Cubic Yards Total', cubic_yards)
+
+        sq_ft_floor = calculate_square_feet(length=length, width=width)
+        sq_ft_perimeter = calculate_square_feet(length=linear_ft, width=3)
+        sq_ft = sq_ft_floor + sq_ft_perimeter
+
+        print('Floating Slab SqFt Floor', sq_ft_floor)
+        print('Floating Slab SqFt Perimeter', sq_ft_perimeter)
+        print('Floating Slab SqFt Total', sq_ft)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -545,7 +560,7 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         insert_bid_item(**finishing_record)
 
         if backhoe:
-            backhoe_obj = get_one_object('Backhoe')
+            backhoe_obj = get_one_object(backhoe)
             backhoe_record = {'bid': bid_obj,
                               'job_type': job_type,
                               'quantity': 1,
@@ -555,7 +570,7 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
             insert_bid_item(**backhoe_record)
 
         if waterproofing:
-            waterproofing_obj = get_one_object('Waterproofing Block Foundation')
+            waterproofing_obj = get_one_object(waterproofing)
             waterproofing_record = {'bid': bid_obj,
                                     'job_type': job_type,
                                     'quantity': sq_ft,
@@ -565,7 +580,7 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
             insert_bid_item(**waterproofing_record)
 
         if pump_trunk:
-            pump_trunk_obj = get_one_object('Concrete Pump Truck')
+            pump_trunk_obj = get_one_object(pump_trunk)
             pump_trunk_record = {'bid': bid_obj,
                                  'job_type': job_type,
                                  'quantity': 1,

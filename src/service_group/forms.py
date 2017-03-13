@@ -103,7 +103,7 @@ class DecorativeConcreteForm(forms.Form):
     fill = forms.ModelChoiceField(queryset=get_queryset('Fill'), required=False)
     finishing = forms.ModelChoiceField(queryset=get_queryset('Finishing'),
                                        initial=get_one_object('Pour, Finish, Control Joints Colored/Stamped'))
-    stamps = forms.BooleanField(required=False)
+    stamps = forms.ModelChoiceField(queryset=get_queryset('Stamps'), required=False)
     sealer = forms.ModelChoiceField(queryset=get_queryset('Sealer'), required=False,
                                     initial=get_one_object('Sealer - Lumiseal Plus'))
 
@@ -211,9 +211,9 @@ class BlockFoundationForm(forms.Form):
                                      initial=get_one_object('Forming, Grading and Setup Block Foundation'))
     finishing = forms.ModelChoiceField(queryset=get_queryset('Finishing'),
                                        initial=get_one_object('Pour, Finish, Control Joints Block Foundation'))
-    backhoe = forms.BooleanField(required=False, initial=False)
-    waterproofing = forms.BooleanField(required=False, initial=False)
-    pump_truck = forms.BooleanField(required=False, initial=False)
+    backhoe = forms.ModelChoiceField(queryset=get_queryset('Backhoe'), required=False)
+    waterproofing = forms.ModelChoiceField(queryset=get_queryset('Waterproofing'), required=False)
+    pump_truck = forms.ModelChoiceField(queryset=get_queryset('Pump-Truck'), required=False)
     bobcat_hours = forms.IntegerField(label='Enter Number of Hours for Bobcat Work or Blank for None', required=False)
 
     helper = FormHelper()
@@ -310,8 +310,8 @@ class RetainingWallForm(forms.Form):
 
     removal_cost = forms.FloatField(label='Enter Price to Remove Existing Wall', required=False)
     geogrid = forms.IntegerField(label='Enter number of rolls of GeoGrid', required=False)
-    rock = forms.BooleanField(initial=False)
-    drain_tile = forms.BooleanField(initial=False)
+    rock = forms.ModelChoiceField(queryset=get_queryset('Rock'), required=False)
+    drain_tile = forms.ModelChoiceField(queryset=get_queryset('Drain-Tile'), required=False)
 
     helper = FormHelper()
     helper.form_method = 'POST'

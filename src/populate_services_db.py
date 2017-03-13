@@ -140,12 +140,14 @@ def populate():
          'protected': True},
         {'description': 'General Bobcat Labor', 'cost': 65, 'category': 'Bobcat', 'measurement': 'each',
          'protected': True},
-        {'description': 'Waterproofing Block Foundation', 'cost': .7, 'category': 'waterproofing',
-         'measurement': 'square_foot', 'protected': True},
-        {'description': 'Concrete Pump Truck', 'cost': 1200, 'category': 'pump-truck', 'measurement': 'each',
-         'protected': True},
-        {'description': 'Backhoe', 'cost': 300, 'category': 'backhoe', 'measurement': 'each',
-         'protected': True},
+        {'description': 'Standard Foundation Waterproofing', 'cost': .7, 'category': 'waterproofing',
+         'measurement': 'square_foot', 'protected': False},
+        {'description': 'Standard Concrete Pump Truck', 'cost': 1200, 'category': 'pump-truck', 'measurement': 'each',
+         'protected': False},
+        {'description': 'Large Backhoe', 'cost': 300, 'category': 'backhoe', 'measurement': 'each',
+         'protected': False},
+        {'description': 'Small Backhoe', 'cost': 200, 'category': 'backhoe', 'measurement': 'each',
+         'protected': False},
 
     ]
 
