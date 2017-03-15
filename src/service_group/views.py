@@ -19,6 +19,12 @@ def calculate_square_feet(length, width):
 
 
 def calculate_cubic_yards(length, width, thickness):
+    """
+    :param length: length in feet
+    :param width: width in feet
+    :param thickness: thickness in inches
+    :return: cubic_yards
+    """
     cubic_yards = (length * width * (thickness / 12)) / 27
 
     # add 5% extra
@@ -609,10 +615,10 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
             waterproofing_obj = get_one_object(waterproofing)
             waterproofing_record = {'bid': bid_obj,
                                     'job_type': job_type,
-                                    'quantity': sq_ft,
+                                    'quantity': sq_ft_foundation,
                                     'cost': waterproofing_obj.cost,
                                     'description': waterproofing_obj.description,
-                                    'total': (waterproofing_obj.cost * sq_ft)}
+                                    'total': (waterproofing_obj.cost * sq_ft_foundation)}
             insert_bid_item(**waterproofing_record)
 
         if pump_trunk:
@@ -849,22 +855,6 @@ class RetainingWallCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
 
-        """
-        job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-        linear_foot = forms.IntegerField(label='Enter Linear Feet of Wall')
-        height = forms.IntegerField(label='Enter Height of Wall in Feet')
-        block_type = forms.ModelChoiceField(queryset=get_queryset('Block'))
-        cap_type = forms.ModelChoiceField(queryset=get_queryset('Block-Cap'), required=False)
-
-        removal_cost = forms.FloatField(label='Enter Price to Remove Existing Wall', required=False)
-        geogrid_type = forms.ModelChoiceField(queryset=get_queryset('GeoGrid'), required=False)
-        geogrid_count = forms.IntegerField(label='Enter number of rolls of GeoGrid', required=False)
-        rock = forms.ModelChoiceField(queryset=get_queryset('Rock'), required=False)
-        drain_tile = forms.ModelChoiceField(queryset=get_queryset('Drain-Tile'), required=False)
-        :param form:
-        :return:
-        """
-
         print("RETAINING WALL POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         linear_feet = form.cleaned_data['linear_feet']
@@ -931,8 +921,15 @@ class RetainingWallCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
             insert_bid_item(**geogrid_record)
 
         if rock:
-            # TODO Rock for Retaining Wall
-            pass
+            rock_cubic_yards = calculate_cubic_yards(length=linear_feet, width=height, thickness=12)
+            rock_obj = get_one_object(rock)
+            rock_record = {'bid': bid_obj,
+                           'job_type': job_type,
+                           'quantity': rock_cubic_yards,
+                           'cost': rock_obj.cost,
+                           'description': rock_obj.description,
+                           'total': (rock_obj.cost * rock_cubic_yards)}
+            insert_bid_item(**rock_record)
 
         if drain_tile:
             drain_tile_obj = get_one_object(drain_tile)
@@ -943,6 +940,5 @@ class RetainingWallCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
                                  'description': drain_tile_obj.description,
                                  'total': (drain_tile_obj.cost * linear_feet)}
             insert_bid_item(**drain_tile_record)
-
 
         return super(RetainingWallCreate, self).form_valid(form)

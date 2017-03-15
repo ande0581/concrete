@@ -137,6 +137,8 @@ def populate():
          'protected': True},
         {'description': 'Rock for Window Well', 'cost': 25, 'category': 'Rock', 'measurement': 'each',
          'protected': True},
+        {'description': 'Rock for Retaining Wall', 'cost': 50, 'category': 'Rock', 'measurement': 'cubic_yard',
+         'protected': True},
         {'description': 'Standard Window Well', 'cost': 250, 'category': 'Window-Well', 'measurement': 'each',
          'protected': True},
         {'description': 'Large Window Well', 'cost': 300, 'category': 'Window-Well', 'measurement': 'each',
