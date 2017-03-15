@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
+import math
 
 from bid.models import Bid
 from bid_item.models import BidItem
@@ -27,6 +28,17 @@ def calculate_cubic_yards(length, width, thickness):
 
 def calculate_cubic_yards_using_sq_ft(sq_ft, thickness):
     cubic_yards = (sq_ft * (thickness / 12)) / 27
+
+    # add 5% extra
+    cubic_yards *= 1.05
+    return round(cubic_yards, 2)
+
+
+def calculate_cubic_yards_cylinder(diameter, depth):
+    diameter /= 12
+    depth /= 12
+    area = math.pi * math.pow((diameter / 2), 2)
+    cubic_yards = (area * depth) / 27
 
     # add 5% extra
     cubic_yards *= 1.05
@@ -88,6 +100,30 @@ def calculate_steps_square_feet(length, width, num_steps):
 
 def calculate_railing_length(length, num_steps):
     return length + ((num_steps - 1) * 1)
+
+
+def calculate_number_of_block(linear_feet, height, block_obj):
+    # TODO block calculation rounding
+    # Is cap height important in wall calculation?
+    blocks_per_row = (linear_feet * 12) / block_obj.width
+    print('Blocks Per Row:', blocks_per_row)
+    number_of_rows = math.ceil((height * 12) / block_obj.height)
+    print('Number of Rows:', number_of_rows)
+    total_blocks = blocks_per_row * number_of_rows
+    print('Total Blocks:', total_blocks)
+
+    # Add 10% extra
+    total_blocks *= 1.10
+    print('Total Blocks Plus Waste:', total_blocks)
+    return math.ceil(total_blocks)
+
+
+def calculate_number_of_block_caps(linear_feet, cap_obj):
+    caps_per_row = math.ceil((linear_feet * 12) / cap_obj.width)
+
+    # Add 10% extra
+    caps_per_row *= 1.10
+    return math.ceil(caps_per_row)
 
 
 # def calculate_floating_slab_square_foot(length, width):
@@ -618,6 +654,7 @@ class PierFootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         job_type = form.cleaned_data['job_type']
         diameter = form.cleaned_data['diameter']
         depth = form.cleaned_data['depth']
+        concrete = form.cleaned_data['concrete']
         auger = form.cleaned_data['auger']
         sonotube = form.cleaned_data['sonotube']
         setup = form.cleaned_data['setup']
@@ -626,10 +663,67 @@ class PierFootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         print('Job Type:', job_type)
         print('Diameter:', diameter)
         print('Depth:', depth)
+        print('Concrete', concrete)
         print('Auger:', auger)
         print('Sonotube:', sonotube)
         print('Setup:', setup)
         print('Quantity:', quantity)
+
+        cubic_yards = calculate_cubic_yards_cylinder(diameter=diameter, depth=depth)
+        print('Cubic Yards Before Quantity', cubic_yards)
+        cubic_yards *= quantity
+        print('Cubic Yards After Quantity', cubic_yards)
+
+        bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
+
+        concrete_obj = get_one_object(concrete)
+        concrete_record = {'bid': bid_obj,
+                           'job_type': job_type,
+                           'quantity': cubic_yards,
+                           'cost': concrete_obj.cost,
+                           'description': concrete_obj.description,
+                           'total': (concrete_obj.cost * cubic_yards)}
+        insert_bid_item(**concrete_record)
+
+        # Check For Short Load Fee
+        if cubic_yards < 5:
+            short_load_obj = get_one_object('Minimum Load Charge')
+            short_load_record = {'bid': bid_obj,
+                                 'job_type': job_type,
+                                 'quantity': 1,
+                                 'cost': short_load_obj.cost,
+                                 'description': short_load_obj.description,
+                                 'total': short_load_obj.cost}
+            insert_bid_item(**short_load_record)
+
+        if auger:
+            auger_obj = get_one_object(auger)
+            auger_record = {'bid': bid_obj,
+                            'job_type': job_type,
+                            'quantity': quantity,
+                            'cost': auger_obj.cost,
+                            'description': auger_obj.description,
+                            'total': (auger_obj.cost * quantity)}
+            insert_bid_item(**auger_record)
+
+        if sonotube:
+            sonotube_obj = get_one_object(sonotube)
+            sonotube_record = {'bid': bid_obj,
+                               'job_type': job_type,
+                               'quantity': quantity,
+                               'cost': sonotube_obj.cost,
+                               'description': sonotube_obj.description,
+                               'total': (sonotube_obj.cost * quantity)}
+            insert_bid_item(**sonotube_record)
+
+        if setup:
+            setup_record = {'bid': bid_obj,
+                            'job_type': job_type,
+                            'quantity': quantity,
+                            'cost': setup,
+                            'description': 'Footing Layout and Setup',
+                            'total': (setup * quantity)}
+            insert_bid_item(**setup_record)
 
         return super(PierFootingsCreate, self).form_valid(form)
 
@@ -754,5 +848,101 @@ class RetainingWallCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
+
+        """
+        job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
+        linear_foot = forms.IntegerField(label='Enter Linear Feet of Wall')
+        height = forms.IntegerField(label='Enter Height of Wall in Feet')
+        block_type = forms.ModelChoiceField(queryset=get_queryset('Block'))
+        cap_type = forms.ModelChoiceField(queryset=get_queryset('Block-Cap'), required=False)
+
+        removal_cost = forms.FloatField(label='Enter Price to Remove Existing Wall', required=False)
+        geogrid_type = forms.ModelChoiceField(queryset=get_queryset('GeoGrid'), required=False)
+        geogrid_count = forms.IntegerField(label='Enter number of rolls of GeoGrid', required=False)
+        rock = forms.ModelChoiceField(queryset=get_queryset('Rock'), required=False)
+        drain_tile = forms.ModelChoiceField(queryset=get_queryset('Drain-Tile'), required=False)
+        :param form:
+        :return:
+        """
+
+        print("RETAINING WALL POST FORM SAVE:", form.cleaned_data)
+        job_type = form.cleaned_data['job_type']
+        linear_feet = form.cleaned_data['linear_feet']
+        height = form.cleaned_data['height']
+        block_type = form.cleaned_data['block_type']
+        cap_type = form.cleaned_data['cap_type']
+        removal_cost = form.cleaned_data['removal_cost']
+        geogrid_type = form.cleaned_data['geogrid_type']
+        geogrid_count = form.cleaned_data['geogrid_count']
+        rock = form.cleaned_data['rock']
+        drain_tile = form.cleaned_data['drain_tile']
+
+        print('Job Type:', job_type)
+        print('Linear Feet:', linear_feet)
+        print('Height:', height)
+        print('Block Type:', block_type)
+        print('Cap Type:', cap_type)
+        print('removal_cost:', removal_cost)
+        print('GeoGrid Type:', geogrid_type)
+        print('GeoGrid Count:', geogrid_count)
+        print('Rock:', rock)
+        print('Drain Tile:', drain_tile)
+
+        bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
+
+        block_obj = get_one_object(block_type)
+        block_count = calculate_number_of_block(linear_feet=linear_feet, height=height, block_obj=block_obj)
+        block_record = {'bid': bid_obj,
+                        'job_type': job_type,
+                        'quantity': block_count,
+                        'cost': block_obj.cost,
+                        'description': block_obj.description,
+                        'total': (block_obj.cost * block_count)}
+        insert_bid_item(**block_record)
+
+        if cap_type:
+            cap_obj = get_one_object(cap_type)
+            cap_count = calculate_number_of_block_caps(linear_feet=linear_feet, cap_obj=cap_obj)
+            cap_record = {'bid': bid_obj,
+                          'job_type': job_type,
+                          'quantity': cap_count,
+                          'cost': cap_obj.cost,
+                          'description': cap_obj.description,
+                          'total': (cap_obj.cost * cap_count)}
+            insert_bid_item(**cap_record)
+
+        if removal_cost:
+            removal_cost_record = {'bid': bid_obj,
+                                   'job_type': job_type,
+                                   'quantity': 1,
+                                   'cost': removal_cost,
+                                   'description': 'Remove Existing Wall',
+                                   'total': removal_cost}
+            insert_bid_item(**removal_cost_record)
+
+        if geogrid_type:
+            geogrid_obj = get_one_object(geogrid_type)
+            geogrid_record = {'bid': bid_obj,
+                              'job_type': job_type,
+                              'quantity': geogrid_count,
+                              'cost': geogrid_obj.cost,
+                              'description': geogrid_obj.description,
+                              'total': (geogrid_obj.cost * geogrid_count)}
+            insert_bid_item(**geogrid_record)
+
+        if rock:
+            # TODO Rock for Retaining Wall
+            pass
+
+        if drain_tile:
+            drain_tile_obj = get_one_object(drain_tile)
+            drain_tile_record = {'bid': bid_obj,
+                                 'job_type': job_type,
+                                 'quantity': linear_feet,
+                                 'cost': drain_tile_obj.cost,
+                                 'description': drain_tile_obj.description,
+                                 'total': (drain_tile_obj.cost * linear_feet)}
+            insert_bid_item(**drain_tile_record)
+
 
         return super(RetainingWallCreate, self).form_valid(form)

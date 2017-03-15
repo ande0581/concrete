@@ -1,7 +1,6 @@
 from django import forms
-from crispy_forms.bootstrap import FormActions
-from crispy_forms.helper import FormHelper, Layout
-from crispy_forms.layout import Submit, Div
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 from job_type.models import JobType
 from service.models import Service
@@ -245,6 +244,8 @@ class PierFootingsForm(forms.Form):
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
     diameter = forms.IntegerField(label='Diameter of Footing in Inches')
     depth = forms.IntegerField(label='Depth of Footing in Inches')
+    concrete = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
+                                      initial=get_one_object('Concrete Pier Footings'))
     auger = forms.ModelChoiceField(queryset=get_queryset('Auger'), required=False)
     sonotube = forms.ModelChoiceField(queryset=get_queryset('Sonotube'), required=False)
     setup = forms.FloatField(label='Labor Cost Per Hole in Dollars For Setup')
@@ -253,13 +254,6 @@ class PierFootingsForm(forms.Form):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('login', 'Bid Pier Footings', css_class='btn=primary'))
-
-    """
-    length
-    width
-    height
-    quantity
-    """
 
 
 class EgressWindowForm(forms.Form):
@@ -303,15 +297,27 @@ class EgressWindowForm(forms.Form):
 class RetainingWallForm(forms.Form):
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
-    linear_foot = forms.IntegerField(label='Enter Linear Feet of Wall')
+    linear_feet = forms.IntegerField(label='Enter Linear Feet of Wall')
     height = forms.IntegerField(label='Enter Height of Wall in Feet')
     block_type = forms.ModelChoiceField(queryset=get_queryset('Block'))
-    cap_type = forms.ModelChoiceField(queryset=get_queryset('Block'), required=False)
+    cap_type = forms.ModelChoiceField(queryset=get_queryset('Block-Cap'), required=False)
 
     removal_cost = forms.FloatField(label='Enter Price to Remove Existing Wall', required=False)
-    geogrid = forms.IntegerField(label='Enter number of rolls of GeoGrid', required=False)
+    geogrid_type = forms.ModelChoiceField(queryset=get_queryset('GeoGrid'), required=False)
+    geogrid_count = forms.IntegerField(label='Enter number of rolls of GeoGrid', required=False)
     rock = forms.ModelChoiceField(queryset=get_queryset('Rock'), required=False)
     drain_tile = forms.ModelChoiceField(queryset=get_queryset('Drain-Tile'), required=False)
+
+    def clean(self):
+        """
+        If using GeoGrid, make sure both GeoGrid Type and Number of Rolls are Populated
+        """
+        cleaned_data = super(RetainingWallForm, self).clean()
+        geogrid_type = cleaned_data.get('geogrid_type')
+        geogrid_count = cleaned_data.get('geogrid_count')
+
+        if (geogrid_type and not geogrid_count) or (geogrid_count and not geogrid_type):
+            raise forms.ValidationError('GeoGrid Type and GeoGrid Roll Count are Both Required!')
 
     helper = FormHelper()
     helper.form_method = 'POST'
