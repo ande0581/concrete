@@ -13,6 +13,7 @@ from service_group.forms import StepsForm, BlockFoundationForm, PierFootingsForm
     RetainingWallForm
 
 # Enable Print Statements to Facilitate Debugging
+# TODO disable debug before production
 DEBUG_SERVICE_GROUP = True
 
 

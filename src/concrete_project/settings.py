@@ -29,6 +29,7 @@ MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# TODO disable debug before production
 DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
