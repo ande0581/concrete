@@ -13,8 +13,7 @@ from service_group.forms import StepsForm, BlockFoundationForm, PierFootingsForm
     RetainingWallForm
 
 # Enable Print Statements to Facilitate Debugging
-# TODO disable debug before production
-DEBUG_SERVICE_GROUP = True
+DEBUG_SERVICE_GROUP = False
 
 
 def calculate_square_feet(length, width):
@@ -105,14 +104,13 @@ def calculate_steps_square_feet(length, width, num_steps):
 
 
 def calculate_railing_length(length, num_steps):
-    return length + ((num_steps - 1) * 1)
+    railing_length = length + ((num_steps - 1) * 1)
+    return math.ceil(railing_length)
 
 
 def calculate_number_of_block(linear_feet, height, block_obj):
-    # TODO block calculation rounding
-    # Is cap height important in wall calculation?
-    blocks_per_row = (linear_feet * 12) / block_obj.width
 
+    blocks_per_row = (linear_feet * 12) / block_obj.width
     number_of_rows = math.ceil((height * 12) / block_obj.height)
     total_blocks = blocks_per_row * number_of_rows
 
@@ -300,7 +298,7 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
 
 class FloatingSlabCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
-    # TODO floating slab
+
     template_name = 'service_group/service_group_form.html'
     form_class = FloatingSlabForm
 

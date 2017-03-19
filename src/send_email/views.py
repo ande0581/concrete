@@ -61,7 +61,13 @@ def send_customer_proposal_invoice_email(pdf_id, body):
     # If proposal attach bid explanation
     if proposal:
         bid_explanation = os.path.join(settings.MEDIA_ROOT, 'global/bid_explanation.pdf')
+        liabilities_warranty = os.path.join(settings.MEDIA_ROOT, 'global/liabilities_warranty.pdf')
+        what_to_expect = os.path.join(settings.MEDIA_ROOT, 'global/what_to_expect.pdf')
+        contractor_license = os.path.join(settings.MEDIA_ROOT, 'global/contractor_license.pdf')
         email.attach_file(bid_explanation)
+        email.attach_file(liabilities_warranty)
+        email.attach_file(what_to_expect)
+        email.attach_file(contractor_license)
 
     # Attempt to send email
     try:

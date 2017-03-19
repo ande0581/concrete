@@ -54,7 +54,7 @@ def populate():
          'protected': False},
         {'description': '5 Yards Black Dirt Soil', 'cost': 450, 'category': 'Soil', 'measurement': 'each',
          'protected': False},
-        {'description': 'Concrete Block Foundation', 'cost': 250, 'category': 'Concrete', 'measurement': 'cubic_yard',
+        {'description': 'Concrete Block Foundation Mix', 'cost': 250, 'category': 'Concrete', 'measurement': 'cubic_yard',
          'protected': True},
         {'description': 'Concrete Colored $', 'cost': 150, 'category': 'Concrete', 'measurement': 'cubic_yard',
          'protected': False},
