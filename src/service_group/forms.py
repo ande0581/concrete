@@ -67,18 +67,6 @@ class StandardConcreteForm(forms.Form):
         if not width and not length and not sq_ft:
             raise forms.ValidationError('You must enter Length and Width or Sq_Ft')
 
-    """
-    x1. removal -required(no), default=Removal - Concrete/Tar (sq/ft)
-    x2. saw cutting  -required(no), default=nothing
-    x3. forming grading and setup - required(no), default=Forming / Grading / Setup (sq/ft)
-    x3.1 fill - required(no), default(none)
-    x4. rebar - required(no), default (1/2 non-coated), option for none
-    x5. felt - required(no), float field
-    x5.1 pour finish control joint - required=true, default=calculated on sq
-    x6. cement (min load load charge, less than 5 yards), add %5 extra, required=yes
-    x7. sealer (required=no), default=(Sealer - Cure n Seal)
-    """
-
 
 class DecorativeConcreteForm(forms.Form):
 
@@ -122,22 +110,12 @@ class DecorativeConcreteForm(forms.Form):
         if not width and not length and not sq_ft:
             raise forms.ValidationError('You must enter Length and Width or Sq_Ft')
 
-    """
-    x1. removal -required(no), default=Removal - Concrete/Tar (sq/ft).
-    x2. saw cutting  -required(no), default=nothing
-    x3. forming grading and setup - required(no), default=Forming / Grading / Setup (sq/ft)
-    x3.1 fill - required(no), default(none)
-    x4. rebar - required(no), default (1/2 non-coated), option for none
-    x5. felt - required(no), float field
-    x5.1 pour finish control joint - required=true, default=calculated on sq, more expensive for colored
-    x6. cement (min load load charge, less than 5 yards), add %5 extra, required=yes, more expensive
-    x7. colored washout fee ($60), always
-    x8. stamps (true/false)
-    x9  sealer (required=no), default=(Sealer - Lumiseal +)
-    """
-
 
 class StepsForm(forms.Form):
+    """
+    standard step depth is 12"
+    standard step height is 7.5"
+    """
 
     job_type = forms.ModelChoiceField(queryset=JobType.objects.all())
     length = forms.IntegerField(label='Length of Landing in Inches')
@@ -155,24 +133,6 @@ class StepsForm(forms.Form):
     helper.form_method = 'POST'
     helper.add_input(Submit('login', 'Bid Steps', css_class='btn=primary'))
 
-    """
-    xlength (required)
-    xwidth (required)
-    xthickness (required)
-    xrisers (int, required)
-    xremoval = float field
-    xshort_load_fee = true/false, default=none
-    xrailing (required=no, default=none)
-    xsealer (required=no), default=(Sealer - Lumiseal +)
-
-    revised 2/9/2017
-    landing width
-    landing depth
-    standard step depth is 12"
-    standard step height is 7.5"
-    recursion
-    """
-
 
 class FloatingSlabForm(forms.Form):
 
@@ -181,7 +141,7 @@ class FloatingSlabForm(forms.Form):
     width = forms.IntegerField(label='Width in Feet')
     thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
     concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
-                                           initial=get_one_object('Concrete Floating Slab'))
+                                           initial=get_one_object('Concrete Floating Slab Mix'))
     rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), required=False,
                                         initial=get_one_object('Rebar 1/2 Non-Coated'))
     forming = forms.ModelChoiceField(queryset=get_queryset('Forming'), required=False,
@@ -203,7 +163,7 @@ class BlockFoundationForm(forms.Form):
     width = forms.ChoiceField(label='Width', choices=((8, "8 inches"), (12, "12 Inches")))
     height = forms.FloatField(label='Height of Foundation in Inches')
     concrete = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
-                                      initial=get_one_object('Concrete Block Foundation'))
+                                      initial=get_one_object('Concrete Block Foundation Mix'))
     rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), required=False,
                                         initial=get_one_object('Rebar 1/2 Non-Coated Block Foundation'))
     forming = forms.ModelChoiceField(queryset=get_queryset('Forming'), required=False,
@@ -219,25 +179,6 @@ class BlockFoundationForm(forms.Form):
     helper.form_method = 'POST'
     helper.add_input(Submit('login', 'Bid Block Foundation', css_class='btn=primary'))
 
-    """
-    length
-    width
-    height
-    removal_sqft
-    removal_unit
-    add_footing to this form
-
-
-      -Block foundation- Footing included. I just need to enter in linear feet and put a value to that.
-      Footings are always the same linear feet as the foundation. The only difference would be 8" or 12" wide
-      foundation. It would be nice to have the concrete volume come up automatically so i don't have to figure out how
-      much concrete to order every time. 8 inches thick divided by 41 square feet. Foundation = Length x Height divided
-      by 41, plus footing = 20" wide(always) x 12" thick(always) x total linear length. 12 inches thick divided by 27
-      square feet. I can put a value on the concrete volume figured.
-
-
-    """
-
 
 class PierFootingsForm(forms.Form):
 
@@ -245,7 +186,7 @@ class PierFootingsForm(forms.Form):
     diameter = forms.IntegerField(label='Diameter of Footing in Inches')
     depth = forms.IntegerField(label='Depth of Footing in Inches')
     concrete = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
-                                      initial=get_one_object('Concrete Pier Footings'))
+                                      initial=get_one_object('Concrete Pier Footings Mix'))
     auger = forms.ModelChoiceField(queryset=get_queryset('Auger'), required=False)
     sonotube = forms.ModelChoiceField(queryset=get_queryset('Sonotube'), required=False)
     setup = forms.FloatField(label='Labor Cost Per Hole in Dollars For Setup')
@@ -279,19 +220,6 @@ class EgressWindowForm(forms.Form):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('login', 'Bid Egress Window', css_class='btn=primary'))
-
-
-    """
-    treated_wood, always true (value=?)
-    digging out, always true (value=?)
-    flashing (always true (value=?)
-    window = (always true (std window)
-    window well includes ladder (pick list)
-    fasteners (always true, value(you provide)
-    building permits (always true, $120)
-    rock 3/8- rock (always true, flat rate)
-
-    """
 
 
 class RetainingWallForm(forms.Form):

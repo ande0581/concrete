@@ -64,11 +64,11 @@ def populate():
          'protected': False},
         {'description': 'Concrete Driveway Mix', 'cost': 100, 'category': 'Concrete', 'measurement': 'cubic_yard',
          'protected': True},
-        {'description': 'Concrete Exposed', 'cost': 120, 'category': 'Concrete', 'measurement': 'cubic_yard',
+        {'description': 'Concrete Exposed Mix', 'cost': 120, 'category': 'Concrete', 'measurement': 'cubic_yard',
          'protected': False},
-        {'description': 'Concrete Floating Slab', 'cost': 200, 'category': 'Concrete', 'measurement': 'cubic_yard',
+        {'description': 'Concrete Floating Slab Mix', 'cost': 200, 'category': 'Concrete', 'measurement': 'cubic_yard',
          'protected': True},
-        {'description': 'Concrete Pier Footings', 'cost': 300, 'category': 'Concrete', 'measurement': 'cubic_yard',
+        {'description': 'Concrete Pier Footings Mix', 'cost': 300, 'category': 'Concrete', 'measurement': 'cubic_yard',
          'protected': True},
         {'description': 'Concrete Steps', 'cost': 350, 'category': 'Concrete', 'measurement': 'cubic_yard',
          'protected': True},
@@ -175,7 +175,7 @@ def populate():
          'protected': False, 'height': 3.5, 'width': 11.5, 'depth': 7},
         {'description': 'Clifton Wall XL Straight Cap 3 1/2" x 18" x 13"', 'cost': 4.75, 'category': 'Block-Cap',
          'measurement': 'each', 'protected': False, 'height': 3.5, 'width': 18, 'depth': 13},
-        {'description': 'Crestone Cap 2 3/8" x 12 x 7 1/2"', 'cost': 1.78, 'category': 'Block-Cap',
+        {'description': 'Crestone Cap 2 3/8" x 12" x 7 1/2"', 'cost': 1.78, 'category': 'Block-Cap',
          'measurement': 'each', 'protected': False, 'height': 2.375, 'width': 12, 'depth': 7.5},
     ]
 

@@ -12,6 +12,9 @@ from service.models import Service
 from service_group.forms import StepsForm, BlockFoundationForm, PierFootingsForm, EgressWindowForm, FloatingSlabForm, \
     RetainingWallForm
 
+# Enable Print Statements to Facilitate Debugging
+DEBUG_SERVICE_GROUP = True
+
 
 def calculate_square_feet(length, width):
     square_feet = length * width
@@ -63,13 +66,8 @@ def insert_bid_item(**item_details):
 
 def calculate_steps_cubic_yards(length, width, num_steps):
     """
-    revised 2/9/2017
-    landing length
-    landing width
     standard step depth is 12"
     standard step height is 7.5"
-    recursion
-
     """
     total_area = []
     for i in range(num_steps):
@@ -96,10 +94,11 @@ def calculate_steps_square_feet(length, width, num_steps):
         total_sq_ft.append(total)
         length += 1  # add one foot for each new step
 
-        print("Step:", i)
-        print('Surface:', surface)
-        print('Total:', total)
-        print("_" * 30)
+        if DEBUG_SERVICE_GROUP:
+            print("calculate_steps_square_feet Step Count:", i)
+            print('calculate_steps_square_feet Step Surface Sq-Ft:', surface)
+            print('calculate_steps_square_feet Step Sq-Ft:', total)
+            print("_" * 30)
 
     return round(sum(total_sq_ft), 2)
 
@@ -112,15 +111,21 @@ def calculate_number_of_block(linear_feet, height, block_obj):
     # TODO block calculation rounding
     # Is cap height important in wall calculation?
     blocks_per_row = (linear_feet * 12) / block_obj.width
-    print('Blocks Per Row:', blocks_per_row)
+
     number_of_rows = math.ceil((height * 12) / block_obj.height)
-    print('Number of Rows:', number_of_rows)
     total_blocks = blocks_per_row * number_of_rows
-    print('Total Blocks:', total_blocks)
+
+    if DEBUG_SERVICE_GROUP:
+        print('calculate_number_of_block Blocks Per Row:', blocks_per_row)
+        print('calculate_number_of_block Number of Block Rows:', number_of_rows)
+        print('calculate_number_of_block Total Blocks:', total_blocks)
 
     # Add 10% extra
     total_blocks *= 1.10
-    print('Total Blocks Plus Waste:', total_blocks)
+
+    if DEBUG_SERVICE_GROUP:
+        print('calculate_number_of_block Total Blocks Plus Waste:', total_blocks)
+
     return math.ceil(total_blocks)
 
 
@@ -130,23 +135,6 @@ def calculate_number_of_block_caps(linear_feet, cap_obj):
     # Add 10% extra
     caps_per_row *= 1.10
     return math.ceil(caps_per_row)
-
-
-# def calculate_floating_slab_square_foot(length, width):
-#     sq_ft = (length - 1) * (width - 1)
-#     perimeter = (length + width) * 2
-#     perimeter += perimeter / 2
-#     sq_ft += perimeter
-#     return round(sq_ft, 2)
-#
-#
-# def calculate_floating_slab_cubic_yards(length, width, thickness):
-#     # TODO, calculate cubic yards for floating slab
-#     cubic_yards = (length * width * (thickness / 12)) / 27
-#
-#     # add 5% extra
-#     cubic_yards *= 1.05
-#     return round(cubic_yards, 2)
 
 
 class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
@@ -161,7 +149,8 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         return reverse('bid_app:bid_detail', kwargs={'pk': self.kwargs['bid']})
 
     def form_valid(self, form):
-        # print("POST FORM SAVE:", form.cleaned_data)
+        if DEBUG_SERVICE_GROUP:
+            print("ConcreteCreate Post Form Save:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         length = form.cleaned_data['length']
         width = form.cleaned_data['width']
@@ -176,7 +165,7 @@ class ConcreteCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         forming = form.cleaned_data['forming']
         fill = form.cleaned_data['fill']
         finishing = form.cleaned_data['finishing']
-        stamps = form.cleaned_data['stamps']
+        stamps = form.cleaned_data.get('stamps', None)
         sealer = form.cleaned_data['sealer']
 
         if not sq_ft:
@@ -320,7 +309,6 @@ class FloatingSlabCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
 
-        print("BLOCK FOUNDATION POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         length = form.cleaned_data['length']
         width = form.cleaned_data['width']
@@ -331,26 +319,25 @@ class FloatingSlabCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         finishing = form.cleaned_data['finishing']
         sealer = form.cleaned_data['sealer']
 
-        # sq_ft = calculate_floating_slab_square_foot(length=length, width=width)
-        # cubic_yards = calculate_floating_slab_cubic_yards(length=length, width=width, thickness=thickness)
         linear_ft = (length + width) * 2
         cubic_yards_floor = calculate_cubic_yards(length=length, width=width, thickness=thickness)
         cubic_yards_perimeter = calculate_cubic_yards(length=linear_ft, width=1.25, thickness=12)
         cubic_yards_perimeter_triangle = calculate_cubic_yards(length=linear_ft, width=1, thickness=12) / 2
         cubic_yards = cubic_yards_floor + cubic_yards_perimeter + cubic_yards_perimeter_triangle
 
-        print('Floating Slab Cubic Yards Floor', cubic_yards_floor)
-        print('Floating Slab Cubic Yards Perimeter', cubic_yards_perimeter)
-        print('Floating Slab Cubic Yards Perimeter Triangle', cubic_yards_perimeter_triangle)
-        print('Floating Slab Cubic Yards Total', cubic_yards)
-
         sq_ft_floor = calculate_square_feet(length=length, width=width)
         sq_ft_perimeter = calculate_square_feet(length=linear_ft, width=3)
         sq_ft = sq_ft_floor + sq_ft_perimeter
 
-        print('Floating Slab SqFt Floor', sq_ft_floor)
-        print('Floating Slab SqFt Perimeter', sq_ft_perimeter)
-        print('Floating Slab SqFt Total', sq_ft)
+        if DEBUG_SERVICE_GROUP:
+            print('FloatingSlabCreate Post Form Save:', form.cleaned_data)
+            print('FloatingSlabCreate Cubic Yards Floor', cubic_yards_floor)
+            print('FloatingSlabCreate Cubic Yards Perimeter', cubic_yards_perimeter)
+            print('FloatingSlabCreate Cubic Yards Perimeter Triangle', cubic_yards_perimeter_triangle)
+            print('FloatingSlabCreate Cubic Yards Total', cubic_yards)
+            print('FloatingSlabCreate SqFt Floor', sq_ft_floor)
+            print('FloatingSlabCreate SqFt Perimeter', sq_ft_perimeter)
+            print('FloatingSlabCreate SqFt Total', sq_ft)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -427,7 +414,6 @@ class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
 
-        print("POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         length = form.cleaned_data['length'] / 12
         width = form.cleaned_data['width'] / 12
@@ -442,14 +428,16 @@ class StepsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         sq_ft = calculate_steps_square_feet(length=length, width=width, num_steps=num_steps)
         railing_length = calculate_railing_length(length=length, num_steps=num_steps)
 
-        print('job_type:', job_type)
-        print('cubic_yards:', cubic_yards)
-        print('num_steps:', num_steps)
-        print('concrete:', concrete)
-        print('removal:', removal)
-        print('short_load:', short_load)
-        print('railing:', railing)
-        print('sealer:', sealer)
+        if DEBUG_SERVICE_GROUP:
+            print("StepsCreate Post Form Save", form.cleaned_data)
+            print('StepsCreate job_type:', job_type)
+            print('StepsCreate cubic_yards:', cubic_yards)
+            print('StepsCreate num_steps:', num_steps)
+            print('StepsCreate concrete:', concrete)
+            print('StepsCreate removal:', removal)
+            print('StepsCreate short_load:', short_load)
+            print('StepsCreate railing:', railing)
+            print('StepsCreate sealer:', sealer)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -515,7 +503,6 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
 
-        print("BLOCK FOUNDATION POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         linear_feet = form.cleaned_data['linear_feet']
         width = int(form.cleaned_data['width'])
@@ -543,12 +530,14 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         sq_ft_foundation = calculate_square_feet(length=linear_feet, width=height)
         sq_ft = round(sq_ft_footing + sq_ft_foundation, 2)
 
-        print('cubic yards footings:', cubic_yards_footing)
-        print('cubic yards foundation:', cubic_yards_foundation)
-        print('cubic yards total:', cubic_yards)
-        print('sq ft footings:', sq_ft_footing)
-        print('sq ft foundation:', sq_ft_foundation)
-        print('sq ft total:', sq_ft)
+        if DEBUG_SERVICE_GROUP:
+            print('BlockFoundationCreate post form save:', form.cleaned_data)
+            print('BlockFoundationCreate cubic yards footings:', cubic_yards_footing)
+            print('BlockFoundationCreate cubic yards foundation:', cubic_yards_foundation)
+            print('BlockFoundationCreate cubic yards total:', cubic_yards)
+            print('BlockFoundationCreate sq ft footings:', sq_ft_footing)
+            print('BlockFoundationCreate sq ft foundation:', sq_ft_foundation)
+            print('BlockFoundationCreate sq ft total:', sq_ft)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -646,7 +635,6 @@ class BlockFoundationCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
 class PierFootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
-    # TODO Pier Footings Create
     template_name = 'service_group/service_group_form.html'
     form_class = PierFootingsForm
 
@@ -656,7 +644,6 @@ class PierFootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
 
-        print("PIER FOOTINGS POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         diameter = form.cleaned_data['diameter']
         depth = form.cleaned_data['depth']
@@ -666,19 +653,23 @@ class PierFootingsCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         setup = form.cleaned_data['setup']
         quantity = form.cleaned_data['quantity']
 
-        print('Job Type:', job_type)
-        print('Diameter:', diameter)
-        print('Depth:', depth)
-        print('Concrete', concrete)
-        print('Auger:', auger)
-        print('Sonotube:', sonotube)
-        print('Setup:', setup)
-        print('Quantity:', quantity)
+        if DEBUG_SERVICE_GROUP:
+            print("PierFootingsCreate Post Form Save:", form.cleaned_data)
+            print('PierFootingsCreate Job Type:', job_type)
+            print('PierFootingsCreate Diameter:', diameter)
+            print('PierFootingsCreate Depth:', depth)
+            print('PierFootingsCreate Concrete', concrete)
+            print('PierFootingsCreate Auger:', auger)
+            print('PierFootingsCreate Sonotube:', sonotube)
+            print('PierFootingsCreate Setup:', setup)
+            print('PierFootingsCreate Quantity:', quantity)
 
         cubic_yards = calculate_cubic_yards_cylinder(diameter=diameter, depth=depth)
-        print('Cubic Yards Before Quantity', cubic_yards)
+        if DEBUG_SERVICE_GROUP:
+            print('PierFootingsCreate Cubic Yards Before Quantity', cubic_yards)
         cubic_yards *= quantity
-        print('Cubic Yards After Quantity', cubic_yards)
+        if DEBUG_SERVICE_GROUP:
+            print('PierFootingsCreate Cubic Yards After Quantity', cubic_yards)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -745,7 +736,6 @@ class EgressWindowCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
 
-        # print("POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         wood = form.cleaned_data['wood']
         dig_out = form.cleaned_data['dig_out']
@@ -756,15 +746,17 @@ class EgressWindowCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         permit = form.cleaned_data['permit']
         rock = form.cleaned_data['rock']
 
-        # print('job_type:', job_type)
-        # print('wood:', wood)
-        # print('dig_out:', dig_out)
-        # print('flashing:', flashing)
-        # print('window:', window)
-        # print('window_well', window_well)
-        # print('fasteners:', fasteners)
-        # print('permit:', permit)
-        # print('rock:', rock)
+        if DEBUG_SERVICE_GROUP:
+            print('EgressWindowCreate Post Form Save:', form.cleaned_data)
+            print('EgressWindowCreate job_type:', job_type)
+            print('EgressWindowCreate wood:', wood)
+            print('EgressWindowCreate dig_out:', dig_out)
+            print('EgressWindowCreate flashing:', flashing)
+            print('EgressWindowCreate window:', window)
+            print('EgressWindowCreate window_well', window_well)
+            print('EgressWindowCreate fasteners:', fasteners)
+            print('EgressWindowCreate permit:', permit)
+            print('EgressWindowCreate rock:', rock)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
@@ -845,7 +837,6 @@ class EgressWindowCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
 class RetainingWallCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
-    # TODO Retaining Wall Create
     template_name = 'service_group/service_group_form.html'
     form_class = RetainingWallForm
 
@@ -855,7 +846,6 @@ class RetainingWallCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
 
     def form_valid(self, form):
 
-        print("RETAINING WALL POST FORM SAVE:", form.cleaned_data)
         job_type = form.cleaned_data['job_type']
         linear_feet = form.cleaned_data['linear_feet']
         height = form.cleaned_data['height']
@@ -867,16 +857,18 @@ class RetainingWallCreate(LoginRequiredMixin, SuccessMessageMixin, FormView):
         rock = form.cleaned_data['rock']
         drain_tile = form.cleaned_data['drain_tile']
 
-        print('Job Type:', job_type)
-        print('Linear Feet:', linear_feet)
-        print('Height:', height)
-        print('Block Type:', block_type)
-        print('Cap Type:', cap_type)
-        print('removal_cost:', removal_cost)
-        print('GeoGrid Type:', geogrid_type)
-        print('GeoGrid Count:', geogrid_count)
-        print('Rock:', rock)
-        print('Drain Tile:', drain_tile)
+        if DEBUG_SERVICE_GROUP:
+            print('RetainingWallCreate Post Form Save:', form.cleaned_data)
+            print('RetainingWallCreate Job Type:', job_type)
+            print('RetainingWallCreate Linear Feet:', linear_feet)
+            print('RetainingWallCreate Height:', height)
+            print('RetainingWallCreate Block Type:', block_type)
+            print('RetainingWallCreate Cap Type:', cap_type)
+            print('RetainingWallCreate removal_cost:', removal_cost)
+            print('RetainingWallCreate GeoGrid Type:', geogrid_type)
+            print('RetainingWallCreate GeoGrid Count:', geogrid_count)
+            print('RetainingWallCreate Rock:', rock)
+            print('RetainingWallCreate Drain Tile:', drain_tile)
 
         bid_obj = Bid.objects.get(pk=self.kwargs['bid'])
 
