@@ -21,7 +21,8 @@ Madsen Concrete Services
 concrete@madsenservices.com
 """
 
-EMPLOYEES = (('jeffrey.d.anderson@gmail.com', 'Jeff Anderson'),
+EMPLOYEES = (('jacobozzzborn@gmail.com', 'Jake Osborn'),
+             ('jeffrey.d.anderson@gmail.com', 'Jeff Anderson'),
              ('concrete@madsenservices.com', 'Tom Madsen'),)
 
 
