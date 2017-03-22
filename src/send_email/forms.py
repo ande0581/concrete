@@ -1,6 +1,21 @@
 from django import forms
-from crispy_forms.helper import FormHelper, Layout
-from crispy_forms.layout import Submit, Div
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+from document.models import Document
+
+import sys
+# http://stackoverflow.com/questions/42024101/problems-with-migrations
+# http://stackoverflow.com/questions/39535983/migration-clashes-with-forms-py
+if 'makemigrations' in sys.argv or 'migrate' in sys.argv or 'showmigrations' in sys.argv:
+    "Prevent querying of DB while initializing the applications, will fail to migrate otherwise"
+
+    def get_queryset():
+        pass
+
+else:
+
+    def get_queryset():
+        return Document.objects.all()
 
 
 email_body = """Attached is the proposal for your project. Please let me know if you have any questions.
@@ -29,6 +44,8 @@ EMPLOYEES = (('jacobozzzborn@gmail.com', 'Jake Osborn'),
 class SendCustomerEmailForm(forms.Form):
 
     body = forms.CharField(initial=email_body, widget=forms.Textarea)
+    attachments = forms.ModelMultipleChoiceField(queryset=get_queryset(), required=False,
+                                                 label='Select Multiple Attachments by Ctrl-Click')
 
     helper = FormHelper()
     helper.form_method = 'POST'
@@ -47,6 +64,8 @@ class SendEmployeeEmailForm(forms.Form):
 class SendGeneralEmailForm(forms.Form):
     subject = forms.CharField()
     body = forms.CharField(initial=generic_email_body, widget=forms.Textarea)
+    attachments = forms.ModelMultipleChoiceField(queryset=get_queryset(), required=False,
+                                                 label='Select Multiple Attachments by Ctrl-Click')
 
     helper = FormHelper()
     helper.form_method = 'POST'

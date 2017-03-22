@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'q_search_form.html' %}
+
+
+<h4 class="entries">
+  <h4><strong>General Documents </strong><a href="{% url 'document_app:document_create' %}" class="btn btn-sm btn-success" role="button">Upload</a></h4>
+  <div class="datagrid">
+    <table>
+      <thead>
+        <tr>
+          <th><strong>Description</strong></th>
+          <th width="10%"><strong>Edit</strong></th>
+          <th width="10%"><strong>Delete</strong></th>
+        </tr>
+      </thead>
+      {% for document in object_list %}
+          <tr style="{% cycle 'background: white' 'background: #F0F0F0' %}">
+              <td><a href="{{ MEDIA_URL }}{{ document.filename }}" target="_blank">{{ document.description }}</a></td>
+              <td><a href="{% url 'document_app:document_update' pk=document.pk %}">Edit</a></td>
+              <td><a href="{% url 'document_app:document_delete' pk=document.pk %}">Delete</a></td>
+          </tr>
+      {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

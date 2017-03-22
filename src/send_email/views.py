@@ -36,7 +36,7 @@ def log_email(**kwargs):
     email_entry.save()
 
 
-def send_customer_proposal_invoice_email(pdf_id, body):
+def send_customer_proposal_invoice_email(pdf_id, body, attachments):
     pdf_obj = PDFImage.objects.get(pk=pdf_id)
 
     if '_proposal_' in pdf_obj.filename.name:
@@ -58,7 +58,7 @@ def send_customer_proposal_invoice_email(pdf_id, body):
     # Attach PDF
     email.attach_file(pdf_obj.filename.path)
 
-    # If proposal attach bid explanation
+    # If proposal attach supporting documents
     if proposal:
         media_folder = os.path.join(settings.MEDIA_ROOT, 'global')
         bid_explanation = os.path.join(media_folder, 'bid_explanation.pdf')
@@ -69,6 +69,10 @@ def send_customer_proposal_invoice_email(pdf_id, body):
         email.attach_file(liabilities_warranty)
         email.attach_file(what_to_expect)
         email.attach_file(contractor_license)
+
+    # Add any additional attachments selected on form submission
+    for attachment in attachments:
+        email.attach_file(attachment.filename.path)
 
     # Attempt to send email
     try:
@@ -133,10 +137,14 @@ def send_employee_bid_email(request, bid_id, to_address, body):
     return response
 
 
-def send_general_email(customer_id, to_address, subject, body):
+def send_general_email(customer_id, to_address, subject, body, attachments):
     customer_obj = Customer.objects.get(pk=customer_id)
     from_address = config('EMAIL_HOST_USER')
     email = EmailMessage(subject, body, from_address, [to_address])
+
+    # Add any additional attachments selected on form submission
+    for attachment in attachments:
+        email.attach_file(attachment.filename.path)
 
     # Attempt to send email
     try:
@@ -189,8 +197,9 @@ class ProposalInvoiceEmailCreate(LoginRequiredMixin, SuccessMessageMixin, FormVi
     def form_valid(self, form):
         body = form.cleaned_data['body']
         pdf_obj = PDFImage.objects.get(pk=self.kwargs['pdf_id'])
+        attachments = form.cleaned_data['attachments']
         to_address = pdf_obj.bid.customer.email
-        email_response = send_customer_proposal_invoice_email(self.kwargs['pdf_id'], body)
+        email_response = send_customer_proposal_invoice_email(self.kwargs['pdf_id'], body, attachments)
         if email_response:
             messages.success(self.request, 'Successfully sent email to {}'.format(to_address))
         else:
@@ -209,9 +218,10 @@ class GeneralEmailCreate(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         subject = form.cleaned_data['subject']
         body = form.cleaned_data['body']
+        attachments = form.cleaned_data['attachments']
         customer_obj = Customer.objects.get(pk=self.kwargs['customer_id'])
         to_address = customer_obj.email
-        email_response = send_general_email(customer_obj.id, to_address, subject, body)
+        email_response = send_general_email(customer_obj.id, to_address, subject, body, attachments)
         if email_response:
             messages.success(self.request, 'Successfully sent email to {}'.format(to_address))
         else:
