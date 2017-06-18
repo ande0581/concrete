@@ -39,5 +39,8 @@ urlpatterns = [
     url(r'^send_email/', include('send_email.urls')),
     url(r'^service/', include('service.urls')),
     url(r'^service_group/', include('service_group.urls')),
+    url(r'^utility/', include('utility.urls')),
     url(r'^admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

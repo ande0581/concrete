@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'send_email',
     'service',
     'service_group',
+    'utility',
 
     # 3rd Party Apps
     'crispy_forms',
