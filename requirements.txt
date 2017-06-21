@@ -1,8 +1,15 @@
+certifi==2017.4.17
+chardet==3.0.4
 Django==1.10.5
 django-cleanup==0.4.2
 django-crispy-forms==1.6.1
 django-multiupload==0.5.2
+idna==2.5
 olefile==0.44
 Pillow==4.0.0
+pyocclient==0.4
 python-decouple==3.0
 reportlab==3.3.0
+requests==2.18.1
+six==1.10.0
+urllib3==1.21.1

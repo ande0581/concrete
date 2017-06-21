@@ -1,62 +1,46 @@
-import zipfile
-
+import owncloud
 import os
-from django.http import HttpResponse
-from concrete_project.settings import BASE_DIR
 import shutil
+import tempfile
+import zipfile
+from datetime import date
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView
+
+from concrete_project.settings import BASE_DIR, NEXTCLOUD_URL, NEXTCLOUD_USER, NEXTCLOUD_PASSWORD
 
 
-# Create your views here.
-# https://stackoverflow.com/questions/14438928/python-zip-a-sub-folder-and-not-the-entire-folder-path
-def makeArchive(fileList, archive, root):
-    """
-    'fileList' is a list of file names - full path each name
-    'archive' is the file name for the archive with a full path
-    """
-    a = zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED)
-
-    for f in fileList:
-        print("archiving file %s" % f)
-        a.write(f, os.path.relpath(f, root))
-    a.write(os.path.relpath(os.path.join(BASE_DIR, 'db.sqlite3')))
-    a.close()
+def upload_to_next_cloud(file=None):
+    filename = 'madsen_concrete/madsen_concrete_archive_{}.zip'.format(date.today().strftime("%Y_%m_%d"))
+    oc = owncloud.Client(NEXTCLOUD_URL)
+    oc.login(NEXTCLOUD_USER, NEXTCLOUD_PASSWORD)
+    oc.put_file(filename, file)
 
 
-def dirEntries(dir_name, subdir, *args):
-    # Creates a list of all files in the folder
-    '''Return a list of file names found in directory 'dir_name'
-    If 'subdir' is True, recursively access subdirectories under 'dir_name'.
-    Additional arguments, if any, are file extensions to match filenames. Matched
-        file names are added to the list.
-    If there are no additional arguments, all files found in the directory are
-        added to the list.
-    Example usage: fileList = dirEntries(r'H:\TEMP', False, 'txt', 'py')
-        Only files with 'txt' and 'py' extensions will be added to the list.
-    Example usage: fileList = dirEntries(r'H:\TEMP', True)
-        All files and all the files in subdirectories under H:\TEMP will be added
-        to the list. '''
+def upload_website(request):
+    media_folder = os.path.join(BASE_DIR, 'media')
+    sql_db = os.path.join(BASE_DIR, 'db.sqlite3')
+    with tempfile.TemporaryDirectory() as td:
+        tmparchive = os.path.join(td, 'archive')
+        shutil.make_archive(base_name=tmparchive, format='zip', root_dir=media_folder, base_dir="./")
 
-    fileList = []
-    for file in os.listdir(dir_name):
-        dirfile = os.path.join(dir_name, file)
-        if os.path.isfile(dirfile):
-            if not args:
-                fileList.append(dirfile)
-            else:
-                if os.path.splitext(dirfile)[1][1:] in args:
-                    fileList.append(dirfile)
-            # recursively access file names in subdirectories
-        elif os.path.isdir(dirfile) and subdir:
-            print("Accessing directory:", dirfile)
-            fileList.extend(dirEntries(dirfile, subdir, *args))
-    return fileList
+        zf = zipfile.ZipFile(os.path.join(td, 'archive.zip'), mode='a')
+        zf.write(sql_db, arcname=os.path.basename(sql_db))
+        zf.close()
+
+        try:
+            upload_to_next_cloud(file=os.path.join(td, 'archive.zip'))
+            messages.success(request, "Website Data Uploaded")
+        except:
+            messages.error(request, "Upload Failed")
+
+    return HttpResponseRedirect('/utility')
 
 
-def email_website_folder(request):
-    folder = os.path.join(BASE_DIR, 'media')
-    save_to_location = os.path.join(BASE_DIR, 'utility/temp')
-    zipname = 'jeff_test.zip'
-    os.chdir(os.path.join(BASE_DIR, 'utility/temp'))
-    makeArchive(dirEntries(folder, True), zipname, save_to_location)
-    return HttpResponse('this is the email site to admin view')
+class UtilityList(LoginRequiredMixin, TemplateView, SuccessMessageMixin):
+    template_name = 'utility/utility_list.html'
 

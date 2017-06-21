@@ -41,6 +41,10 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
+# Next Cloud Settings
+NEXTCLOUD_URL = config('NEXTCLOUD_URL')
+NEXTCLOUD_USER = config('NEXTCLOUD_USER')
+NEXTCLOUD_PASSWORD = config('NEXTCLOUD_PASSWORD')
 
 # Application definition
 
