@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from payment.views import PaymentCreate, PaymentUpdate, PaymentDelete
+from .views import PaymentCreate, PaymentUpdate, PaymentDelete
 
 
 app_name = 'payment_app'

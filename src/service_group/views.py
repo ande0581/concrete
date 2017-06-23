@@ -5,12 +5,12 @@ from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
 import math
 
+from .forms import StepsForm, BlockFoundationForm, PierFootingsForm, EgressWindowForm, FloatingSlabForm, \
+    RetainingWallForm
 from bid.models import Bid
 from bid_item.models import BidItem
 from service.models import Service
 
-from service_group.forms import StepsForm, BlockFoundationForm, PierFootingsForm, EgressWindowForm, FloatingSlabForm, \
-    RetainingWallForm
 
 # Enable Print Statements to Facilitate Debugging
 DEBUG_SERVICE_GROUP = False

@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from overview.views import OverviewList
+from .views import OverviewList
 
 
 app_name = 'overview_app'

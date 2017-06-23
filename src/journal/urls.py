@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from journal.views import JournalCreate, JournalUpdate, JournalDelete
+from .views import JournalCreate, JournalUpdate, JournalDelete
 
 
 app_name = 'journal_app'

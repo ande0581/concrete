@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from category.views import CategoryList, CategoryCreate, CategoryUpdate, CategoryDelete
+from .views import CategoryList, CategoryCreate, CategoryUpdate, CategoryDelete
 
 app_name = 'category_app'
 urlpatterns = [

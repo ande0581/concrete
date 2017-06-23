@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from service.views import ServiceList, ServiceCreate, ServiceUpdate, ServiceDelete
+from .views import ServiceList, ServiceCreate, ServiceUpdate, ServiceDelete
 
 app_name = 'service_app'
 urlpatterns = [

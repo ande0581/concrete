@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from job_type.views import JobTypeList, JobTypeCreate, JobTypeUpdate, JobTypeDelete
+from .views import JobTypeList, JobTypeCreate, JobTypeUpdate, JobTypeDelete
 
 app_name = 'job_type_app'
 urlpatterns = [

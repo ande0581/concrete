@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from document.views import DocumentList, DocumentCreate, DocumentUpdate, DocumentDelete
+from .views import DocumentList, DocumentCreate, DocumentUpdate, DocumentDelete
 
 app_name = 'document_app'
 urlpatterns = [

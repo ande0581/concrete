@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from calculator import views
+from .views import index
 
 app_name = 'calculator'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', index, name='index'),
 ]

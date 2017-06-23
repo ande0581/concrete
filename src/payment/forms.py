@@ -1,8 +1,8 @@
 from django import forms
-from payment.models import Payment
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from .models import Payment
 
 
 class PaymentForm(forms.ModelForm):

@@ -1,11 +1,11 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+import sys
 
 from job_type.models import JobType
 from service.models import Service
 
-import sys
 # http://stackoverflow.com/questions/42024101/problems-with-migrations
 # http://stackoverflow.com/questions/39535983/migration-clashes-with-forms-py
 if 'makemigrations' in sys.argv or 'migrate' in sys.argv or 'showmigrations' in sys.argv:

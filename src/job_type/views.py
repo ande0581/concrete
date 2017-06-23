@@ -6,8 +6,8 @@ from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
-from job_type.models import JobType
-from job_type.forms import JobTypeForm
+from .models import JobType
+from .forms import JobTypeForm
 
 
 class JobTypeCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):

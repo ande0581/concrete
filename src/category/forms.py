@@ -1,8 +1,8 @@
 from django import forms
-from category.models import Category
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from .models import Category
 
 
 class CategoryForm(forms.ModelForm):

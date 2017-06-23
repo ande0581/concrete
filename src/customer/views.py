@@ -7,11 +7,11 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
+from .models import Customer
+from .forms import CustomerForm
 from address.models import Address
 from bid.models import Bid
-from customer.models import Customer
 from send_email.models import EmailLog
-from customer.forms import CustomerForm
 
 
 class CustomerCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):

@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from pdf.views import view_pdf, save_pdf, PDFImageList, PDFImageDelete
+from .views import view_pdf, save_pdf, PDFImageList, PDFImageDelete
 
 
 app_name = 'pdf_app'

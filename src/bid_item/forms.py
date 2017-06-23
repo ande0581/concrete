@@ -1,10 +1,10 @@
 from django import forms
-from bid_item.models import BidItem
-from job_type.models import JobType
-from service.models import Service
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from .models import BidItem
+from job_type.models import JobType
+from service.models import Service
 
 
 class BidItemForm(forms.ModelForm):

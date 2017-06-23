@@ -1,5 +1,5 @@
 from django.contrib import admin
-from bid_attachment.models import Document
+from .models import Document
 
 # Register your models here.
 

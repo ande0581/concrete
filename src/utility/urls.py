@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from utility.views import upload_website, UtilityList
+from .views import upload_website, UtilityList
 
 app_name = 'utility_app'
 urlpatterns = [

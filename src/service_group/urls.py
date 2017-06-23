@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from service_group.views import ConcreteCreate, StepsCreate, BlockFoundationCreate, \
+from .views import ConcreteCreate, StepsCreate, BlockFoundationCreate, \
     PierFootingsCreate, EgressWindowCreate, FloatingSlabCreate, RetainingWallCreate
-from service_group.forms import StandardConcreteForm, DecorativeConcreteForm
+from .forms import StandardConcreteForm, DecorativeConcreteForm
 
 app_name = 'service_group_app'
 urlpatterns = [

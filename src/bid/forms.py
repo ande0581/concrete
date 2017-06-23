@@ -1,9 +1,9 @@
 from django import forms
-from bid.models import Bid
-
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import Submit, Div
+
+from .models import Bid
 
 
 class BidInitialForm(forms.ModelForm):

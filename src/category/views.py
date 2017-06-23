@@ -6,8 +6,8 @@ from django.core.urlresolvers import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
-from category.models import Category
-from category.forms import CategoryForm
+from .models import Category
+from .forms import CategoryForm
 
 
 class CategoryCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):

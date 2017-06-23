@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from customer.views import CustomerDetail, CustomerList, CustomerCreate, CustomerUpdate, CustomerDelete
+from .views import CustomerDetail, CustomerList, CustomerCreate, CustomerUpdate, CustomerDelete
 
 
 app_name = 'customer_app'

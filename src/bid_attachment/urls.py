@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from bid_attachment.views import AttachmentUpload, AttachmentList, AttachmentDelete
+from .views import AttachmentUpload, AttachmentList, AttachmentDelete
 
 
 app_name = 'bid_attachment_app'

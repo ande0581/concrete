@@ -1,9 +1,9 @@
 from django import forms
-from service.models import Service
-from category.models import Category
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from .models import Service
+from category.models import Category
 
 MEASUREMENT_UNITS = [
     ('each', 'each'),

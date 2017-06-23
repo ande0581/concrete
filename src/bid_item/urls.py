@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from bid_item.views import BidItemCreate, BidItemCustomCreate, BidItemUpdate, BidItemDelete, BidItemGroupDelete
+from .views import BidItemCreate, BidItemCustomCreate, BidItemUpdate, BidItemDelete, BidItemGroupDelete
 
 
 app_name = 'bid_item_app'

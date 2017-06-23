@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from photo.views import PhotoUpload, PhotoList, PhotoDelete
+from .views import PhotoUpload, PhotoList, PhotoDelete
 
 
 app_name = 'photo_app'

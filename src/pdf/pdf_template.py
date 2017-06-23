@@ -18,9 +18,10 @@ from reportlab.platypus import KeepTogether
 from reportlab.platypus import PageBreak
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 
+
+from .models import PDFImage
 from bid_item.models import BidItem
 from payment.models import Payment
-from pdf.models import PDFImage
 
 
 class NumberedCanvas(canvas.Canvas):

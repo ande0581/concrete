@@ -4,9 +4,9 @@ from django.urls import reverse
 from django.views.generic import ListView
 from django.views.generic.edit import FormView, DeleteView
 
+from .models import Document
+from .forms import DocumentForm
 from bid.models import Bid
-from bid_attachment.models import Document
-from bid_attachment.forms import DocumentForm
 
 
 class AttachmentList(LoginRequiredMixin, ListView):

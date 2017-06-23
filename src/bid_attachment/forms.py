@@ -1,8 +1,8 @@
 from django import forms
-from bid_attachment.models import Document
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from .models import Document
 
 
 class DocumentForm(forms.ModelForm):

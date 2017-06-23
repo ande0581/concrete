@@ -1,17 +1,16 @@
-import owncloud
-import os
-import shutil
-import tempfile
-import zipfile
-from datetime import date
-
+from concrete_project.settings import BASE_DIR, NEXTCLOUD_URL, NEXTCLOUD_USER, NEXTCLOUD_PASSWORD
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 
-from concrete_project.settings import BASE_DIR, NEXTCLOUD_URL, NEXTCLOUD_USER, NEXTCLOUD_PASSWORD
+import owncloud
+import os
+import shutil
+import tempfile
+import zipfile
+from datetime import date
 
 
 def upload_to_next_cloud(file=None):

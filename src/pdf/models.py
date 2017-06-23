@@ -1,7 +1,6 @@
 from django.db import models
-import datetime
-
 from django.urls import reverse
+import datetime
 
 
 def generate_filename(instance, pdf_type):

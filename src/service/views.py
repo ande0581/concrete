@@ -7,8 +7,8 @@ from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
-from service.models import Service
-from service.forms import ServiceForm
+from .forms import ServiceForm
+from .models import Service
 
 
 class ServiceCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):

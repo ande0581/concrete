@@ -6,8 +6,8 @@ from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
-from document.models import Document
-from document.forms import DocumentForm
+from .models import Document
+from .forms import DocumentForm
 
 
 class DocumentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):

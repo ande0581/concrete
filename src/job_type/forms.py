@@ -1,8 +1,8 @@
 from django import forms
-from job_type.models import JobType
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from .models import JobType
 
 
 class JobTypeForm(forms.ModelForm):

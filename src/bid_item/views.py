@@ -5,10 +5,10 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+from .models import BidItem
+from .forms import BidItemForm, BidItemCustomForm, BidItemUpdateForm
 from bid.models import Bid
-from bid_item.models import BidItem
 from service.models import Service
-from bid_item.forms import BidItemForm, BidItemCustomForm, BidItemUpdateForm
 
 
 class BidItemCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):

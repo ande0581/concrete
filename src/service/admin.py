@@ -1,5 +1,5 @@
 from django.contrib import admin
-from service.models import Service
+from .models import Service
 
 
 class ServiceModelAdmin(admin.ModelAdmin):

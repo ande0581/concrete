@@ -4,9 +4,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+from .models import Payment
+from .forms import PaymentForm
 from bid.models import Bid
-from payment.models import Payment
-from payment.forms import PaymentForm
 
 
 class PaymentCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):

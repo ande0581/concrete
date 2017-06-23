@@ -1,8 +1,8 @@
 from django import forms
-from journal.models import Journal
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from .models import Journal
 
 
 class JournalForm(forms.ModelForm):

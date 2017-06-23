@@ -1,8 +1,7 @@
 from django.db import models
+from django.urls import reverse
 import datetime
 import os
-
-from django.urls import reverse
 
 
 def generate_filename(instance, filename):

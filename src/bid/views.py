@@ -9,13 +9,14 @@ from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
+
+from .models import Bid
+from .forms import BidInitialForm, BidForm
 from address.models import Address
-from bid.models import Bid
 from bid_item.models import BidItem
 from journal.models import Journal
 from payment.models import Payment
 from pdf.models import PDFImage
-from bid.forms import BidInitialForm, BidForm
 
 
 def create_bid_item_dict(bid_obj):

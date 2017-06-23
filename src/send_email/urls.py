@@ -1,6 +1,6 @@
 from django.conf.urls import url
-from send_email.views import ProposalInvoiceEmailCreate, EmployeeEmailCreate, GeneralEmailCreate
-from send_email.forms import SendCustomerEmailForm, SendEmployeeEmailForm, SendGeneralEmailForm
+from .views import ProposalInvoiceEmailCreate, EmployeeEmailCreate, GeneralEmailCreate
+from .forms import SendCustomerEmailForm, SendEmployeeEmailForm, SendGeneralEmailForm
 
 app_name = 'send_email_app'
 urlpatterns = [

@@ -1,4 +1,3 @@
-import datetime
 from decouple import config
 from django.core.mail import EmailMessage
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,14 +5,15 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
+import datetime
 import os
 
+from .models import EmailLog
 from concrete_project import settings
 from bid.models import Bid
 from customer.models import Customer
 from photo.models import Attachment
 from pdf.models import PDFImage
-from send_email.models import EmailLog
 from pdf.views import view_pdf
 
 

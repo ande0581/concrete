@@ -4,9 +4,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+from .models import Journal
+from .forms import JournalForm
 from bid.models import Bid
-from journal.models import Journal
-from journal.forms import JournalForm
 
 
 class JournalCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):

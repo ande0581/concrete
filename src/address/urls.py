@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from address.views import AddressCreate, AddressUpdate, AddressDelete
+from .views import AddressCreate, AddressUpdate, AddressDelete
 
 
 app_name = 'address_app'

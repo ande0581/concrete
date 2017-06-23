@@ -5,10 +5,10 @@ from django.urls import reverse
 from django.views.generic import DeleteView
 from django.views.generic import ListView
 
-from pdf.pdf_template import generate_pdf
+from .pdf_template import generate_pdf
+from .models import PDFImage
 from bid.models import Bid
 from bid_item.models import BidItem
-from pdf.models import PDFImage
 
 
 def create_bid_item_dict(bid_obj):

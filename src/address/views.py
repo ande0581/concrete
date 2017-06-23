@@ -4,9 +4,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from address.models import Address
+from .models import Address
+from .forms import AddressForm
 from customer.models import Customer
-from address.forms import AddressForm
 
 
 class AddressCreate(LoginRequiredMixin, SuccessMessageMixin, CreateView):
