@@ -20,7 +20,7 @@ else:
 
 email_body = """Attached is the proposal for your project. Please let me know if you have any questions.
 
-Thanks,
+Thank You,
 
 Tom Madsen - Owner
 Madsen Concrete Services

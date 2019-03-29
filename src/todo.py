@@ -1,7 +1,6 @@
 # TODO, explore get_delete_url
 # TODO, change order document
 # TODO, explore decimal rounding on money or storing as integers
-# TODO, change thanks to thank you on the email
 # TODO, Strip comma from customer_name for PDF
 """
 To nuke db delete all migrations but keep migration folder and __init__.py
