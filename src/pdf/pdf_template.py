@@ -96,7 +96,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
         179 Marvy ST<br />
         Lino Lakes, MN 55014<br />
         (612) 508-2484 <br />
-        concrete@madsenconcrete.com <br />
+        concrete@madsenservices.com <br />
         MN License: BC690748
         """
 
