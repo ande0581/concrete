@@ -467,9 +467,9 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
         return redirect('bid_app:bid_detail', pk=obj.id)
 
     if invoice:
-        filename = "{}_invoice_{}".format(obj.customer.__str__().replace(' ', '_').lower(), datetime.date.today())
+        filename = "{}_invoice_{}".format(obj.customer.__str__().replace(' ', '_').replace(',', '').lower(), datetime.date.today())
     else:
-        filename = "{}_proposal_{}".format(obj.customer.__str__().replace(' ', '_').lower(), datetime.date.today())
+        filename = "{}_proposal_{}".format(obj.customer.__str__().replace(' ', '_').replace(',', '').lower(), datetime.date.today())
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'filename={}.pdf'.format(filename)
     response.write(pdf)
