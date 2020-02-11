@@ -1,6 +1,6 @@
 certifi==2017.4.17
 chardet==3.0.4
-Django==1.10.5
+Django==1.11.28
 django-cleanup==0.4.2
 django-crispy-forms==1.6.1
 django-multiupload==0.5.2
