@@ -1,0 +1,1 @@
+c:\Users\concr\OneDrive\Documents\concrete\env\Scripts\python.exe C:\Users\concr\OneDrive\Documents\concrete\src\manage.py runserver
