@@ -11,7 +11,7 @@ import os
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_LEFT
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import cm
+from reportlab.lib.pagesizes import mm
 from reportlab.lib.units import mm, inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import KeepTogether
@@ -51,9 +51,9 @@ class NumberedCanvas(canvas.Canvas):
 def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=False, return_file_object=False):
     buff = BytesIO()
 
-    # The page width totals 18.6cm
-    doc = SimpleDocTemplate(buff, rightMargin=2 * cm, leftMargin=2 * cm,
-                            topMargin=1.5 * cm, bottomMargin=3.75 * cm)
+    # The page width totals 186mm
+    doc = SimpleDocTemplate(buff, rightMargin=20 * mm, leftMargin=20 * mm,
+                            topMargin=15.0 * mm, bottomMargin=37.5 * mm)
 
     def _header_footer(canvas, doc):
         # Save the state of our canvas so we can draw on it
@@ -121,7 +121,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
               image,
               Paragraph(proposal_invoice_paragraph, styles['Line_Data_Large'])]]
 
-    t1 = Table(data1, colWidths=(6.7 * cm, 8 * cm, 4.6 * cm))
+    t1 = Table(data1, colWidths=(67 * mm, 80 * mm, 46 * mm))
     t1.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))
@@ -138,7 +138,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
 
     data1 = [[Paragraph(pdf_type, styles["Line_Data_Largest"])]]
 
-    t1 = Table(data1, colWidths=(18.6 * cm))
+    t1 = Table(data1, colWidths=(186 * mm))
     t1.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'TOP')
     ]))
@@ -193,7 +193,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
                   Paragraph(location_paragraph, styles["Line_Data_Large"])]
                  ]
 
-        t1 = Table(data1, colWidths=(9.3 * cm, 9.3 * cm))
+        t1 = Table(data1, colWidths=(93 * mm, 93 * mm))
         t1.setStyle(TableStyle([
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
@@ -205,7 +205,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
         data1 = [[Paragraph('Job Description', styles["Line_Data_Large"])],
                  [Paragraph(description_paragraph, styles["Line_Data_Large"])]]
 
-        t1 = Table(data1, colWidths=(18.6 * cm))
+        t1 = Table(data1, colWidths=(186 * mm))
         t1.setStyle(TableStyle([
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
@@ -222,7 +222,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
                   Paragraph(description_paragraph, styles["Line_Data_Large"])]
                  ]
 
-        t1 = Table(data1, colWidths=(7 * cm, 11.6 * cm))
+        t1 = Table(data1, colWidths=(70 * mm, 116 * mm))
         t1.setStyle(TableStyle([
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
             ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
@@ -235,7 +235,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
             data1 = [[Paragraph('Notes', styles["Line_Data_Large"])],
                      [Paragraph(obj.notes, styles["Line_Data_Large"])]]
 
-            t1 = Table(data1, colWidths=(18.6 * cm))
+            t1 = Table(data1, colWidths=(186 * mm))
             t1.setStyle(TableStyle([
                 ('VALIGN', (0, 0), (-1, -1), 'TOP'),
                 ('BACKGROUND', (0, 0), (1, 0), colors.lightgrey)
@@ -251,7 +251,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
                   Paragraph('', styles["Line_Data_Large"])]
                  ]
 
-        t1 = Table(title, colWidths=(15 * cm, 3.6 * cm))
+        t1 = Table(title, colWidths=(150 * mm, 36 * mm))
         t1.setStyle(TableStyle([
             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
             ('BOX', (0, 0), (-1, -1), .25, colors.black),
@@ -266,7 +266,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
                       Paragraph(str(item.quantity), styles["Line_Data_Large_Right"])] for item in
                      items]
 
-            t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
+            t1 = Table(data1, colWidths=(150 * mm, 36 * mm))
             t1.setStyle(TableStyle([
                 ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                 ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
@@ -282,7 +282,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
                      in
                      items]
 
-            t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
+            t1 = Table(data1, colWidths=(150 * mm, 36 * mm))
             t1.setStyle(TableStyle([
                 ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                 ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
@@ -298,7 +298,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
                       Paragraph(str("${0:.2f}".format(total)), styles['Line_Data_Large_Right'])]
                      ]
 
-            t1 = Table(data1, colWidths=(15 * cm, 3.6 * cm))
+            t1 = Table(data1, colWidths=(150 * mm, 36 * mm))
             t1.setStyle(TableStyle([
                 ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                 ('BOX', (0, 0), (-1, -1), .25, colors.black),
@@ -346,7 +346,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
 
         all_data = data1 + data2 + data3
 
-        t1 = Table(all_data, colWidths=(14 * cm, 4.6 * cm))
+        t1 = Table(all_data, colWidths=(140 * mm, 46 * mm))
         t1.setStyle(TableStyle([
             ('BOX', (0, 0), (-1, -1), .25, colors.black),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -408,7 +408,7 @@ def generate_pdf(request, obj, bid_item_dict, invoice, employee, save_to_disk=Fa
              Paragraph('_____________________', styles["Line_Label"])],
         ]
 
-        t1 = Table(data1, colWidths=(14 * cm, 4.6 * cm))
+        t1 = Table(data1, colWidths=(140 * mm, 46 * mm))
         t1.setStyle(TableStyle([
             ('BOX', (0, 0), (-1, -1), .25, colors.black),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
