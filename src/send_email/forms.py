@@ -26,6 +26,7 @@ Tom Madsen - Owner
 Madsen Concrete Services
 612-508-2484
 concrete@madsenservices.com
+MN License BC690748
 """
 
 generic_email_body = """
@@ -34,6 +35,7 @@ Tom Madsen - Owner
 Madsen Concrete Services
 612-508-2484
 concrete@madsenservices.com
+MN License BC690748
 """
 
 EMPLOYEES = (('jacobozzzborn@gmail.com', 'Jake Osborn'),
