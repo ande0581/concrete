@@ -36,7 +36,7 @@ class StandardConcreteForm(forms.Form):
     sq_ft = forms.FloatField(label='Enter Square Feet Instead of Length and Width', required=False)
     thickness = forms.IntegerField(label='Thickness in Inches', initial=4)
     concrete_type = forms.ModelChoiceField(queryset=get_queryset('Concrete'),
-                                           initial=get_one_object('Concrete Driveway Mix'))
+                                           initial=get_one_object('4500 psi/ sq/in. with Fiber mesh'))
     rebar_type = forms.ModelChoiceField(queryset=get_queryset('Rebar'), required=False,
                                         initial=get_one_object('Rebar 1/2 Non-Coated'))
     removal = forms.ModelChoiceField(queryset=get_queryset('Removal-Square-Foot'), required=False,
